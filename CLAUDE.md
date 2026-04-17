@@ -36,7 +36,7 @@ On page load: `fetchPicks()` reads Firestore → `mergeRemoteState()` folds remo
 - Teams keyed by short codes: `E1–E7`, `W1–W7`, plus play-in candidates `ORL`, `CHA`, `GSW`, `PHX`.
 - Series IDs: `E1v8`, `E4v5`, `EQ1`, `ECF`, `WCF`, `FINALS`, etc.
 - Series with `t2Slot` depend on the play-in result; series with `from: [sid, sid]` pull teams from prior round winners via `resolveTeams()`.
-- `DEFAULT_GAME_TIMES` holds first-game UTC timestamps; series lock **3 hours before** the first game (`isSeriesLocked()`).
+- `DEFAULT_GAME_TIMES` holds first-game UTC timestamps (verified against NBA.com official schedule, EDT = UTC−4); series lock **3 hours before** the first game (`isSeriesLocked()`). Lock deadlines display in **Israel time** (`Asia/Jerusalem`) via `formatDeadline()`.
 - A series becomes pickable independently as soon as both feeder series have results (`isSeriesAvailable()`) — does not wait for the full round to finish.
 
 ### Scoring
@@ -53,7 +53,7 @@ Five tabs: **My Picks**, **All Picks**, **Results**, **Leaderboard**, **Rules**.
 
 Three card render modes, all via `bracketCard(sid, mode, pid)`:
 - `'picks'` → `cardPicks()` — interactive, current user's bracket
-- `'results'` → `cardResults()` — read-only, shows series record footer (`SAS leads 2–1` / `Tied 1–1` / `SAS wins in 6`)
+- `'results'` → `cardResults()` — read-only, shows series record footer (`Tied 0–0` before games start → `SAS leads 2–1` / `Tied 1–1` → `SAS wins in 6`)
 - `'view'` → `cardView()` — read-only, another user's picks (picks hidden until series locks, except admin/own)
 
 The bracket has two parallel HTML outputs:
