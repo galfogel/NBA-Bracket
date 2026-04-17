@@ -843,8 +843,12 @@ function cardView(sid, t1, t2, pid) {
        </div>`
     : '';
 
+  const gapRow = sid === 'FINALS' && state.finalsGap[pid] != null
+    ? `<div class="gap-input-row gap-readonly"><span class="gap-label">Game 1 gap:</span> <strong>${state.finalsGap[pid]} pts</strong></div>`
+    : '';
+
   return `<div class="matchup-card" data-series="${sid}">
-    ${row(t1)}<div class="series-divider"></div>${row(t2)}${footer}
+    ${row(t1)}<div class="series-divider"></div>${row(t2)}${gapRow}${footer}
   </div>`;
 }
 
