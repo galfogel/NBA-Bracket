@@ -84,7 +84,7 @@ function getUpsetBonus(sid, pickedKey, roundPts) {
   const pickedPct = pickedKey === t1key ? pct.t1 : pct.t2;
   const favPct = Math.max(pct.t1, pct.t2);
   if (pickedPct >= favPct) return 0;
-  return Math.floor(roundPts * favPct / 100);
+  return Math.floor(roundPts * (favPct - 50) / 100);
 }
 
 // Default first-game UTC timestamps per series (deadline = -3 hours)
@@ -1110,10 +1110,10 @@ function renderInfo() {
           <tbody>
             ${pointsRows}
             <tr><td>Correct series length</td><td>+${GAMES_BONUS} pts</td></tr>
-            <tr class="upset-row"><td>Upset bonus <span class="info-note">(picking the underdog correctly)</span></td><td>+floor(pts × fav% / 100)</td></tr>
+            <tr class="upset-row"><td>Upset bonus <span class="info-note">(picking the underdog correctly)</span></td><td>+floor(pts × (fav%−50) / 100)</td></tr>
           </tbody>
         </table>
-        <p class="info-detail">The upset bonus is based on fan pick % from picks.nba.com. Example: picking a team favored at 92% and being correct gives you an extra floor(10 × 92/100) = <strong>9 bonus pts</strong>.</p>
+        <p class="info-detail">The upset bonus is based on fan pick % from picks.nba.com. Example: picking a team favored at 92% and being correct gives you an extra floor(10 × (92−50)/100) = <strong>4 bonus pts</strong>.</p>
       </section>
 
       <section class="info-section">
