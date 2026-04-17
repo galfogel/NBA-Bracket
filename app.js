@@ -86,6 +86,38 @@ function save() {
 }
 
 // ============================================================
+// LIVE SCORES (fetched from data/scores.json via GitHub Actions)
+// ============================================================
+
+let scoresData = null;
+
+async function fetchScores() {
+  try {
+    const resp = await fetch('data/scores.json?_=' + Date.now());
+    if (!resp.ok) return;
+    scoresData = await resp.json();
+    // Re-render whichever tab is active so records appear
+    if (RENDERERS[activeTab]) RENDERERS[activeTab]();
+  } catch (_) {
+    // Silently fail — scores are optional display info
+  }
+}
+
+// Returns { t1Wins, t2Wins } for a series, or null if no data yet.
+function getRecord(sid) {
+  if (!scoresData?.records) return null;
+  const [t1, t2] = resolveTeams(sid, state.results);
+  if (!t1 || !t2) return null;
+  const a1 = TEAMS[t1]?.abbr;
+  const a2 = TEAMS[t2]?.abbr;
+  if (!a1 || !a2) return null;
+  const key = [a1, a2].sort().join('-');
+  const rec = scoresData.records[key];
+  if (!rec) return null;
+  return { t1Wins: rec[a1] ?? 0, t2Wins: rec[a2] ?? 0 };
+}
+
+// ============================================================
 // BRACKET LOGIC
 // ============================================================
 
@@ -186,7 +218,11 @@ function renderBracket() {
   el.innerHTML = `
     ${renderPlayInBanner()}
     <div class="bracket-instructions">
-      <p>Click a team to set the series winner. Click again to clear.</p>
+      <p>Click a team to set the series winner. Click again to clear.
+        ${scoresData
+          ? `<span class="scores-updated">Series records updated ${scoresData.updated.replace('T', ' ').replace('Z', ' UTC')}</span>`
+          : ''}
+      </p>
     </div>
     <div class="bracket-wrap">
       <div class="conf-label east-label">EASTERN CONFERENCE</div>
@@ -282,29 +318,34 @@ function renderColumn(ids, round, side, src, overrideId) {
 }
 
 function renderSeries(sid, src, mode) {
-  const def = SERIES_MAP[sid];
   const [t1, t2] = resolveTeams(sid, src);
   const winner = src[sid] || null;
+  const rec = (mode === 'results') ? getRecord(sid) : null;
 
-  function teamRow(key) {
+  function teamRow(key, wins) {
     if (!key) return `<div class="team-row tbd-row"><span class="seed-num">?</span><span class="team-name">TBD</span></div>`;
     const t = TEAMS[key];
     const isW = winner === key;
     const isE = winner && winner !== key;
+    const isLeading = rec && !winner && wins > (key === t1 ? rec.t2Wins : rec.t1Wins);
     return `<div class="team-row ${isW ? 'is-winner' : ''} ${isE ? 'is-elim' : ''}"
                  data-team="${key}"
                  style="--tc:${t.color}">
-      <span class="seed-num">${t.seed}</span>
+      <span class="seed-num">${t.seed ?? ''}</span>
       <span class="team-name">${t.name}</span>
+      ${rec ? `<span class="series-wins ${isLeading || isW ? 'wins-lead' : ''}">${wins}</span>` : ''}
       ${isW ? '<span class="win-mark">✓</span>' : ''}
     </div>`;
   }
 
+  const t1Wins = rec ? rec.t1Wins : 0;
+  const t2Wins = rec ? rec.t2Wins : 0;
+
   return `
     <div class="matchup-card" data-series="${sid}" data-mode="${mode}">
-      ${teamRow(t1)}
+      ${teamRow(t1, t1Wins)}
       <div class="series-divider"></div>
-      ${teamRow(t2)}
+      ${teamRow(t2, t2Wins)}
     </div>
   `;
 }
@@ -675,4 +716,5 @@ document.addEventListener('DOMContentLoaded', () => {
     btn.addEventListener('click', () => switchTab(btn.dataset.tab));
   });
   switchTab('bracket');
+  fetchScores();
 });

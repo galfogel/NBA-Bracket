@@ -314,6 +314,26 @@ main { padding: 24px; }
   text-overflow: ellipsis;
 }
 
+.series-wins {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-dim);
+  margin-left: auto;
+  padding-right: 4px;
+  flex-shrink: 0;
+}
+
+.series-wins.wins-lead {
+  color: var(--green);
+}
+
+.scores-updated {
+  margin-left: 12px;
+  font-size: 11px;
+  color: var(--text-dim);
+  font-style: italic;
+}
+
 .win-mark {
   color: var(--green);
   font-size: 12px;
