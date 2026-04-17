@@ -714,10 +714,12 @@ function cardResults(sid, t1, t2) {
   let footer = '';
   if (winner && ag) {
     footer = `<div class="card-footer footer-winner">${TEAMS[winner].abbr} wins in ${ag} games</div>`;
-  } else if (rec) {
-    const t1w = rec.t1Wins, t2w = rec.t2Wins;
+  } else if (rec || (!winner && isSeriesAvailable(sid))) {
+    const t1w = rec?.t1Wins ?? 0, t2w = rec?.t2Wins ?? 0;
     const total = t1w + t2w;
-    if (total > 0) {
+    if (total === 0) {
+      footer = `<div class="card-footer footer-record">Tied 0–0</div>`;
+    } else {
       const leader = t1w > t2w ? TEAMS[t1] : t2w > t1w ? TEAMS[t2] : null;
       const status = leader
         ? `<span style="color:${leader.color}">${leader.abbr} leads</span> ${Math.max(t1w,t2w)}–${Math.min(t1w,t2w)}`
