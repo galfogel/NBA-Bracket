@@ -260,6 +260,7 @@ function attemptLogin() {
     state.participants.push({ id, name, password: pass || null });
     state.picks[id] = {};
     save();
+    syncPicksToGitHub(); // register new user in shared DB immediately
     msg.textContent = `Welcome, ${name}! Account created.`;
     msg.className = 'login-msg msg-welcome';
     currentUserId = id;
