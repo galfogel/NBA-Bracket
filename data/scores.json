@@ -1,5 +1,5 @@
 {
-  "updated": "2026-04-17T00:00:00Z",
+  "updated": "2026-04-17T11:45:20Z",
   "records": {},
   "gameTimes": {
     "E1v8": "2026-04-19T17:30:00Z",
@@ -11,5 +11,5 @@
     "W2v7": "2026-04-20T00:30:00Z",
     "W3v6": "2026-04-19T23:30:00Z"
   },
-  "error": null
+  "error": "HTTPSConnectionPool(host='stats.nba.com', port=443): Read timed out. (read timeout=30)"
 }
