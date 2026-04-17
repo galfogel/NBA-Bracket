@@ -160,7 +160,8 @@ function picksToNames(picks) {
     for (const [sid, pick] of Object.entries(pPicks || {})) {
       if (!pick) continue;
       const winner = pick.winner ? (TEAMS[pick.winner]?.name || pick.winner) : null;
-      out[pid][sid] = { winner, games: pick.games ?? null };
+      const round  = SERIES_MAP[sid]?.r ?? null;
+      out[pid][sid] = { winner, games: pick.games ?? null, round };
     }
   }
   return out;
