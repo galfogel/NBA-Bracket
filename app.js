@@ -263,11 +263,18 @@ async function attemptLogin() {
     return;
   }
 
+  if (!pass) {
+    msg.textContent = 'Password is required.';
+    msg.className = 'login-msg msg-error';
+    passInput.focus();
+    return;
+  }
+
   const hash     = await hashPassword(pass);
   const existing = state.participants.find(p => p.name.toLowerCase() === name.toLowerCase());
 
   if (existing) {
-    if (existing.passwordHash && existing.passwordHash !== hash) {
+    if (existing.passwordHash !== hash) {
       msg.textContent = 'Incorrect password.';
       msg.className = 'login-msg msg-error';
       passInput.focus();
