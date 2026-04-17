@@ -673,9 +673,10 @@ function cardView(sid, t1, t2, pid) {
   const locked = isSeriesLocked(sid);
 
   const isAdmin = state.participants.find(p => p.id === currentUserId)?.name.toLowerCase() === 'fogel';
+  const isOwnPicks = pid === currentUserId;
 
-  // Picks are hidden until the series locks (starts), except for the admin
-  if (!locked && !isAdmin) {
+  // Picks are hidden until the series locks (starts), except for the admin or the user viewing their own picks
+  if (!locked && !isAdmin && !isOwnPicks) {
     function rowHidden(key) {
       const t = TEAMS[key];
       return `<div class="team-row no-pointer">
