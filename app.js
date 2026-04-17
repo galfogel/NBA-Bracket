@@ -1059,12 +1059,6 @@ function renderLeaderboard() {
   el.innerHTML = `
     <div class="leaderboard-wrap">
       <h2>Leaderboard</h2>
-      <div class="scoring-legend">
-        ${[1, 2, 3, 4].map(r =>
-          `<span>${ROUND_NAMES[r]}: <strong>${ROUND_POINTS[r]}pt</strong></span>`
-        ).join(' · ')}
-        <span>Correct games: <strong>+${GAMES_BONUS}pt</strong></span>
-      </div>
       <table class="leaderboard-table">
         <thead>
           <tr><th>#</th><th>Name</th><th>R1</th><th>R2</th><th>CF</th><th>Finals</th><th>Total</th></tr>
