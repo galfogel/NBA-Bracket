@@ -380,17 +380,26 @@ main { padding: 24px; }
   align-items: center;
   gap: 6px;
   padding: 6px 8px;
-  cursor: pointer;
+  cursor: default;
   transition: background 0.1s;
   position: relative;
 }
 
-.team-row:hover { background: var(--surface2); }
+.team-row.is-clickable:hover { background: var(--surface2); cursor: pointer; }
 
 .team-row.is-winner {
-  background: color-mix(in srgb, var(--tc) 18%, var(--surface));
-  border-left: 3px solid var(--tc);
+  background: color-mix(in srgb, var(--green) 14%, var(--surface));
+  border-left: 3px solid var(--green);
 }
+
+.team-row.is-wrong-pick {
+  background: color-mix(in srgb, var(--red) 12%, var(--surface));
+  border-left: 3px solid var(--red);
+  opacity: 0.8;
+}
+
+.team-row.is-clickable { cursor: pointer; }
+.team-row.no-pointer   { cursor: default; pointer-events: none; }
 
 .team-row.is-elim {
   opacity: 0.4;
@@ -849,6 +858,186 @@ main { padding: 24px; }
   padding: 48px 0;
   text-align: center;
   font-size: 15px;
+}
+
+/* ============================================================
+   MATCHUP CARD VARIANTS
+   ============================================================ */
+.card-tbd {
+  opacity: 0.45;
+  pointer-events: none;
+}
+
+.card-inactive {
+  opacity: 0.55;
+}
+
+/* ---- Card footer (deadline / lock / game count) ---- */
+.card-footer {
+  font-size: 10px;
+  text-align: center;
+  padding: 3px 8px 4px;
+  border-top: 1px solid var(--border);
+  color: var(--text-dim);
+}
+
+.footer-locked {
+  color: #888;
+}
+
+.footer-deadline {
+  color: var(--text-dim);
+}
+
+/* ============================================================
+   GAMES SELECTOR  (4 / 5 / 6 / 7 buttons)
+   ============================================================ */
+.games-selector {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  border-top: 1px solid var(--border);
+  background: var(--surface2);
+}
+
+.games-label {
+  font-size: 10px;
+  color: var(--text-dim);
+  flex-shrink: 0;
+  margin-right: 2px;
+}
+
+.games-btn {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+  padding: 2px 7px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.1s;
+  line-height: 1.6;
+}
+
+.games-btn:hover:not(:disabled) {
+  border-color: var(--green);
+  color: var(--green);
+}
+
+.games-btn.selected {
+  background: color-mix(in srgb, var(--green) 20%, var(--surface2));
+  border-color: var(--green);
+  color: var(--green);
+}
+
+.games-btn:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+/* ============================================================
+   ROUND CONTROLS BAR  (My Picks tab)
+   ============================================================ */
+.round-controls {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin-bottom: 16px;
+  overflow: hidden;
+}
+
+.round-control-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+.round-control-row:last-child { border-bottom: none; }
+
+.rc-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+  flex-shrink: 0;
+}
+
+.rc-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.rc-badge {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 99px;
+}
+
+.rc-open {
+  background: color-mix(in srgb, var(--accent2) 15%, transparent);
+  color: var(--accent2);
+}
+
+.rc-saved {
+  background: color-mix(in srgb, var(--green) 15%, transparent);
+  color: var(--green);
+}
+
+.rc-locked {
+  background: color-mix(in srgb, #888 15%, transparent);
+  color: #888;
+}
+
+/* ============================================================
+   ALL PICKS TAB HEADER
+   ============================================================ */
+.allpicks-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+
+.allpicks-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.allpicks-left label {
+  color: var(--text-dim);
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+.allpicks-left select {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 6px 10px;
+  border-radius: var(--radius);
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.allpicks-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.allpicks-score {
+  font-size: 13px;
+  color: var(--text-dim);
 }
 
 /* ============================================================

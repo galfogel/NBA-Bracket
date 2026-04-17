@@ -7,28 +7,24 @@
   <link rel="stylesheet" href="style.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <!-- SheetJS for client-side Excel export -->
   <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
 </head>
 <body>
 
-<!-- ======================================================
-     LOGIN OVERLAY
-     ====================================================== -->
+<!-- LOGIN OVERLAY -->
 <div id="login-overlay" class="login-overlay">
   <div class="login-box">
     <div class="login-logo">🏀</div>
     <h2>NBA Playoffs 2026</h2>
     <p class="login-sub">Enter your name to join the bracket</p>
-    <input id="login-input" type="text" placeholder="Your name" maxlength="40" autocomplete="off" />
+    <input id="login-name" type="text"     placeholder="Your name"     maxlength="40" autocomplete="off" />
+    <input id="login-pass" type="password" placeholder="Password (optional)" maxlength="60" autocomplete="off" />
     <div id="login-msg" class="login-msg"></div>
     <button id="login-btn" class="btn-primary login-btn">Enter</button>
   </div>
 </div>
 
-<!-- ======================================================
-     APP SHELL
-     ====================================================== -->
+<!-- APP SHELL -->
 <header>
   <h1>🏀 NBA Playoffs 2026</h1>
   <nav>
