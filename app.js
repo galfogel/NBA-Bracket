@@ -70,8 +70,8 @@ const DEFAULT_GAME_TIMES = {
 // ============================================================
 // STATE
 // ============================================================
-const STORAGE_KEY = 'nba-bracket-2026';
-const USER_KEY    = 'nba-bracket-2026-user';
+const STORAGE_KEY = 'nba-bracket-2026-v2';
+const USER_KEY    = 'nba-bracket-2026-user-v2';
 
 let state = loadState();
 
@@ -80,6 +80,9 @@ function loadState() {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (raw) {
       const s = JSON.parse(raw);
+      s.participants   = s.participants   || [];
+      s.picks          = s.picks          || {};
+      s.results        = s.results        || {};
       s.picksSubmitted = s.picksSubmitted || {};
       s.playIn         = s.playIn         || { E8: null, W8: null };
       return s;
