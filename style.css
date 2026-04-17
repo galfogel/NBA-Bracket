@@ -198,6 +198,10 @@ main { padding: 24px; }
 .info-table .upset-row td { color: var(--accent); }
 .info-note { font-weight: 400; color: var(--text-dim); font-size: 12px; }
 .info-detail { font-size: 13px; color: var(--text-dim); margin: 10px 0 0; line-height: 1.6; }
+.info-matchup-cell { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.info-team { display: inline-flex; align-items: center; gap: 5px; font-size: 13px; }
+.info-team-logo { width: 20px; height: 20px; object-fit: contain; }
+.info-vs { font-size: 11px; color: var(--text-dim); }
 
 /* ============================================================
    BRACKET LAYOUT
@@ -814,7 +818,7 @@ main { padding: 24px; }
 /* ============================================================
    LEADERBOARD TAB
    ============================================================ */
-.leaderboard-wrap { max-width: 860px; }
+.leaderboard-wrap { max-width: 860px; margin: 32px auto; padding: 0 16px; }
 .leaderboard-wrap h2 { font-size: 20px; margin-bottom: 8px; }
 
 .scoring-legend {
@@ -856,30 +860,93 @@ main { padding: 24px; }
 /* ---- Pick breakdown ---- */
 .pick-breakdown h3 { font-size: 16px; margin-bottom: 16px; }
 
-.breakdown-round { margin-bottom: 24px; }
+.breakdown-round { margin-bottom: 28px; }
 .breakdown-round h4 {
-  font-size: 12px;
+  font-size: 11px;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--text-dim);
   margin-bottom: 10px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--border);
 }
 
 .breakdown-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 10px;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 12px;
 }
 
 .breakdown-series {
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  padding: 10px 12px;
+  overflow: hidden;
 }
 
-.series-title { font-weight: 600; font-size: 13px; margin-bottom: 4px; }
-.actual-result { font-size: 12px; color: var(--text-dim); margin-bottom: 8px; }
+/* Teams header inside breakdown card */
+.bd-teams {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 10px;
+  background: var(--surface2);
+  border-bottom: 1px solid var(--border);
+  gap: 4px;
+}
+.bd-team {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  font-weight: 600;
+}
+.bd-team img { width: 20px; height: 20px; object-fit: contain; }
+.bd-vs { font-size: 10px; color: var(--text-dim); font-weight: 400; }
+.bd-result {
+  font-size: 11px;
+  padding: 4px 10px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-dim);
+  background: var(--surface2);
+}
+.bd-result strong { color: var(--text-main); }
+
+/* Per-user pick rows */
+.bd-picks { padding: 4px 0; }
+.bd-pick-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 10px;
+  font-size: 12px;
+  border-bottom: 1px solid var(--border);
+}
+.bd-pick-row:last-child { border-bottom: none; }
+.bd-pick-name { font-weight: 600; min-width: 52px; color: var(--text-dim); font-size: 11px; }
+.bd-pick-team {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex: 1;
+}
+.bd-pick-team img { width: 16px; height: 16px; object-fit: contain; }
+.bd-pick-abbr { font-weight: 600; font-size: 12px; }
+.bd-pick-games { font-size: 11px; color: var(--text-dim); margin-left: 2px; }
+.bd-pick-mark { font-size: 11px; margin-left: auto; }
+.bd-pick-mark.ok  { color: #22c55e; }
+.bd-pick-mark.bad { color: #ef4444; }
+.bd-hidden { padding: 8px 10px; font-size: 11px; color: var(--text-dim); font-style: italic; }
+.bd-gap-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 10px;
+  font-size: 12px;
+  border-bottom: 1px solid var(--border);
+}
+.bd-gap-row:last-child { border-bottom: none; }
+.bd-gap-actual { padding: 5px 10px; font-size: 11px; color: var(--text-dim); border-top: 1px solid var(--border); background: var(--surface2); }
 
 .picks-list { display: flex; flex-wrap: wrap; gap: 4px; }
 

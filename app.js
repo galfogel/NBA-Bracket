@@ -1101,55 +1101,88 @@ function renderLeaderboard() {
 }
 
 function renderPickBreakdown(rows) {
+  const isAdmin = state.participants.find(p => p.id === currentUserId)?.name.toLowerCase() === 'fogel';
   let html = '<div class="pick-breakdown"><h3>Pick Details</h3>';
+
   for (const r of [1, 2, 3, 4]) {
     const series = SERIES.filter(s => s.r === r && isSeriesAvailable(s.id));
     if (!series.length) continue;
     html += `<div class="breakdown-round"><h4>${ROUND_NAMES[r]}</h4><div class="breakdown-grid">`;
     for (const def of series) {
       const actual = state.results[def.id];
-      const [t1, t2] = resolveTeams(def.id);
+      const [t1k, t2k] = resolveTeams(def.id);
+      const t1 = t1k ? TEAMS[t1k] : null;
+      const t2 = t2k ? TEAMS[t2k] : null;
       const ag = getActualGames(def.id);
       const seriesLocked = isSeriesLocked(def.id);
-      const isAdmin = state.participants.find(p => p.id === currentUserId)?.name.toLowerCase() === 'fogel';
-      html += `<div class="breakdown-series">
-        <div class="series-title">${t1 ? TEAMS[t1].abbr : '?'} vs ${t2 ? TEAMS[t2].abbr : '?'}</div>
-        <div class="actual-result">${actual
-          ? `<strong style="color:${TEAMS[actual].color}">${TEAMS[actual].abbr}</strong>${ag ? ` in ${ag}` : ''}`
-          : 'Pending'}</div>
-        <div class="picks-list">
-          ${seriesLocked || isAdmin
-            ? rows.map(p => {
-                const pick = getPick(p.id, def.id);
-                const ok   = actual && pick.winner && actual === pick.winner;
-                const bad  = actual && pick.winner && actual !== pick.winner;
-                const gok  = ok && ag && pick.games && ag === pick.games;
-                return `<span class="pick-chip ${ok ? 'pick-correct' : bad ? 'pick-wrong' : 'pick-pending'}" title="${p.name}">
-                  ${p.name.split(' ')[0]}: ${pick.winner ? TEAMS[pick.winner]?.abbr : '?'}${pick.games ? ` in ${pick.games}${gok ? '✓' : ''}` : ''}
-                </span>`;
-              }).join('')
-            : `<span class="pick-chip pick-hidden">🔒 Hidden until series starts</span>`
-          }
+
+      const teamsHeader = `<div class="bd-teams">
+        <div class="bd-team">
+          ${t1 ? `<img src="${t1.logo}" alt="${t1.abbr}" /><span>${t1.abbr}</span>` : '<span>?</span>'}
+        </div>
+        <span class="bd-vs">vs</span>
+        <div class="bd-team">
+          ${t2 ? `<img src="${t2.logo}" alt="${t2.abbr}" /><span>${t2.abbr}</span>` : '<span>?</span>'}
         </div>
       </div>`;
+
+      const resultBar = `<div class="bd-result">${actual
+        ? `<strong style="color:${TEAMS[actual].color}">${TEAMS[actual].abbr}</strong> wins${ag ? ` in ${ag}` : ''}`
+        : 'Pending'}</div>`;
+
+      let pickRows = '';
+      if (seriesLocked || isAdmin) {
+        pickRows = rows.map(p => {
+          const pick = getPick(p.id, def.id);
+          const pt = pick.winner ? TEAMS[pick.winner] : null;
+          const ok  = actual && pick.winner && actual === pick.winner;
+          const bad = actual && pick.winner && actual !== pick.winner;
+          const gok = ok && ag && pick.games && ag === pick.games;
+          const mark = ok ? '<span class="bd-pick-mark ok">✓</span>' : bad ? '<span class="bd-pick-mark bad">✗</span>' : '';
+          const isMe = p.id === currentUserId;
+          return `<div class="bd-pick-row${isMe ? ' my-row' : ''}">
+            <span class="bd-pick-name">${p.name.split(' ')[0]}</span>
+            <span class="bd-pick-team">
+              ${pt ? `<img src="${pt.logo}" alt="${pt.abbr}" /><span class="bd-pick-abbr" style="color:${pt.color}">${pt.abbr}</span>` : '<span class="bd-pick-abbr">?</span>'}
+              ${pick.games ? `<span class="bd-pick-games">in ${pick.games}${gok ? '✓' : ''}</span>` : ''}
+            </span>
+            ${mark}
+          </div>`;
+        }).join('');
+      } else {
+        pickRows = `<div class="bd-hidden">🔒 Hidden until series starts</div>`;
+      }
+
+      html += `<div class="breakdown-series">${teamsHeader}${resultBar}<div class="bd-picks">${pickRows}</div></div>`;
     }
     html += '</div></div>';
   }
-  // Finals Game 1 gap tiebreaker summary
-  const actual = state.finalsGame1ActualGap;
-  html += '<div class="breakdown-round"><h4>Game 1 Finals Gap (Tiebreaker)</h4><div class="breakdown-grid">';
-  html += '<div class="breakdown-series"><div class="picks-list">';
-  for (const p of rows) {
-    const gap = state.finalsGap[p.id];
-    const hasGap = gap != null;
-    let chipText = `${p.name.split(' ')[0]}: `;
-    if (!hasGap) { chipText += '–'; }
-    else if (actual != null) { chipText += `${gap} pts (diff: ${Math.abs(gap - actual)})`; }
-    else { chipText += `${gap} pts`; }
-    html += `<span class="pick-chip pick-pending">${chipText}</span>`;
+
+  // Finals Game 1 gap — only show when at least one user has submitted a gap
+  const anyGap = rows.some(p => state.finalsGap[p.id] != null);
+  if (anyGap || state.finalsGame1ActualGap != null) {
+    const actualGap = state.finalsGame1ActualGap;
+    html += '<div class="breakdown-round"><h4>Game 1 Finals Gap (Tiebreaker)</h4><div class="breakdown-grid">';
+    html += '<div class="breakdown-series"><div class="bd-picks">';
+    for (const p of rows) {
+      const gap = state.finalsGap[p.id];
+      const isMe = p.id === currentUserId;
+      let diffStr = '';
+      if (gap != null && actualGap != null) {
+        const diff = Math.abs(gap - actualGap);
+        diffStr = `<span class="bd-pick-games">(diff: ${diff})</span>`;
+      }
+      html += `<div class="bd-gap-row${isMe ? ' my-row' : ''}">
+        <span class="bd-pick-name">${p.name.split(' ')[0]}</span>
+        <span class="bd-pick-abbr">${gap != null ? `${gap} pts` : '–'}</span>
+        ${diffStr}
+      </div>`;
+    }
+    if (actualGap != null) {
+      html += `<div class="bd-gap-actual">Actual: <strong>${actualGap} pts</strong></div>`;
+    }
+    html += '</div></div></div></div>';
   }
-  if (actual != null) html += `<div class="actual-result" style="margin-top:4px">Actual: <strong>${actual} pts</strong></div>`;
-  html += '</div></div></div></div>';
 
   return html + '</div>';
 }
@@ -1172,14 +1205,17 @@ function renderInfo() {
     const t1 = TEAMS[s.t1];
     const t2key = s.t2 || (s.t2Slot ? state.playIn?.[s.t2Slot] : null);
     const t2 = t2key ? TEAMS[t2key] : null;
-    const matchup = t2 ? `${t1.name} vs ${t2.name}` : `${t1.name} vs TBD`;
+    const teamCell = (t) => t
+      ? `<span class="info-team"><img src="${t.logo}" alt="${t.abbr}" class="info-team-logo" />${t.name}</span>`
+      : `<span class="info-team">TBD</span>`;
+    const matchup = `${teamCell(t1)} <span class="info-vs">vs</span> ${teamCell(t2)}`;
     const gameTs = scoresData?.gameTimes?.[s.id] ?? DEFAULT_GAME_TIMES[s.id];
     let deadlineStr = '—';
     if (gameTs) {
       const d = new Date(new Date(gameTs).getTime() - 3 * 60 * 60 * 1000);
       deadlineStr = d.toLocaleString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit', timeZoneName: 'short' });
     }
-    return `<tr><td>${matchup}</td><td>${deadlineStr}</td></tr>`;
+    return `<tr><td class="info-matchup-cell">${matchup}</td><td>${deadlineStr}</td></tr>`;
   }).join('');
 
   el.innerHTML = `
