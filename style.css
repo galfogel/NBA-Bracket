@@ -424,6 +424,13 @@ main { padding: 24px; }
   flex-shrink: 0;
 }
 
+.team-logo {
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
 .team-name {
   font-size: 12px;
   font-weight: 600;

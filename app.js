@@ -1,26 +1,27 @@
 // ============================================================
 // TEAMS  (play-in teams included — seed assigned once confirmed)
 // ============================================================
+const ESPN = s => `https://a.espncdn.com/i/teamlogos/nba/500/${s}.png`;
 const TEAMS = {
-  E1:  { name: 'Detroit Pistons',           abbr: 'DET', seed: 1, conf: 'East', color: '#C8102E' },
-  E2:  { name: 'Boston Celtics',            abbr: 'BOS', seed: 2, conf: 'East', color: '#007A33' },
-  E3:  { name: 'New York Knicks',           abbr: 'NYK', seed: 3, conf: 'East', color: '#006BB6' },
-  E4:  { name: 'Cleveland Cavaliers',       abbr: 'CLE', seed: 4, conf: 'East', color: '#6F263D' },
-  E5:  { name: 'Toronto Raptors',           abbr: 'TOR', seed: 5, conf: 'East', color: '#CE1141' },
-  E6:  { name: 'Atlanta Hawks',             abbr: 'ATL', seed: 6, conf: 'East', color: '#E03A3E' },
-  E7:  { name: 'Philadelphia 76ers',        abbr: 'PHI', seed: 7, conf: 'East', color: '#006BB6' },
-  W1:  { name: 'Oklahoma City Thunder',     abbr: 'OKC', seed: 1, conf: 'West', color: '#007AC1' },
-  W2:  { name: 'San Antonio Spurs',         abbr: 'SAS', seed: 2, conf: 'West', color: '#1d1160' },
-  W3:  { name: 'Denver Nuggets',            abbr: 'DEN', seed: 3, conf: 'West', color: '#0E2240' },
-  W4:  { name: 'Los Angeles Lakers',        abbr: 'LAL', seed: 4, conf: 'West', color: '#552583' },
-  W5:  { name: 'Houston Rockets',           abbr: 'HOU', seed: 5, conf: 'West', color: '#CE1141' },
-  W6:  { name: 'Minnesota Timberwolves',    abbr: 'MIN', seed: 6, conf: 'West', color: '#236192' },
-  W7:  { name: 'Portland Trail Blazers',    abbr: 'POR', seed: 7, conf: 'West', color: '#E03A3E' },
+  E1:  { name: 'Detroit Pistons',           abbr: 'DET', seed: 1, conf: 'East', color: '#C8102E', logo: ESPN('det') },
+  E2:  { name: 'Boston Celtics',            abbr: 'BOS', seed: 2, conf: 'East', color: '#007A33', logo: ESPN('bos') },
+  E3:  { name: 'New York Knicks',           abbr: 'NYK', seed: 3, conf: 'East', color: '#006BB6', logo: ESPN('nyk') },
+  E4:  { name: 'Cleveland Cavaliers',       abbr: 'CLE', seed: 4, conf: 'East', color: '#6F263D', logo: ESPN('cle') },
+  E5:  { name: 'Toronto Raptors',           abbr: 'TOR', seed: 5, conf: 'East', color: '#CE1141', logo: ESPN('tor') },
+  E6:  { name: 'Atlanta Hawks',             abbr: 'ATL', seed: 6, conf: 'East', color: '#E03A3E', logo: ESPN('atl') },
+  E7:  { name: 'Philadelphia 76ers',        abbr: 'PHI', seed: 7, conf: 'East', color: '#006BB6', logo: ESPN('phi') },
+  W1:  { name: 'Oklahoma City Thunder',     abbr: 'OKC', seed: 1, conf: 'West', color: '#007AC1', logo: ESPN('okc') },
+  W2:  { name: 'San Antonio Spurs',         abbr: 'SAS', seed: 2, conf: 'West', color: '#1d1160', logo: ESPN('sa')  },
+  W3:  { name: 'Denver Nuggets',            abbr: 'DEN', seed: 3, conf: 'West', color: '#0E2240', logo: ESPN('den') },
+  W4:  { name: 'Los Angeles Lakers',        abbr: 'LAL', seed: 4, conf: 'West', color: '#552583', logo: ESPN('lal') },
+  W5:  { name: 'Houston Rockets',           abbr: 'HOU', seed: 5, conf: 'West', color: '#CE1141', logo: ESPN('hou') },
+  W6:  { name: 'Minnesota Timberwolves',    abbr: 'MIN', seed: 6, conf: 'West', color: '#236192', logo: ESPN('min') },
+  W7:  { name: 'Portland Trail Blazers',    abbr: 'POR', seed: 7, conf: 'West', color: '#E03A3E', logo: ESPN('por') },
   // Play-In candidates — only visible after commissioner confirms 8-seed
-  ORL: { name: 'Orlando Magic',             abbr: 'ORL', seed: 8, conf: 'East', color: '#0077C0' },
-  CHA: { name: 'Charlotte Hornets',         abbr: 'CHA', seed: 8, conf: 'East', color: '#00788C' },
-  GSW: { name: 'Golden State Warriors',     abbr: 'GSW', seed: 8, conf: 'West', color: '#1D428A' },
-  PHX: { name: 'Phoenix Suns',             abbr: 'PHX', seed: 8, conf: 'West', color: '#E56020' },
+  ORL: { name: 'Orlando Magic',             abbr: 'ORL', seed: 8, conf: 'East', color: '#0077C0', logo: ESPN('orl') },
+  CHA: { name: 'Charlotte Hornets',         abbr: 'CHA', seed: 8, conf: 'East', color: '#00788C', logo: ESPN('cha') },
+  GSW: { name: 'Golden State Warriors',     abbr: 'GSW', seed: 8, conf: 'West', color: '#1D428A', logo: ESPN('gs')  },
+  PHX: { name: 'Phoenix Suns',              abbr: 'PHX', seed: 8, conf: 'West', color: '#E56020', logo: ESPN('phx') },
 };
 
 // Play-In game definitions (tonight, Apr 17 — commissioner sets winners)
@@ -619,6 +620,7 @@ function bracketCard(sid, mode, pid) {
       const t = TEAMS[key];
       return `<div class="team-row tbd-row">
         <span class="seed-num">${t.seed ?? ''}</span>
+        <img class="team-logo" src="${t.logo}" alt="${t.abbr}" />
         <span class="team-name">${t.name}</span>
       </div>`;
     }
@@ -647,6 +649,7 @@ function cardResults(sid, t1, t2) {
     const wins = rec ? (key === t1 ? rec.t1Wins : rec.t2Wins) : null;
     return `<div class="team-row ${isW ? 'is-winner' : ''} ${isL ? 'is-elim' : ''}">
       <span class="seed-num">${t.seed ?? ''}</span>
+      <img class="team-logo" src="${t.logo}" alt="${t.abbr}" />
       <span class="team-name">${t.name}</span>
       ${wins !== null ? `<span class="series-wins ${isW ? 'wins-lead' : ''}">${wins}</span>` : ''}
       ${isW ? '<span class="win-mark">✓</span>' : ''}
@@ -681,6 +684,7 @@ function cardPicks(sid, t1, t2, pid) {
     return `<div class="team-row ${cls} ${editable ? 'is-clickable' : ''}"
                  data-ps="${sid}" data-pt="${key}">
       <span class="seed-num">${t.seed ?? ''}</span>
+      <img class="team-logo" src="${t.logo}" alt="${t.abbr}" />
       <span class="team-name">${t.name}</span>
       ${mark ? `<span class="win-mark">${mark}</span>` : ''}
     </div>`;
@@ -723,6 +727,7 @@ function cardView(sid, t1, t2, pid) {
       const t = TEAMS[key];
       return `<div class="team-row no-pointer">
         <span class="seed-num">${t.seed ?? ''}</span>
+        <img class="team-logo" src="${t.logo}" alt="${t.abbr}" />
         <span class="team-name">${t.name}</span>
       </div>`;
     }
@@ -743,6 +748,7 @@ function cardView(sid, t1, t2, pid) {
     const cls      = isPicked ? (isOk ? 'is-winner' : isBad ? 'is-wrong-pick' : 'is-winner') : '';
     return `<div class="team-row no-pointer ${cls}">
       <span class="seed-num">${t.seed ?? ''}</span>
+      <img class="team-logo" src="${t.logo}" alt="${t.abbr}" />
       <span class="team-name">${t.name}</span>
       ${isPicked ? `<span class="win-mark">${isOk ? '✓' : isBad ? '✗' : '·'}</span>` : ''}
     </div>`;
