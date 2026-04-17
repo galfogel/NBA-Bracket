@@ -486,23 +486,21 @@ function cardResults(sid, t1, t2) {
   const ag     = getActualGames(sid);
 
   function row(key) {
-    const t   = TEAMS[key];
-    const isW = winner === key;
-    const isL = winner && !isW;
+    const t    = TEAMS[key];
+    const isW  = winner === key;
+    const isL  = winner && !isW;
     const wins = rec ? (key === t1 ? rec.t1Wins : rec.t2Wins) : null;
     return `<div class="team-row ${isW ? 'is-winner' : ''} ${isL ? 'is-elim' : ''}">
       <span class="seed-num">${t.seed ?? ''}</span>
       <span class="team-name">${t.name}</span>
-      ${wins !== null && !winner ? `<span class="series-wins">${wins}</span>` : ''}
+      ${wins !== null ? `<span class="series-wins ${isW ? 'wins-lead' : ''}">${wins}</span>` : ''}
       ${isW ? '<span class="win-mark">✓</span>' : ''}
     </div>`;
   }
 
   const footer = winner && ag
-    ? `<div class="card-footer">${ag} games</div>`
-    : rec && !winner
-      ? `<div class="card-footer">${TEAMS[t1].abbr} ${rec.t1Wins}–${rec.t2Wins} ${TEAMS[t2].abbr}</div>`
-      : '';
+    ? `<div class="card-footer">${TEAMS[winner].abbr} wins in ${ag} games</div>`
+    : '';
 
   return `<div class="matchup-card" data-series="${sid}">
     ${row(t1)}<div class="series-divider"></div>${row(t2)}${footer}
@@ -515,25 +513,34 @@ function cardPicks(sid, t1, t2, pid) {
   const editable = canPickSeries(pid, sid);
   const locked   = isSeriesLocked(sid);
   const dl       = !locked ? formatDeadline(sid) : null;
+  const actual   = state.results[sid] || null;
+  const ag       = getActualGames(sid);
 
   function row(key) {
     const t        = TEAMS[key];
     const isPicked = pick.winner === key;
-    return `<div class="team-row ${isPicked ? 'is-winner' : ''} ${editable ? 'is-clickable' : ''}"
+    const isOk     = isPicked && actual && actual === key;
+    const isBad    = isPicked && actual && actual !== key;
+    const cls      = isPicked ? (isBad ? 'is-wrong-pick' : 'is-winner') : '';
+    const mark     = isPicked ? (isOk ? '✓' : isBad ? '✗' : '') : '';
+    return `<div class="team-row ${cls} ${editable ? 'is-clickable' : ''}"
                  data-ps="${sid}" data-pt="${key}">
       <span class="seed-num">${t.seed ?? ''}</span>
       <span class="team-name">${t.name}</span>
-      ${isPicked ? '<span class="win-mark">✓</span>' : ''}
+      ${mark ? `<span class="win-mark">${mark}</span>` : ''}
     </div>`;
   }
 
   const gamesRow = pick.winner ? `
     <div class="games-selector">
       <span class="games-label">Games:</span>
-      ${[4, 5, 6, 7].map(n => `
-        <button class="games-btn ${pick.games === n ? 'selected' : ''}"
-                data-ps="${sid}" data-pg="${n}"
-                ${!editable ? 'disabled' : ''}>${n}</button>`).join('')}
+      ${[4, 5, 6, 7].map(n => {
+        const sel = pick.games === n;
+        const gcls = sel && ag ? (n === ag ? 'games-correct' : 'games-wrong') : '';
+        return `<button class="games-btn ${sel ? 'selected' : ''} ${gcls}"
+                        data-ps="${sid}" data-pg="${n}"
+                        ${!editable ? 'disabled' : ''}>${n}</button>`;
+      }).join('')}
     </div>` : '';
 
   const footer = locked
@@ -566,7 +573,14 @@ function cardView(sid, t1, t2, pid) {
     </div>`;
   }
 
-  const footer = pick.games ? `<div class="card-footer">${pick.games} games</div>` : '';
+  const ag2    = getActualGames(sid);
+  const gOk    = pick.games && ag2 && pick.games === ag2;
+  const gBad   = pick.games && ag2 && pick.games !== ag2;
+  const footer = pick.games
+    ? `<div class="card-footer ${gOk ? 'footer-correct' : gBad ? 'footer-wrong' : ''}">
+         ${pick.games} games${gOk ? ' ✓' : gBad ? ` ✗ (actual ${ag2})` : ''}
+       </div>`
+    : '';
 
   return `<div class="matchup-card" data-series="${sid}">
     ${row(t1)}<div class="series-divider"></div>${row(t2)}${footer}

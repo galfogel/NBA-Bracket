@@ -314,7 +314,7 @@ main { padding: 24px; }
 }
 
 .half.east { flex-direction: row; }
-.half.west { flex-direction: row-reverse; }
+.half.west { flex-direction: row; }
 
 /* ---- Column ---- */
 .bracket-col {
@@ -891,13 +891,10 @@ main { padding: 24px; }
   color: var(--text-dim);
 }
 
-.footer-locked {
-  color: #888;
-}
-
-.footer-deadline {
-  color: var(--text-dim);
-}
+.footer-locked   { color: #888; }
+.footer-deadline { color: var(--text-dim); }
+.footer-correct  { color: var(--green); font-weight: 600; }
+.footer-wrong    { color: var(--red);   font-weight: 600; }
 
 /* ============================================================
    GAMES SELECTOR  (4 / 5 / 6 / 7 buttons)
@@ -940,6 +937,19 @@ main { padding: 24px; }
   background: color-mix(in srgb, var(--green) 20%, var(--surface2));
   border-color: var(--green);
   color: var(--green);
+}
+
+.games-btn.selected.games-correct {
+  background: color-mix(in srgb, var(--green) 35%, var(--surface2));
+  border-color: var(--green);
+  color: #fff;
+  font-weight: 700;
+}
+
+.games-btn.selected.games-wrong {
+  background: color-mix(in srgb, var(--red) 20%, var(--surface2));
+  border-color: var(--red);
+  color: var(--red);
 }
 
 .games-btn:disabled {
