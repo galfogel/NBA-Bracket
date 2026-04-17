@@ -28,6 +28,84 @@ body {
 }
 
 /* ============================================================
+   LOGIN OVERLAY
+   ============================================================ */
+.login-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(10, 12, 20, 0.92);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  backdrop-filter: blur(4px);
+}
+
+.login-overlay.hidden { display: none; }
+
+.login-box {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 40px 36px;
+  width: 100%;
+  max-width: 380px;
+  text-align: center;
+  box-shadow: 0 24px 64px rgba(0,0,0,0.6);
+}
+
+.login-logo {
+  font-size: 48px;
+  margin-bottom: 12px;
+}
+
+.login-box h2 {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--accent);
+  margin-bottom: 6px;
+}
+
+.login-sub {
+  color: var(--text-dim);
+  font-size: 14px;
+  margin-bottom: 24px;
+}
+
+.login-box input {
+  width: 100%;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 12px 14px;
+  border-radius: var(--radius);
+  font-size: 16px;
+  text-align: center;
+  margin-bottom: 10px;
+  transition: border-color 0.15s;
+}
+
+.login-box input:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.login-msg {
+  font-size: 13px;
+  min-height: 20px;
+  margin-bottom: 6px;
+}
+
+.msg-welcome { color: var(--green); }
+.msg-error   { color: var(--red);   }
+
+.login-btn {
+  width: 100%;
+  padding: 12px;
+  font-size: 15px;
+}
+
+/* ============================================================
    HEADER & NAVIGATION
    ============================================================ */
 header {
@@ -69,6 +147,33 @@ nav {
 
 .tab-btn:hover { background: var(--surface2); color: var(--text); }
 .tab-btn.active { background: var(--accent); color: #fff; }
+
+/* User display in header */
+.user-display {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.user-greeting {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-dim);
+}
+
+.btn-switch-user {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+  padding: 4px 10px;
+  border-radius: var(--radius);
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.btn-switch-user:hover { border-color: var(--accent); color: var(--accent); }
 
 /* ============================================================
    TAB CONTENT
@@ -512,6 +617,37 @@ main { padding: 24px; }
 }
 
 .pick-team-row.no-pointer { cursor: default; }
+
+/* Correct/wrong in All Picks view */
+.pick-team-row.is-correct { border-left: 3px solid var(--green); background: color-mix(in srgb, var(--green) 12%, var(--surface2)); }
+.pick-team-row.is-wrong   { border-left: 3px solid var(--red);   background: color-mix(in srgb, var(--red)   12%, var(--surface2)); opacity: 0.75; }
+
+/* Status: not saved */
+.status-pending { background: color-mix(in srgb, #888 12%, transparent); color: #888; }
+
+/* Series deadline note */
+.series-deadline {
+  font-size: 10px;
+  color: var(--text-dim);
+  text-align: center;
+  padding: 3px 8px 4px;
+  border-top: 1px solid var(--border);
+}
+
+/* Leaderboard: highlight current user */
+.my-row { background: color-mix(in srgb, var(--accent) 6%, transparent); }
+.you-badge {
+  display: inline-block;
+  background: var(--accent);
+  color: #fff;
+  font-size: 9px;
+  font-weight: 700;
+  padding: 1px 5px;
+  border-radius: 4px;
+  vertical-align: middle;
+  margin-left: 4px;
+  text-transform: uppercase;
+}
 
 .pick-check {
   margin-left: auto;
