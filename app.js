@@ -134,8 +134,10 @@ function attemptLogin() {
   const nameInput = document.getElementById('login-name');
   const passInput = document.getElementById('login-pass');
   const msg       = document.getElementById('login-msg');
-  const name      = nameInput.value.trim();
-  const pass      = passInput.value;
+
+  try {
+  const name = nameInput.value.trim();
+  const pass = passInput.value;
 
   if (!name) {
     msg.textContent = 'Please enter your name.';
@@ -170,6 +172,10 @@ function attemptLogin() {
     document.getElementById('login-overlay').classList.add('hidden');
     startApp();
   }, 600);
+  } catch (err) {
+    msg.textContent = 'Error: ' + err.message;
+    msg.className = 'login-msg msg-error';
+  }
 }
 
 function switchUser() {
