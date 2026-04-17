@@ -358,14 +358,23 @@ main { padding: 24px; }
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
   width: calc(var(--card-w) + 32px);
   flex-shrink: 0;
   padding: 0 8px;
-  gap: 12px;
+  gap: 0;
 }
 
-.finals-col .round-label { text-align: center; }
+.finals-col .round-label { text-align: center; margin-bottom: 8px; }
+
+.finals-inner {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  width: 100%;
+}
 
 /* ---- Matchup card ---- */
 .matchup-card {
@@ -1063,10 +1072,71 @@ main { padding: 24px; }
 /* ============================================================
    RESPONSIVE
    ============================================================ */
-@media (max-width: 700px) {
-  :root { --card-w: 130px; }
-  header { gap: 12px; padding: 0 12px; }
-  header h1 { font-size: 15px; }
-  .tab-btn { padding: 6px 10px; font-size: 13px; }
-  main { padding: 12px; }
+
+/* Bracket: touch-friendly horizontal scroll on all devices */
+.bracket {
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+}
+
+@media (max-width: 768px) {
+  :root { --card-w: 110px; }
+
+  /* Header: title + user on row 1, nav wraps to row 2 */
+  header {
+    flex-wrap: wrap;
+    height: auto;
+    padding: 8px 12px;
+    gap: 6px;
+    row-gap: 0;
+  }
+  header h1 { font-size: 14px; flex: 1; }
+  .user-display { margin-left: 0; }
+  nav {
+    order: 3;
+    width: 100%;
+    justify-content: space-around;
+    border-top: 1px solid var(--border);
+    padding-top: 4px;
+    margin-top: 4px;
+    gap: 0;
+  }
+  .tab-btn { flex: 1; text-align: center; padding: 6px 4px; font-size: 12px; }
+
+  main { padding: 10px; }
+
+  /* Bracket: ensure it scrolls edge to edge */
+  .bracket { padding: 16px 0 8px; }
+
+  /* Picks grid: 2 columns minimum */
+  .picks-cards-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); }
+
+  /* Leaderboard: scroll horizontally if needed */
+  .leaderboard-wrap { overflow-x: auto; }
+
+  /* Breakdown: single column */
+  .breakdown-grid { grid-template-columns: 1fr; }
+
+  /* Play-in: stack vertically */
+  .playin-slots { flex-direction: column; }
+}
+
+@media (max-width: 480px) {
+  :root { --card-w: 96px; }
+
+  header h1 { font-size: 13px; }
+  .user-greeting { display: none; }
+  .scores-updated { display: none; }
+
+  /* Picks: 2 fixed columns */
+  .picks-cards-grid { grid-template-columns: 1fr 1fr; gap: 6px; }
+
+  .picks-round-section { padding: 12px 12px 16px; }
+
+  /* Leaderboard table: compact */
+  .leaderboard-table th,
+  .leaderboard-table td { padding: 8px 8px; font-size: 12px; }
+
+  /* Login box: full width with less padding */
+  .login-box { padding: 28px 20px; }
 }
