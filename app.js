@@ -1117,6 +1117,18 @@ function renderInfo() {
       </section>
 
       <section class="info-section">
+        <h2>Prizes</h2>
+        <table class="info-table">
+          <thead><tr><th>Place</th><th>Prize</th></tr></thead>
+          <tbody>
+            <tr><td>🥇 1st place</td><td>60% of the pot</td></tr>
+            <tr><td>🥈 2nd place</td><td>30% of the pot</td></tr>
+            <tr><td>🥉 3rd place</td><td>10% of the pot</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="info-section">
         <h2>Pick Deadlines — First Round</h2>
         <p class="info-detail">Picks lock <strong>3 hours</strong> before the first game of each series. Later rounds lock when the matchup is confirmed.</p>
         <table class="info-table">
