@@ -566,7 +566,7 @@ function bracketCol(ids, round, side, mode, pid) {
     <div class="bracket-col r${round} ${side}">
       <div class="round-label">${label}</div>
       <div class="col-series">
-        ${ids.map(id => bracketCard(id, mode, pid)).join('')}
+        ${ids.map(id => `<div class="series-slot">${bracketCard(id, mode, pid)}</div>`).join('')}
       </div>
     </div>`;
 }

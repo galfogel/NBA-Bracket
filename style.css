@@ -190,7 +190,7 @@ main { padding: 24px; }
    BRACKET LAYOUT
    ============================================================ */
 /* ============================================================
-   PLAY-IN BANNER
+   PLAY-IN BANNER (keep this comment block as separator)
    ============================================================ */
 .playin-banner {
   background: color-mix(in srgb, #f97316 8%, var(--surface));
@@ -345,17 +345,16 @@ main { padding: 24px; }
 .col-series {
   display: flex;
   flex-direction: column;
-  justify-content: space-around;
   flex: 1;
-  gap: 8px;
 }
 
-/* R1 needs evenly-spaced series */
-.r1 .col-series { justify-content: space-evenly; }
-/* R2 centers its 2 series across the full height */
-.r2 .col-series { justify-content: space-around; padding: 12% 0; }
-/* R3 centers its 1 series */
-.r3 .col-series { justify-content: center; }
+/* Each series sits in an equal-height slot → R2 cards align with midpoint of R1 pairs */
+.series-slot {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  padding: 4px 0;
+}
 
 /* ---- Finals column ---- */
 /* Grid with 1fr spacers above and below the card guarantees exact vertical center */
