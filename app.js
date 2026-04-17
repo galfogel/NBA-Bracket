@@ -146,6 +146,9 @@ function isSeriesAvailable(sid) {
 // Can this participant currently edit picks for this round?
 function canEditRound(pid, round) {
   if (isPastDeadline(round)) return false;
+  // Round is not available until at least one series has both teams confirmed
+  const available = SERIES.filter(s => s.r === round && isSeriesAvailable(s.id));
+  if (available.length === 0) return false;
   if (!state.picksSubmitted[pid]?.[round]) return true;
   return editingState.pid === pid && editingState.round === round;
 }
@@ -514,17 +517,28 @@ function renderPicksTab() {
 }
 
 function renderPicksRound(pid, round) {
-  const seriesInRound  = SERIES.filter(s => s.r === round);
-  const available      = seriesInRound.filter(s => isSeriesAvailable(s.id));
-  const unavailable    = seriesInRound.filter(s => !isSeriesAvailable(s.id));
-  const picks          = state.picks[pid] || {};
-  const submitted      = !!state.picksSubmitted[pid]?.[round];
-  const pastDeadline   = isPastDeadline(round);
-  const editable       = canEditRound(pid, round);
-  const isEditing      = editingState.pid === pid && editingState.round === round;
-  const dl             = formatDeadline(round);
-  const picksMade      = available.filter(s => picks[s.id]).length;
-  const hasAny         = available.length > 0;
+  const seriesInRound = SERIES.filter(s => s.r === round);
+  const available     = seriesInRound.filter(s => isSeriesAvailable(s.id));
+  const unavailable   = seriesInRound.filter(s => !isSeriesAvailable(s.id));
+  const picks         = state.picks[pid] || {};
+  const submitted     = !!state.picksSubmitted[pid]?.[round];
+  const pastDeadline  = isPastDeadline(round);
+  const hasAny        = available.length > 0;
+  const editable      = canEditRound(pid, round); // false if hasAny=false, past deadline, or submitted+not editing
+  const isEditing     = editingState.pid === pid && editingState.round === round;
+  const dl            = formatDeadline(round);
+  const picksMade     = available.filter(s => picks[s.id]).length;
+
+  // Rounds with no available series are completely locked out
+  if (!hasAny && !pastDeadline) {
+    return `
+      <div class="picks-round-section picks-round-future">
+        <div class="picks-round-header">
+          <h3>${ROUND_NAMES[round]}</h3>
+          <span class="round-status status-waiting">Available once ${round === 2 ? 'Round 1' : round === 3 ? 'Semifinals' : 'Conf. Finals'} matchups are set</span>
+        </div>
+      </div>`;
+  }
 
   // Status badge + action button
   let statusHtml;
@@ -534,14 +548,12 @@ function renderPicksRound(pid, round) {
     statusHtml = `
       <span class="round-status status-submitted">✓ Submitted</span>
       <button class="edit-round-btn btn-outline-sm" data-round="${round}">Edit</button>`;
-  } else if (!hasAny) {
-    statusHtml = `<span class="round-status status-waiting">Waiting for previous round results</span>`;
   } else {
-    const lockNote = dl ? `Locks ${dl}` : 'No deadline set yet';
-    statusHtml = `<span class="round-status status-open">Open · ${lockNote}</span>`;
+    const lockNote = dl ? `Locks ${dl}` : '';
+    statusHtml = `<span class="round-status status-open">Open${lockNote ? ` · ${lockNote}` : ''}</span>`;
   }
 
-  // Series cards
+  // Series cards — only for available series
   const cards = available.map(def => {
     const [t1, t2] = resolveTeams(def.id, state.results);
     const pick = picks[def.id];
@@ -566,22 +578,22 @@ function renderPicksRound(pid, round) {
     </div>`;
   }).join('');
 
+  // TBD cards for series in this round whose teams aren't known yet
   const tbdCards = unavailable.map(() => `
     <div class="pick-card pick-card-tbd">
       <div class="pick-team-row tbd-row"><span class="team-name">TBD</span></div>
       <div class="series-divider"></div>
       <div class="pick-team-row tbd-row"><span class="team-name">TBD</span></div>
-    </div>
-  `).join('');
+    </div>`).join('');
 
-  const saveBtn = editable && hasAny
+  const saveBtn = editable
     ? `<button class="save-round-btn btn-primary" data-round="${round}">
-         Save ${ROUND_NAMES[round]} Picks (${picksMade}/${available.length})
+         Save ${ROUND_NAMES[round]} Picks (${picksMade} / ${available.length})
        </button>`
     : '';
 
   return `
-    <div class="picks-round-section ${!hasAny && !pastDeadline ? 'picks-round-inactive' : ''}">
+    <div class="picks-round-section">
       <div class="picks-round-header">
         <h3>${ROUND_NAMES[round]}</h3>
         <div class="round-status-area">${statusHtml}</div>
