@@ -426,8 +426,10 @@ function renderBracketLayout(mode, pid) {
         </div>
         <div class="finals-col">
           <div class="round-label">NBA Finals</div>
-          ${bracketCard('FINALS', mode, pid)}
-          <div class="champion-slot">${renderChampion(mode, pid)}</div>
+          <div class="finals-card-wrap">
+            ${bracketCard('FINALS', mode, pid)}
+            <div class="champion-slot">${renderChampion(mode, pid)}</div>
+          </div>
         </div>
         <div class="half west">
           ${bracketCol(['WCF'],                        3, 'west', mode, pid)}

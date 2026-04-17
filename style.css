@@ -362,10 +362,20 @@ main { padding: 24px; }
   width: calc(var(--card-w) + 32px);
   flex-shrink: 0;
   padding: 0 8px;
-  gap: 12px;
 }
 
-.finals-col .round-label { text-align: center; }
+.finals-col .round-label { text-align: center; margin-bottom: 8px; }
+
+.finals-card-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+  justify-content: center;
+}
+
+.finals-col .champion-slot { text-align: center; }
 
 /* ---- Matchup card ---- */
 .matchup-card {
