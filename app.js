@@ -708,11 +708,13 @@ function bracketCard(sid, mode, pid) {
     const gt = getGameTime(sid);
     const lockTs = gt ? new Date(gt).getTime() - 3 * 3600 * 1000 : null;
     const locked = lockTs && Date.now() >= lockTs;
-    const footer = locked
-      ? `<div class="card-footer footer-locked">🔒 Locked</div>`
-      : lockTs
-        ? `<div class="card-footer footer-countdown" data-lock-ts="${lockTs}">${formatCountdown(lockTs)}</div>`
-        : '';
+    const footer = mode === 'picks'
+      ? (locked
+          ? `<div class="card-footer footer-locked">🔒 Locked</div>`
+          : lockTs
+            ? `<div class="card-footer footer-countdown" data-lock-ts="${lockTs}">${formatCountdown(lockTs)}</div>`
+            : '')
+      : '';
     return `<div class="matchup-card card-tbd">
       ${teamRow(t1)}<div class="series-divider"></div>${teamRow(t2)}${footer}
     </div>`;
@@ -1312,6 +1314,7 @@ let activeTab = 'bracket';
 
 function switchTab(tab) {
   activeTab = tab;
+  sessionStorage.setItem('nba-active-tab', tab);
   document.querySelectorAll('.tab-btn').forEach(b =>
     b.classList.toggle('active', b.dataset.tab === tab));
   document.querySelectorAll('.tab-content').forEach(el =>
@@ -1353,6 +1356,9 @@ async function beginApp() {
   await fetchPicks();
   loginBtn.disabled = false;
   loginMsg.textContent = '';
+
+  const savedTab = sessionStorage.getItem('nba-active-tab');
+  if (savedTab && RENDERERS[savedTab]) activeTab = savedTab;
 
   initLogin();
   fetchScores();
