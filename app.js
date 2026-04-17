@@ -519,15 +519,6 @@ function renderBracketLayout(mode, pid) {
           ${bracketCol(['W1v8','W4v5','W2v7','W3v6'], 1, 'west', mode, pid)}
         </div>
       </div>
-      <div class="round-labels-row">
-        <div class="round-labels east-rounds">
-          <span>First Round</span><span>Semifinals</span><span>Conf. Finals</span>
-        </div>
-        <div class="round-labels-spacer"></div>
-        <div class="round-labels west-rounds">
-          <span>Conf. Finals</span><span>Semifinals</span><span>First Round</span>
-        </div>
-      </div>
     </div>`;
 }
 
