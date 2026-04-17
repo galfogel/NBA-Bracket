@@ -89,14 +89,15 @@ function getUpsetBonus(sid, pickedKey, roundPts) {
 
 // Default first-game UTC timestamps per series (deadline = -3 hours)
 const DEFAULT_GAME_TIMES = {
-  E1v8: '2026-04-19T17:30:00Z',
-  E4v5: '2026-04-20T17:00:00Z',
-  E2v7: '2026-04-20T19:30:00Z',
-  E3v6: '2026-04-19T20:00:00Z',
-  W1v8: '2026-04-19T22:00:00Z',
-  W4v5: '2026-04-20T22:30:00Z',
-  W2v7: '2026-04-20T00:30:00Z',
-  W3v6: '2026-04-19T23:30:00Z',
+  // EDT = UTC-4. Sources: NBA.com / CBS Sports official first-round schedule.
+  E4v5: '2026-04-18T17:00:00Z',  // CLE vs TOR  – Apr 18, 1:00 PM ET
+  W3v6: '2026-04-18T19:30:00Z',  // DEN vs MIN  – Apr 18, 3:30 PM ET
+  E3v6: '2026-04-18T22:00:00Z',  // NYK vs ATL  – Apr 18, 6:00 PM ET
+  W4v5: '2026-04-19T00:30:00Z',  // LAL vs HOU  – Apr 18, 8:30 PM ET
+  E2v7: '2026-04-19T17:00:00Z',  // BOS vs PHI  – Apr 19, 1:00 PM ET
+  W1v8: '2026-04-19T19:30:00Z',  // OKC vs W8   – Apr 19, 3:30 PM ET
+  E1v8: '2026-04-19T22:30:00Z',  // DET vs E8   – Apr 19, 6:30 PM ET
+  W2v7: '2026-04-20T01:00:00Z',  // SAS vs POR  – Apr 19, 9:00 PM ET
 };
 
 // ============================================================
@@ -430,7 +431,7 @@ function formatDeadline(sid) {
   return dl.toLocaleString('en-US', {
     month: 'short', day: 'numeric',
     hour: 'numeric', minute: '2-digit',
-    timeZone: 'America/New_York', timeZoneName: 'short',
+    timeZone: 'Asia/Jerusalem', timeZoneName: 'short',
   });
 }
 
@@ -1212,7 +1213,7 @@ function renderInfo() {
     let deadlineStr = '—';
     if (gameTs) {
       const d = new Date(new Date(gameTs).getTime() - 3 * 60 * 60 * 1000);
-      deadlineStr = d.toLocaleString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit', timeZoneName: 'short' });
+      deadlineStr = d.toLocaleString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit', timeZone: 'Asia/Jerusalem', timeZoneName: 'short' });
     }
     return `<tr><td class="info-matchup-cell">${matchup}</td><td>${deadlineStr}</td></tr>`;
   }).join('');
