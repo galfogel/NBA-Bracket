@@ -228,6 +228,37 @@ function setPick(pid, sid, winner, games) {
 }
 
 // ============================================================
+// PLATFORM GATE
+// ============================================================
+const PLATFORM_PASSWORD    = 'nba2026';
+const PLATFORM_SESSION_KEY = 'nba-gate-2026';
+
+function initGate() {
+  if (sessionStorage.getItem(PLATFORM_SESSION_KEY) === '1') {
+    document.getElementById('gate-overlay').classList.add('hidden');
+    return true;
+  }
+  document.getElementById('gate-overlay').classList.remove('hidden');
+  setTimeout(() => document.getElementById('gate-pass').focus(), 60);
+  return false;
+}
+
+function attemptGate() {
+  const input = document.getElementById('gate-pass');
+  const msg   = document.getElementById('gate-msg');
+  if (input.value === PLATFORM_PASSWORD) {
+    sessionStorage.setItem(PLATFORM_SESSION_KEY, '1');
+    document.getElementById('gate-overlay').classList.add('hidden');
+    beginApp();
+  } else {
+    msg.textContent = 'Incorrect access code.';
+    msg.className = 'login-msg msg-error';
+    input.value = '';
+    input.focus();
+  }
+}
+
+// ============================================================
 // LOGIN
 // ============================================================
 let currentUserId = null;
@@ -1023,21 +1054,16 @@ function switchTab(tab) {
 // INIT
 // ============================================================
 
-document.addEventListener('DOMContentLoaded', async () => {
-  // Tab navigation
+async function beginApp() {
   document.querySelectorAll('.tab-btn').forEach(btn =>
     btn.addEventListener('click', () => switchTab(btn.dataset.tab)));
 
-  // Login
   document.getElementById('login-btn').addEventListener('click', attemptLogin);
   ['login-name', 'login-pass'].forEach(id =>
     document.getElementById(id).addEventListener('keydown', e => { if (e.key === 'Enter') attemptLogin(); }));
 
-  // Picks interactions (event delegation on the bracket tab)
   document.getElementById('tab-bracket').addEventListener('click', handlePicksClick);
 
-  // Load shared picks from repo before showing login so that returning
-  // users on a new device are recognised by name.
   const loginBtn = document.getElementById('login-btn');
   const loginMsg = document.getElementById('login-msg');
   loginBtn.disabled = true;
@@ -1049,4 +1075,11 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   initLogin();
   fetchScores();
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('gate-btn').addEventListener('click', attemptGate);
+  document.getElementById('gate-pass').addEventListener('keydown', e => { if (e.key === 'Enter') attemptGate(); });
+
+  if (initGate()) beginApp();
 });
