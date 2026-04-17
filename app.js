@@ -887,8 +887,10 @@ function renderRoundControls(pid) {
       const missing = [];
       if (picked < avail.length) missing.push(`${avail.length - picked} winner${avail.length - picked > 1 ? 's' : ''}`);
       if (games  < avail.length) missing.push(`${avail.length - games}  game count${avail.length - games > 1 ? 's' : ''}`);
+      if (r === 4 && state.finalsGap[pid] == null) missing.push('Game 1 gap');
+      const canSave = allDone && !(r === 4 && state.finalsGap[pid] == null);
       badge  = `<span class="rc-badge rc-open">Open</span>`;
-      action = allDone
+      action = canSave
         ? `<button class="save-round-btn btn-primary" data-round="${r}">Save ${ROUND_NAMES[r]}</button>`
         : `<button class="save-round-btn btn-primary btn-disabled" disabled data-round="${r}" title="Still missing: ${missing.join(', ')}">
              Missing: ${missing.join(' · ')}
@@ -949,7 +951,7 @@ function handlePicksClick(e) {
       const warn = saveBtn.closest('.round-col, .blist-round')?.querySelector('.gap-warn');
       if (warn) { warn.textContent = '⚠ Add a Game 1 gap for the tiebreaker!'; warn.style.display = 'block'; }
       setTimeout(() => { if (warn) warn.style.display = 'none'; }, 4000);
-      // Don't block — allow saving without gap
+      return; // block submission until gap is filled
     }
     if (!state.picksSubmitted[currentUserId]) state.picksSubmitted[currentUserId] = {};
     state.picksSubmitted[currentUserId][r] = true;
