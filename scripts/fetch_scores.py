@@ -82,6 +82,47 @@ def compute_records(games):
     return {k: dict(v) for k, v in records.items()}
 
 
+def detect_finals_game1_gap(games):
+    """
+    Find Game 1 of the NBA Finals and return the score gap (winning margin).
+    The Finals is identified as the series with the latest first-game date
+    (it starts weeks after all conference finals end).
+    Returns an integer gap or None if Finals haven't started yet.
+    """
+    # Build {game_id: {abbr: pts}} and {game_id: game_date}
+    by_game_pts  = defaultdict(dict)
+    by_game_date = {}
+    for g in games:
+        gid = g["GAME_ID"]
+        by_game_pts[gid][g["TEAM_ABBREVIATION"]] = g.get("PTS") or 0
+        by_game_date[gid] = g.get("GAME_DATE", "")
+
+    # Group game_ids by series key (sorted abbr pair)
+    by_series = defaultdict(list)
+    for gid, teams in by_game_pts.items():
+        if len(teams) != 2:
+            continue
+        key = "-".join(sorted(teams.keys()))
+        by_series[key].append(gid)
+
+    if not by_series:
+        return None
+
+    # Finals = series whose earliest game has the latest date across all series
+    def series_start(gids):
+        return min(by_game_date.get(g, "") for g in gids)
+
+    finals_key = max(by_series, key=lambda k: series_start(by_series[k]))
+
+    # Game 1 = earliest game in that series
+    game1_id = min(by_series[finals_key], key=lambda g: by_game_date.get(g, ""))
+    pts = by_game_pts[game1_id]
+    if len(pts) == 2:
+        vals = list(pts.values())
+        return abs(vals[0] - vals[1])
+    return None
+
+
 PLAYIN_CANDIDATES = {
     "E8": ["ORL", "CHA"],
     "W8": ["GSW", "PHX"],
@@ -119,28 +160,32 @@ def main():
         except Exception:
             pass
 
-    records = {}
-    playin  = {"E8": None, "W8": None}
-    error   = None
+    records          = {}
+    playin           = {"E8": None, "W8": None}
+    finals_game1_gap = None
+    error            = None
 
     try:
         games   = fetch_playoff_games()
         records = compute_records(games)
         playin  = detect_playin_seeds(records)
+        finals_game1_gap = detect_finals_game1_gap(games)
         print(f"Fetched {len(games)} game rows → {len(records)} series")
         for k, v in sorted(records.items()):
             print(f"  {k}: {v}")
         print(f"Play-in seeds: {playin}")
+        print(f"Finals Game 1 gap: {finals_game1_gap}")
     except Exception as exc:
         error = str(exc)
         print(f"Error: {exc}", file=sys.stderr)
 
     output = {
-        "updated": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
-        "records": records,
-        "playIn":  playin,
-        "gameTimes": existing_game_times,
-        "error": error,
+        "updated":         datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "records":         records,
+        "playIn":          playin,
+        "gameTimes":       existing_game_times,
+        "finalsGame1Gap":  finals_game1_gap,
+        "error":           error,
     }
 
     with open(out_path, "w") as f:

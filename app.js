@@ -486,6 +486,11 @@ async function fetchScores() {
     const resp = await fetch('data/scores.json?_=' + Date.now());
     if (!resp.ok) return;
     scoresData = await resp.json();
+    // Auto-populate Finals Game 1 gap from scores pipeline
+    if (scoresData.finalsGame1Gap != null) {
+      state.finalsGame1ActualGap = scoresData.finalsGame1Gap;
+      save();
+    }
     syncResultsFromAPI();
     if (RENDERERS[activeTab]) RENDERERS[activeTab]();
   } catch (_) {}
@@ -995,16 +1000,12 @@ function renderPicksTab() {
 
 function renderResults() {
   const el = document.getElementById('tab-participants');
-  const isAdmin = state.participants.find(p => p.id === currentUserId)?.name.toLowerCase() === 'fogel';
-
-  const actualGapCtrl = isAdmin && isSeriesAvailable('FINALS') ? `
-    <div class="game1-gap-ctrl">
-      <label class="gap-label">Finals Game 1 actual gap:</label>
-      <input type="number" id="actual-gap-input" class="gap-input" min="1" max="50"
-             value="${state.finalsGame1ActualGap ?? ''}" placeholder="pts" />
-      <button class="btn-sm btn-primary" id="actual-gap-btn">Set</button>
-      <span id="actual-gap-msg" class="gap-set-msg"></span>
-    </div>` : '';
+  const gapDisplay = state.finalsGame1ActualGap != null
+    ? `<div class="game1-gap-ctrl">
+        <span class="gap-label">Finals Game 1 actual gap:</span>
+        <strong>${state.finalsGame1ActualGap} pts</strong>
+       </div>`
+    : '';
 
   el.innerHTML = `
     <div class="bracket-instructions">
@@ -1013,22 +1014,8 @@ function renderResults() {
         ? `<span class="scores-updated">Last sync: ${scoresData.updated.replace('T', ' ').replace('Z', ' UTC')}</span>`
         : ''}
     </div>
-    ${actualGapCtrl}
+    ${gapDisplay}
     ${renderBracketLayout('results', null)}`;
-
-  if (isAdmin) {
-    document.getElementById('actual-gap-btn').addEventListener('click', () => {
-      const val = parseInt(document.getElementById('actual-gap-input').value);
-      if (isNaN(val) || val < 1) return;
-      state.finalsGame1ActualGap = val;
-      save();
-      syncPicksToGitHub();
-      renderLeaderboard();
-      const msg = document.getElementById('actual-gap-msg');
-      msg.textContent = '✓ Saved';
-      setTimeout(() => { msg.textContent = ''; }, 3000);
-    });
-  }
 }
 
 // ============================================================
