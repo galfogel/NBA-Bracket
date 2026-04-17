@@ -865,25 +865,37 @@ function cardView(sid, t1, t2, pid) {
     const isPicked = pick.winner === key;
     const isOk     = isPicked && actual && actual === key;
     const isBad    = isPicked && actual && actual !== key;
-    const cls      = isPicked ? (isOk ? 'is-winner' : isBad ? 'is-wrong-pick' : 'is-winner') : '';
+    const cls      = isPicked ? (isBad ? 'is-wrong-pick' : 'is-winner') : '';
+    const mark     = isOk ? '✓' : isBad ? '✗' : '';
     const pct = getWinPct(sid, key);
     return `<div class="team-row no-pointer ${cls}">
       <span class="seed-num">${t.seed ?? ''}</span>
       <img class="team-logo" src="${t.logo}" alt="${t.abbr}" />
       <span class="team-name">${t.name}</span>
       ${pct !== null ? `<span class="fan-pct">${pct}%</span>` : ''}
-      ${isPicked ? `<span class="win-mark">${isOk ? '✓' : isBad ? '✗' : '·'}</span>` : ''}
+      ${mark ? `<span class="win-mark">${mark}</span>` : ''}
     </div>`;
   }
 
   const ag2    = getActualGames(sid);
   const gOk    = pick.games && ag2 && pick.games === ag2;
   const gBad   = pick.games && ag2 && pick.games !== ag2;
+  const seriesDef = SERIES_MAP[sid];
+  const ptsEarned = actual && pick.winner && actual === pick.winner
+    ? (() => {
+        let p = ROUND_POINTS[seriesDef?.r ?? 1];
+        if (gOk) p += GAMES_BONUS;
+        p += getUpsetBonus(sid, pick.winner, ROUND_POINTS[seriesDef?.r ?? 1]);
+        return p;
+      })()
+    : 0;
   const footer = pick.games
     ? `<div class="card-footer ${gOk ? 'footer-correct' : gBad ? 'footer-wrong' : ''}">
-         ${pick.games} games${gOk ? ' ✓' : gBad ? ` ✗ (actual ${ag2})` : ''}
+         ${pick.games} games${gOk ? ' ✓' : gBad ? ` ✗ (actual ${ag2})` : ''}${ptsEarned ? ` · <span class="pts-badge">${ptsEarned} pts</span>` : ''}
        </div>`
-    : '';
+    : ptsEarned
+      ? `<div class="card-footer footer-correct"><span class="pts-badge">${ptsEarned} pts</span></div>`
+      : '';
 
   const gapRow = sid === 'FINALS' && state.finalsGap[pid] != null
     ? `<div class="gap-input-row gap-readonly"><span class="gap-label">Game 1 gap:</span> <strong>${state.finalsGap[pid]} pts</strong></div>`
@@ -1178,15 +1190,24 @@ function renderPickBreakdown(rows) {
           const ok  = actual && pick.winner && actual === pick.winner;
           const bad = actual && pick.winner && actual !== pick.winner;
           const gok = ok && ag && pick.games && ag === pick.games;
-          const mark = ok ? '<span class="bd-pick-mark ok">✓</span>' : bad ? '<span class="bd-pick-mark bad">✗</span>' : '';
+          const gbad = actual && ag && pick.games && ag !== pick.games;
           const isMe = p.id === currentUserId;
+          const teamCls = ok ? 'bd-team-ok' : bad ? 'bd-team-bad' : '';
+          const gamesCls = gok ? 'bd-games-ok' : gbad ? 'bd-games-bad' : '';
+          let ptsEarned = 0;
+          if (ok) {
+            ptsEarned = ROUND_POINTS[def.r];
+            if (gok) ptsEarned += GAMES_BONUS;
+            ptsEarned += getUpsetBonus(def.id, pick.winner, ROUND_POINTS[def.r]);
+          }
           return `<div class="bd-pick-row${isMe ? ' my-row' : ''}">
             <span class="bd-pick-name">${p.name.split(' ')[0]}</span>
-            <span class="bd-pick-team">
+            <span class="bd-pick-team ${teamCls}">
               ${pt ? `<img src="${pt.logo}" alt="${pt.abbr}" /><span class="bd-pick-abbr" style="color:${pt.color}">${pt.abbr}</span>` : '<span class="bd-pick-abbr">?</span>'}
-              ${pick.games ? `<span class="bd-pick-games">in ${pick.games}${gok ? '✓' : ''}</span>` : ''}
+              ${ok ? '<span class="bd-pick-mark ok">✓</span>' : bad ? '<span class="bd-pick-mark bad">✗</span>' : ''}
+              ${pick.games ? `<span class="bd-pick-games ${gamesCls}">in ${pick.games}${gok ? ' ✓' : gbad ? ` ✗(${ag})` : ''}</span>` : ''}
             </span>
-            ${mark}
+            ${ptsEarned ? `<span class="bd-pts-earned">${ptsEarned} pts</span>` : ''}
           </div>`;
         }).join('');
       } else {

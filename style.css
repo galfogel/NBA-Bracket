@@ -933,9 +933,15 @@ main { padding: 24px; }
 .bd-pick-team img { width: 16px; height: 16px; object-fit: contain; }
 .bd-pick-abbr { font-weight: 600; font-size: 12px; }
 .bd-pick-games { font-size: 11px; color: var(--text-dim); margin-left: 2px; }
-.bd-pick-mark { font-size: 11px; margin-left: auto; }
+.bd-pick-games.bd-games-ok  { color: #22c55e; font-weight: 600; }
+.bd-pick-games.bd-games-bad { color: #ef4444; }
+.bd-pick-mark { font-size: 11px; }
 .bd-pick-mark.ok  { color: #22c55e; }
 .bd-pick-mark.bad { color: #ef4444; }
+.bd-pick-team.bd-team-ok  { background: color-mix(in srgb, #22c55e 12%, transparent); border-radius: 4px; padding: 1px 4px; }
+.bd-pick-team.bd-team-bad { background: color-mix(in srgb, #ef4444 10%, transparent); border-radius: 4px; padding: 1px 4px; opacity: 0.85; }
+.bd-pts-earned { margin-left: auto; font-size: 11px; font-weight: 700; color: #22c55e; white-space: nowrap; }
+.pts-badge { font-weight: 700; color: #22c55e; }
 .bd-hidden { padding: 8px 10px; font-size: 11px; color: var(--text-dim); font-style: italic; }
 .bd-gap-row {
   display: flex;
