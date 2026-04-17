@@ -101,6 +101,12 @@ const FIRESTORE_PROJECT = 'nba-bracket-f91f1';
 firebase.initializeApp({ apiKey: FIRESTORE_API_KEY, projectId: FIRESTORE_PROJECT });
 const db = firebase.firestore();
 
+async function hashPassword(pass) {
+  if (!pass) return null;
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(pass));
+  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
 // ── Read picks from Firestore ──────────────────────────────────
 async function fetchPicks() {
   try {
@@ -112,8 +118,7 @@ async function fetchPicks() {
 }
 
 // Merge remote participants + picks into local state.
-// Remote is the source of truth for submitted picks.
-// Passwords never leave localStorage.
+// Remote is the source of truth for submitted picks and password hashes.
 function mergeRemoteState(remote) {
   const rParticipants  = remote.participants   || [];
   const rPicks         = remote.picks          || {};
@@ -125,8 +130,9 @@ function mergeRemoteState(remote) {
            p.name.toLowerCase() === rp.name.toLowerCase()
     );
     if (!local) {
-      state.participants.push({ id: rp.id, name: rp.name, password: null });
+      state.participants.push({ id: rp.id, name: rp.name, passwordHash: rp.passwordHash || null });
     } else {
+      if (rp.passwordHash) local.passwordHash = rp.passwordHash;
       // Normalise to the canonical remote ID so all devices agree
       if (local.id !== rp.id) {
         state.picks[rp.id]         = state.picks[local.id] || {};
@@ -152,7 +158,7 @@ async function syncPicksToGitHub() {
       if (snap.exists) { mergeRemoteState(snap.data()); save(); }
       tx.set(ref, {
         updated:        new Date().toISOString(),
-        participants:   state.participants.map(({ id, name }) => ({ id, name })),
+        participants:   state.participants.map(({ id, name, passwordHash }) => ({ id, name, passwordHash: passwordHash || null })),
         picks:          state.picks,
         picksSubmitted: state.picksSubmitted,
       });
@@ -195,7 +201,7 @@ function showLoginOverlay() {
   setTimeout(() => document.getElementById('login-name').focus(), 60);
 }
 
-function attemptLogin() {
+async function attemptLogin() {
   const nameInput = document.getElementById('login-name');
   const passInput = document.getElementById('login-pass');
   const msg       = document.getElementById('login-msg');
@@ -210,10 +216,11 @@ function attemptLogin() {
     return;
   }
 
+  const hash     = await hashPassword(pass);
   const existing = state.participants.find(p => p.name.toLowerCase() === name.toLowerCase());
 
   if (existing) {
-    if (existing.password && existing.password !== pass) {
+    if (existing.passwordHash && existing.passwordHash !== hash) {
       msg.textContent = 'Incorrect password.';
       msg.className = 'login-msg msg-error';
       passInput.focus();
@@ -224,7 +231,7 @@ function attemptLogin() {
     currentUserId = existing.id;
   } else {
     const id = 'p_' + Date.now();
-    state.participants.push({ id, name, password: pass || null });
+    state.participants.push({ id, name, passwordHash: hash });
     state.picks[id] = {};
     save();
     syncPicksToGitHub(); // register new user in shared DB immediately
