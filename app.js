@@ -580,13 +580,24 @@ function renderChampion(mode, pid) {
 
 function bracketCard(sid, mode, pid) {
   const [t1, t2] = resolveTeams(sid);
+
+  // At least one team known — show partial card (non-interactive)
   if (!t1 || !t2) {
+    function teamRow(key) {
+      if (!key) return `<div class="team-row tbd-row"><span class="team-name">TBD</span></div>`;
+      const t = TEAMS[key];
+      return `<div class="team-row tbd-row">
+        <span class="seed-num">${t.seed ?? ''}</span>
+        <span class="team-name">${t.name}</span>
+      </div>`;
+    }
+    const dl = formatDeadline(sid);
+    const footer = dl ? `<div class="card-footer footer-deadline">Locks ${dl}</div>` : '';
     return `<div class="matchup-card card-tbd">
-      <div class="team-row tbd-row"><span class="team-name">TBD</span></div>
-      <div class="series-divider"></div>
-      <div class="team-row tbd-row"><span class="team-name">TBD</span></div>
+      ${teamRow(t1)}<div class="series-divider"></div>${teamRow(t2)}${footer}
     </div>`;
   }
+
   if (mode === 'results') return cardResults(sid, t1, t2);
   if (mode === 'picks')   return cardPicks(sid, t1, t2, pid);
   return cardView(sid, t1, t2, pid);
