@@ -95,40 +95,102 @@ function save() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
 }
 
-// ── GitHub picks sync ──────────────────────────────────────────
-// Set GITHUB_TOKEN to a PAT with contents:write on this repo.
-// Leave blank to skip — all picks still stored in localStorage.
+// ── Shared picks database (data/picks.json in repo) ───────────
+// Set GITHUB_TOKEN to a fine-grained PAT with contents:write on
+// this repo so saved picks are pushed to the shared database.
+// All users can READ picks.json without a token (public repo).
+// Leave blank → app works locally only; other users won't appear.
 const GITHUB_REPO  = 'galfogel/NBA-Bracket';
 const GITHUB_TOKEN = '';   // ← add your token here
 
+// ── Read picks from repo ───────────────────────────────────────
+async function fetchPicks() {
+  try {
+    const resp = await fetch('data/picks.json?_=' + Date.now());
+    if (!resp.ok) return;
+    const remote = await resp.json();
+    mergeRemoteState(remote);
+    save();
+  } catch (_) {}
+}
+
+// Merge remote participants + picks into local state.
+// Remote is the source of truth for submitted picks.
+// Passwords never leave localStorage.
+function mergeRemoteState(remote) {
+  const rParticipants  = remote.participants   || [];
+  const rPicks         = remote.picks          || {};
+  const rSubmitted     = remote.picksSubmitted || {};
+
+  for (const rp of rParticipants) {
+    const local = state.participants.find(
+      p => p.id === rp.id ||
+           p.name.toLowerCase() === rp.name.toLowerCase()
+    );
+    if (!local) {
+      state.participants.push({ id: rp.id, name: rp.name, password: null });
+    } else {
+      // Normalise to the canonical remote ID so all devices agree
+      if (local.id !== rp.id) {
+        state.picks[rp.id]         = state.picks[local.id] || {};
+        state.picksSubmitted[rp.id] = state.picksSubmitted[local.id] || {};
+        delete state.picks[local.id];
+        delete state.picksSubmitted[local.id];
+        if (currentUserId === local.id) currentUserId = rp.id;
+        local.id = rp.id;
+      }
+    }
+    // Remote submitted picks always win (they are the committed source)
+    if (rPicks[rp.id])     state.picks[rp.id]          = rPicks[rp.id];
+    if (rSubmitted[rp.id]) state.picksSubmitted[rp.id] = rSubmitted[rp.id];
+  }
+}
+
+// ── Write picks to repo ────────────────────────────────────────
 async function syncPicksToGitHub() {
   if (!GITHUB_TOKEN) return;
-  const data = {
-    updated: new Date().toISOString(),
-    participants: state.participants.map(({ id, name }) => ({ id, name })),
-    picks: state.picks,
-  };
   const apiUrl = `https://api.github.com/repos/${GITHUB_REPO}/contents/data/picks.json`;
+  const headers = {
+    Authorization: `token ${GITHUB_TOKEN}`,
+    'Content-Type': 'application/json',
+  };
   try {
-    const headers = {
-      Authorization: `token ${GITHUB_TOKEN}`,
-      'Content-Type': 'application/json',
-    };
+    // Get current SHA (required for update; also merges any concurrent saves)
     const getResp = await fetch(apiUrl, { headers });
-    const existing = getResp.ok ? await getResp.json() : null;
-    const sha      = existing?.sha;
-    const bytes    = new TextEncoder().encode(JSON.stringify(data, null, 2));
-    const content  = btoa(Array.from(bytes, b => String.fromCharCode(b)).join(''));
-    await fetch(apiUrl, {
+    let sha = null;
+    if (getResp.ok) {
+      const existing = await getResp.json();
+      sha = existing.sha;
+      // Merge any concurrent changes from other users
+      try {
+        const current = JSON.parse(atob(existing.content.replace(/\n/g, '')));
+        mergeRemoteState(current);
+        save();
+      } catch (_) {}
+    }
+
+    const payload = {
+      updated:         new Date().toISOString(),
+      participants:    state.participants.map(({ id, name }) => ({ id, name })),
+      picks:           state.picks,
+      picksSubmitted:  state.picksSubmitted,
+    };
+    const bytes   = new TextEncoder().encode(JSON.stringify(payload, null, 2));
+    const content = btoa(Array.from(bytes, b => String.fromCharCode(b)).join(''));
+
+    const putResp = await fetch(apiUrl, {
       method: 'PUT',
       headers,
       body: JSON.stringify({
-        message: `Update picks ${new Date().toISOString().slice(0, 10)}`,
+        message: `picks: update ${new Date().toISOString().slice(0, 10)}`,
         content,
         ...(sha ? { sha } : {}),
       }),
     });
-  } catch (_) {}
+    if (!putResp.ok) console.warn('picks sync failed', putResp.status);
+  } catch (err) {
+    console.warn('syncPicksToGitHub error:', err);
+  }
 }
 
 // Pick accessor — normalises legacy string format to { winner, games }
@@ -864,13 +926,17 @@ function switchTab(tab) {
   document.querySelectorAll('.tab-content').forEach(el =>
     el.classList.toggle('active', el.id === `tab-${tab}`));
   RENDERERS[tab]();
+  // Refresh shared picks when switching to All Picks or Leaderboard
+  if (tab === 'picks' || tab === 'leaderboard') {
+    fetchPicks().then(() => { save(); RENDERERS[tab](); });
+  }
 }
 
 // ============================================================
 // INIT
 // ============================================================
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
   // Tab navigation
   document.querySelectorAll('.tab-btn').forEach(btn =>
     btn.addEventListener('click', () => switchTab(btn.dataset.tab)));
@@ -882,6 +948,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Picks interactions (event delegation on the bracket tab)
   document.getElementById('tab-bracket').addEventListener('click', handlePicksClick);
+
+  // Load shared picks from repo before showing login so that returning
+  // users on a new device are recognised by name.
+  const loginBtn = document.getElementById('login-btn');
+  const loginMsg = document.getElementById('login-msg');
+  loginBtn.disabled = true;
+  loginMsg.textContent = 'Loading…';
+  loginMsg.className = 'login-msg';
+  await fetchPicks();
+  loginBtn.disabled = false;
+  loginMsg.textContent = '';
 
   initLogin();
   fetchScores();
