@@ -16,7 +16,7 @@
   --red: #ef4444;
   --radius: 8px;
   /* card width scales to fill viewport across all 7 columns */
-  --card-w: clamp(96px, calc((100vw - 96px) / 7.4), 160px);
+  --card-w: clamp(150px, calc((100vw - 80px) / 7.2), 210px);
   /* explicit bracket height so flex stretch chain is definite */
   --bracket-h: 580px;
 }
@@ -432,12 +432,10 @@ main { padding: 24px; }
 }
 
 .team-name {
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 600;
   flex: 1;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  line-height: 1.2;
 }
 
 .series-wins {
