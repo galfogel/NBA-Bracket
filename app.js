@@ -552,9 +552,9 @@ function renderBracketLayout(mode, pid) {
           <div class="champion-slot">${renderChampion(mode, pid)}</div>
         </div>
         <div class="half west">
-          ${bracketCol(['WCF'],                        3, 'west', mode, pid)}
-          ${bracketCol(['WQ1','WQ2'],                 2, 'west', mode, pid)}
           ${bracketCol(['W1v8','W4v5','W2v7','W3v6'], 1, 'west', mode, pid)}
+          ${bracketCol(['WQ1','WQ2'],                 2, 'west', mode, pid)}
+          ${bracketCol(['WCF'],                        3, 'west', mode, pid)}
         </div>
       </div>
     </div>
