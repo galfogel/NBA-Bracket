@@ -56,6 +56,26 @@ const ROUND_NAMES  = ['', 'First Round', 'Conf. Semifinals', 'Conf. Finals', 'NB
 const ROUND_POINTS = [0, 10, 20, 40, 80];
 const GAMES_BONUS  = 10; // bonus point for predicting correct game count
 
+// Fan pick % from picks.nba.com (t1 = higher seed)
+const WIN_PCT = {
+  E1v8: { t1: 92, t2: 8  },
+  E4v5: { t1: 86, t2: 14 },
+  E2v7: { t1: 98, t2: 2  },
+  E3v6: { t1: 89, t2: 11 },
+  W1v8: { t1: 97, t2: 3  },
+  W4v5: { t1: 35, t2: 65 },
+  W2v7: { t1: 98, t2: 2  },
+  W3v6: { t1: 82, t2: 18 },
+};
+
+function getWinPct(sid, teamKey) {
+  const pct = WIN_PCT[sid];
+  if (!pct) return null;
+  const def = SERIES_MAP[sid];
+  const t1key = def.t1 || state.results[def.from?.[0]];
+  return teamKey === t1key ? pct.t1 : pct.t2;
+}
+
 // Default first-game UTC timestamps per series (deadline = -3 hours)
 const DEFAULT_GAME_TIMES = {
   E1v8: '2026-04-19T17:30:00Z',
@@ -618,10 +638,12 @@ function bracketCard(sid, mode, pid) {
     function teamRow(key) {
       if (!key) return `<div class="team-row tbd-row"><span class="team-name">TBD</span></div>`;
       const t = TEAMS[key];
+      const pct = getWinPct(sid, key);
       return `<div class="team-row tbd-row">
         <span class="seed-num">${t.seed ?? ''}</span>
         <img class="team-logo" src="${t.logo}" alt="${t.abbr}" />
         <span class="team-name">${t.name}</span>
+        ${pct !== null ? `<span class="fan-pct">${pct}%</span>` : ''}
       </div>`;
     }
     const dl = formatDeadline(sid);
@@ -647,10 +669,12 @@ function cardResults(sid, t1, t2) {
     const isW  = winner === key;
     const isL  = winner && !isW;
     const wins = rec ? (key === t1 ? rec.t1Wins : rec.t2Wins) : null;
+    const pct = getWinPct(sid, key);
     return `<div class="team-row ${isW ? 'is-winner' : ''} ${isL ? 'is-elim' : ''}">
       <span class="seed-num">${t.seed ?? ''}</span>
       <img class="team-logo" src="${t.logo}" alt="${t.abbr}" />
       <span class="team-name">${t.name}</span>
+      ${pct !== null ? `<span class="fan-pct">${pct}%</span>` : ''}
       ${wins !== null ? `<span class="series-wins ${isW ? 'wins-lead' : ''}">${wins}</span>` : ''}
       ${isW ? '<span class="win-mark">✓</span>' : ''}
     </div>`;
@@ -681,11 +705,13 @@ function cardPicks(sid, t1, t2, pid) {
     const isBad    = isPicked && actual && actual !== key;
     const cls      = isPicked ? (isBad ? 'is-wrong-pick' : 'is-winner') : '';
     const mark     = isPicked ? (isOk ? '✓' : isBad ? '✗' : '') : '';
+    const pct = getWinPct(sid, key);
     return `<div class="team-row ${cls} ${editable ? 'is-clickable' : ''}"
                  data-ps="${sid}" data-pt="${key}">
       <span class="seed-num">${t.seed ?? ''}</span>
       <img class="team-logo" src="${t.logo}" alt="${t.abbr}" />
       <span class="team-name">${t.name}</span>
+      ${pct !== null ? `<span class="fan-pct">${pct}%</span>` : ''}
       ${mark ? `<span class="win-mark">${mark}</span>` : ''}
     </div>`;
   }
@@ -725,10 +751,12 @@ function cardView(sid, t1, t2, pid) {
   if (!locked && !isAdmin && !isOwnPicks) {
     function rowHidden(key) {
       const t = TEAMS[key];
+      const pct = getWinPct(sid, key);
       return `<div class="team-row no-pointer">
         <span class="seed-num">${t.seed ?? ''}</span>
         <img class="team-logo" src="${t.logo}" alt="${t.abbr}" />
         <span class="team-name">${t.name}</span>
+        ${pct !== null ? `<span class="fan-pct">${pct}%</span>` : ''}
       </div>`;
     }
     return `<div class="matchup-card card-hidden-picks" data-series="${sid}">
@@ -746,10 +774,12 @@ function cardView(sid, t1, t2, pid) {
     const isOk     = isPicked && actual && actual === key;
     const isBad    = isPicked && actual && actual !== key;
     const cls      = isPicked ? (isOk ? 'is-winner' : isBad ? 'is-wrong-pick' : 'is-winner') : '';
+    const pct = getWinPct(sid, key);
     return `<div class="team-row no-pointer ${cls}">
       <span class="seed-num">${t.seed ?? ''}</span>
       <img class="team-logo" src="${t.logo}" alt="${t.abbr}" />
       <span class="team-name">${t.name}</span>
+      ${pct !== null ? `<span class="fan-pct">${pct}%</span>` : ''}
       ${isPicked ? `<span class="win-mark">${isOk ? '✓' : isBad ? '✗' : '·'}</span>` : ''}
     </div>`;
   }
