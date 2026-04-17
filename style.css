@@ -1122,8 +1122,23 @@ main { padding: 24px; }
 
 /* ── Tablet (≤ 900px) ─────────────────────────────────────── */
 @media (max-width: 900px) {
-  :root { --card-w: 120px; }
+  :root { --card-w: clamp(130px, calc((100vw - 80px) / 7.2), 180px); }
   main { padding: 16px; }
+}
+
+/* ── Landscape phone (short viewport) ────────────────────── */
+@media (orientation: landscape) and (max-height: 500px) {
+  /* Switch to list view — bracket diagram is too tall for landscape phones */
+  .bracket-wrap { display: none !important; }
+  .bracket-list { display: block !important; }
+
+  /* 2-column card grid so content fits without scrolling too much */
+  .blist-cards { grid-template-columns: 1fr 1fr; }
+
+  /* Compact header */
+  header { height: 44px; padding: 0 16px; }
+  header h1 { font-size: 15px; }
+  main { padding: 8px 12px; }
 }
 
 /* ── Mobile (≤ 600px) ─────────────────────────────────────── */
