@@ -153,9 +153,17 @@ function mergeRemoteState(remote) {
 async function syncPicksToGitHub() {
   try {
     const ref = db.collection('brackets').doc('nba-2026');
+    // Snapshot current user's state before any remote merge — local is authoritative for the submitter
+    const myPicks     = currentUserId ? JSON.parse(JSON.stringify(state.picks[currentUserId] || {})) : null;
+    const mySubmitted = currentUserId ? JSON.parse(JSON.stringify(state.picksSubmitted[currentUserId] || {})) : null;
     await db.runTransaction(async (tx) => {
       const snap = await tx.get(ref);
-      if (snap.exists) { mergeRemoteState(snap.data()); save(); }
+      if (snap.exists) { mergeRemoteState(snap.data()); }
+      // Restore current user's picks on top — the merge must not overwrite them
+      if (currentUserId && myPicks !== null) {
+        state.picks[currentUserId]          = myPicks;
+        state.picksSubmitted[currentUserId] = mySubmitted;
+      }
       tx.set(ref, {
         updated:        new Date().toISOString(),
         participants:   state.participants.map(({ id, name, passwordHash }) => ({ id, name, passwordHash: passwordHash || null })),
@@ -163,6 +171,7 @@ async function syncPicksToGitHub() {
         picksSubmitted: state.picksSubmitted,
       });
     });
+    save();
   } catch (err) { console.warn('syncPicksToGitHub error:', err); }
 }
 
