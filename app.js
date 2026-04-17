@@ -1274,7 +1274,7 @@ function renderInfo() {
     let deadlineStr = '—';
     if (gameTs) {
       const d = new Date(new Date(gameTs).getTime() - 3 * 60 * 60 * 1000);
-      deadlineStr = d.toLocaleString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit', timeZone: 'Asia/Jerusalem', timeZoneName: 'short' });
+      deadlineStr = d.toLocaleString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit', timeZone: 'Asia/Jerusalem' }) + ' (IST)';
     }
     return `<tr><td class="info-matchup-cell">${matchup}</td><td>${deadlineStr}</td></tr>`;
   }).join('');
