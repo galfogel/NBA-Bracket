@@ -101,6 +101,37 @@ const FIRESTORE_PROJECT = 'nba-bracket-f91f1';
 firebase.initializeApp({ apiKey: FIRESTORE_API_KEY, projectId: FIRESTORE_PROJECT });
 const db = firebase.firestore();
 
+// Reverse lookup: team name → TEAMS key (e.g. "Oklahoma City Thunder" → "W1")
+const TEAM_KEY_BY_NAME = Object.fromEntries(Object.entries(TEAMS).map(([k, t]) => [t.name, k]));
+
+// Convert picks stored in Firestore (team names) back to internal keys
+function picksToKeys(picks) {
+  const out = {};
+  for (const [pid, pPicks] of Object.entries(picks || {})) {
+    out[pid] = {};
+    for (const [sid, pick] of Object.entries(pPicks || {})) {
+      if (!pick) continue;
+      const winner = pick.winner ? (TEAM_KEY_BY_NAME[pick.winner] || pick.winner) : null;
+      out[pid][sid] = { winner, games: pick.games ?? null };
+    }
+  }
+  return out;
+}
+
+// Convert internal keys to team names for Firestore storage
+function picksToNames(picks) {
+  const out = {};
+  for (const [pid, pPicks] of Object.entries(picks || {})) {
+    out[pid] = {};
+    for (const [sid, pick] of Object.entries(pPicks || {})) {
+      if (!pick) continue;
+      const winner = pick.winner ? (TEAMS[pick.winner]?.name || pick.winner) : null;
+      out[pid][sid] = { winner, games: pick.games ?? null };
+    }
+  }
+  return out;
+}
+
 async function hashPassword(pass) {
   if (!pass) return null;
   const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(pass));
@@ -112,7 +143,9 @@ async function fetchPicks() {
   try {
     const snap = await db.collection('brackets').doc('nba-2026').get();
     if (!snap.exists) return;
-    mergeRemoteState(snap.data());
+    const data = snap.data();
+    data.picks = picksToKeys(data.picks);
+    mergeRemoteState(data);
     save();
   } catch (err) { console.warn('fetchPicks error:', err); }
 }
@@ -163,14 +196,14 @@ async function syncPicksToGitHub() {
         if (!state.participants.find(p => p.id === rp.id)) {
           state.participants.push({ id: rp.id, name: rp.name, passwordHash: rp.passwordHash || null });
         }
-        if (remote.picks?.[rp.id])          state.picks[rp.id]          = remote.picks[rp.id];
+        if (remote.picks?.[rp.id])          state.picks[rp.id]          = picksToKeys({ x: remote.picks[rp.id] }).x;
         if (remote.picksSubmitted?.[rp.id]) state.picksSubmitted[rp.id] = remote.picksSubmitted[rp.id];
       }
     }
     await ref.set({
       updated:        new Date().toISOString(),
       participants:   state.participants.map(({ id, name, passwordHash }) => ({ id, name, passwordHash: passwordHash || null })),
-      picks:          state.picks,
+      picks:          picksToNames(state.picks),
       picksSubmitted: state.picksSubmitted,
     });
     save();
