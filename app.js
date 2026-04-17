@@ -705,8 +705,14 @@ function bracketCard(sid, mode, pid) {
         ${pct !== null ? `<span class="fan-pct">${pct}%</span>` : ''}
       </div>`;
     }
-    const dl = formatDeadline(sid);
-    const footer = dl ? `<div class="card-footer footer-deadline">Locks ${dl}</div>` : '';
+    const gt = getGameTime(sid);
+    const lockTs = gt ? new Date(gt).getTime() - 3 * 3600 * 1000 : null;
+    const locked = lockTs && Date.now() >= lockTs;
+    const footer = locked
+      ? `<div class="card-footer footer-locked">🔒 Locked</div>`
+      : lockTs
+        ? `<div class="card-footer footer-countdown" data-lock-ts="${lockTs}">${formatCountdown(lockTs)}</div>`
+        : '';
     return `<div class="matchup-card card-tbd">
       ${teamRow(t1)}<div class="series-divider"></div>${teamRow(t2)}${footer}
     </div>`;
