@@ -1074,6 +1074,61 @@ function renderPickBreakdown(rows) {
 }
 
 // ============================================================
+// RULES TAB
+// ============================================================
+
+function renderInfo() {
+  const el = document.getElementById('tab-info');
+
+  const pointsRows = ROUND_NAMES.slice(1).map((name, i) => {
+    const r = i + 1;
+    return `<tr><td>${name}</td><td>${ROUND_POINTS[r]} pts</td></tr>`;
+  }).join('');
+
+  // Build deadlines for R1 series (have known game times)
+  const r1Series = SERIES.filter(s => s.r === 1);
+  const deadlineRows = r1Series.map(s => {
+    const t1 = TEAMS[s.t1];
+    const t2key = s.t2 || (s.t2Slot ? state.playIn?.[s.t2Slot] : null);
+    const t2 = t2key ? TEAMS[t2key] : null;
+    const matchup = t2 ? `${t1.name} vs ${t2.name}` : `${t1.name} vs TBD`;
+    const gameTs = scoresData?.gameTimes?.[s.id] ?? DEFAULT_GAME_TIMES[s.id];
+    let deadlineStr = '—';
+    if (gameTs) {
+      const d = new Date(new Date(gameTs).getTime() - 3 * 60 * 60 * 1000);
+      deadlineStr = d.toLocaleString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit', timeZoneName: 'short' });
+    }
+    return `<tr><td>${matchup}</td><td>${deadlineStr}</td></tr>`;
+  }).join('');
+
+  el.innerHTML = `
+    <div class="info-tab">
+      <section class="info-section">
+        <h2>Points System</h2>
+        <table class="info-table">
+          <thead><tr><th>Round</th><th>Points</th></tr></thead>
+          <tbody>
+            ${pointsRows}
+            <tr><td>Correct series length</td><td>+${GAMES_BONUS} pts</td></tr>
+            <tr class="upset-row"><td>Upset bonus <span class="info-note">(picking the underdog correctly)</span></td><td>+floor(pts × fav% / 100)</td></tr>
+          </tbody>
+        </table>
+        <p class="info-detail">The upset bonus is based on fan pick % from picks.nba.com. Example: picking a team favored at 92% and being correct gives you an extra floor(10 × 92/100) = <strong>9 bonus pts</strong>.</p>
+      </section>
+
+      <section class="info-section">
+        <h2>Pick Deadlines — First Round</h2>
+        <p class="info-detail">Picks lock <strong>3 hours</strong> before the first game of each series. Later rounds lock when the matchup is confirmed.</p>
+        <table class="info-table">
+          <thead><tr><th>Matchup</th><th>Deadline</th></tr></thead>
+          <tbody>${deadlineRows}</tbody>
+        </table>
+      </section>
+    </div>
+  `;
+}
+
+// ============================================================
 // TAB NAVIGATION
 // ============================================================
 
@@ -1082,6 +1137,7 @@ const RENDERERS = {
   picks:        renderPicksTab,
   participants: renderResults,
   leaderboard:  renderLeaderboard,
+  info:         renderInfo,
 };
 
 let activeTab = 'bracket';
