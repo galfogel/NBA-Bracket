@@ -153,26 +153,31 @@ function mergeRemoteState(remote) {
 async function syncPicksToGitHub() {
   try {
     const ref = db.collection('brackets').doc('nba-2026');
-    // Snapshot current user's state before any remote merge — local is authoritative for the submitter
-    const myPicks     = currentUserId ? JSON.parse(JSON.stringify(state.picks[currentUserId] || {})) : null;
-    const mySubmitted = currentUserId ? JSON.parse(JSON.stringify(state.picksSubmitted[currentUserId] || {})) : null;
-    await db.runTransaction(async (tx) => {
-      const snap = await tx.get(ref);
-      if (snap.exists) { mergeRemoteState(snap.data()); }
-      // Restore current user's picks on top — the merge must not overwrite them
-      if (currentUserId && myPicks !== null) {
-        state.picks[currentUserId]          = myPicks;
-        state.picksSubmitted[currentUserId] = mySubmitted;
+    // Fetch latest to avoid overwriting other users' concurrent picks
+    const snap = await ref.get();
+    if (snap.exists) {
+      const remote = snap.data();
+      // Merge other users in from remote; skip current user — local is authoritative
+      for (const rp of (remote.participants || [])) {
+        if (rp.id === currentUserId) continue;
+        if (!state.participants.find(p => p.id === rp.id)) {
+          state.participants.push({ id: rp.id, name: rp.name, passwordHash: rp.passwordHash || null });
+        }
+        if (remote.picks?.[rp.id])          state.picks[rp.id]          = remote.picks[rp.id];
+        if (remote.picksSubmitted?.[rp.id]) state.picksSubmitted[rp.id] = remote.picksSubmitted[rp.id];
       }
-      tx.set(ref, {
-        updated:        new Date().toISOString(),
-        participants:   state.participants.map(({ id, name, passwordHash }) => ({ id, name, passwordHash: passwordHash || null })),
-        picks:          state.picks,
-        picksSubmitted: state.picksSubmitted,
-      });
+    }
+    await ref.set({
+      updated:        new Date().toISOString(),
+      participants:   state.participants.map(({ id, name, passwordHash }) => ({ id, name, passwordHash: passwordHash || null })),
+      picks:          state.picks,
+      picksSubmitted: state.picksSubmitted,
     });
     save();
-  } catch (err) { console.warn('syncPicksToGitHub error:', err); }
+    console.log('picks saved to Firestore ✓');
+  } catch (err) {
+    console.error('syncPicksToGitHub error:', err);
+  }
 }
 
 // Pick accessor — normalises legacy string format to { winner, games }
