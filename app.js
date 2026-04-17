@@ -115,12 +115,14 @@ function loadState() {
       s.participants   = s.participants   || [];
       s.picks          = s.picks          || {};
       s.results        = s.results        || {};
-      s.picksSubmitted = s.picksSubmitted || {};
-      s.playIn         = s.playIn         || { E8: null, W8: null };
+      s.picksSubmitted      = s.picksSubmitted      || {};
+      s.playIn              = s.playIn              || { E8: null, W8: null };
+      s.finalsGap           = s.finalsGap           || {};
+      s.finalsGame1ActualGap = s.finalsGame1ActualGap ?? null;
       return s;
     }
   } catch (_) {}
-  return { results: {}, participants: [], picks: {}, playIn: { E8: null, W8: null }, picksSubmitted: {} };
+  return { results: {}, participants: [], picks: {}, playIn: { E8: null, W8: null }, picksSubmitted: {}, finalsGap: {}, finalsGame1ActualGap: null };
 }
 
 function save() {
@@ -211,7 +213,13 @@ function mergeRemoteState(remote) {
     // Remote submitted picks always win (they are the committed source)
     if (rPicks[rp.id])     state.picks[rp.id]          = rPicks[rp.id];
     if (rSubmitted[rp.id]) state.picksSubmitted[rp.id] = rSubmitted[rp.id];
+    // Merge finalsGap: remote wins for other users, local wins for current user
+    if (rp.id !== currentUserId && remote.finalsGap?.[rp.id] != null) {
+      state.finalsGap[rp.id] = remote.finalsGap[rp.id];
+    }
   }
+  // Commissioner-set actual gap: remote always wins
+  if (remote.finalsGame1ActualGap != null) state.finalsGame1ActualGap = remote.finalsGame1ActualGap;
 }
 
 // ── Write picks to Firestore ───────────────────────────────────
@@ -230,13 +238,17 @@ async function syncPicksToGitHub() {
         }
         if (remote.picks?.[rp.id])          state.picks[rp.id]          = picksToKeys({ x: remote.picks[rp.id] }).x;
         if (remote.picksSubmitted?.[rp.id]) state.picksSubmitted[rp.id] = remote.picksSubmitted[rp.id];
+        if (remote.finalsGap?.[rp.id] != null) state.finalsGap[rp.id]  = remote.finalsGap[rp.id];
       }
+      if (remote.finalsGame1ActualGap != null) state.finalsGame1ActualGap = remote.finalsGame1ActualGap;
     }
     await ref.set({
-      updated:        new Date().toISOString(),
-      participants:   state.participants.map(({ id, name, passwordHash }) => ({ id, name, passwordHash: passwordHash || null })),
-      picks:          picksToNames(state.picks),
-      picksSubmitted: state.picksSubmitted,
+      updated:              new Date().toISOString(),
+      participants:         state.participants.map(({ id, name, passwordHash }) => ({ id, name, passwordHash: passwordHash || null })),
+      picks:                picksToNames(state.picks),
+      picksSubmitted:       state.picksSubmitted,
+      finalsGap:            state.finalsGap,
+      finalsGame1ActualGap: state.finalsGame1ActualGap ?? null,
     });
     save();
     console.log('picks saved to Firestore ✓');
@@ -746,9 +758,19 @@ function cardPicks(sid, t1, t2, pid) {
       ? `<div class="card-footer footer-deadline">Locks ${dl}</div>`
       : '';
 
+  const gapRow = sid === 'FINALS' ? (() => {
+    const val = state.finalsGap[pid] ?? '';
+    if (editable) return `<div class="gap-input-row">
+      <label class="gap-label">Game 1 gap (pts)</label>
+      <input type="number" class="gap-input" min="1" max="50" value="${val}" placeholder="?" data-gap-pid="${pid}" />
+    </div>`;
+    if (val !== '') return `<div class="gap-input-row gap-readonly"><span class="gap-label">Game 1 gap:</span> <strong>${val} pts</strong></div>`;
+    return '';
+  })() : '';
+
   return `<div class="matchup-card ${locked && !pick.winner ? 'card-inactive' : ''}"
                data-series="${sid}">
-    ${row(t1)}<div class="series-divider"></div>${row(t2)}${gamesRow}${footer}
+    ${row(t1)}<div class="series-divider"></div>${row(t2)}${gamesRow}${gapRow}${footer}
   </div>`;
 }
 
@@ -853,9 +875,10 @@ function renderRoundControls(pid) {
            </button>`;
     }
 
+    const gapWarn = r === 4 ? `<span class="gap-warn" style="display:none"></span>` : '';
     return [`<div class="round-control-row">
       <span class="rc-name">${ROUND_NAMES[r]}</span>
-      <div class="rc-right">${badge}${action}</div>
+      <div class="rc-right">${badge}${action}${gapWarn}</div>
     </div>`];
   });
 
@@ -902,6 +925,12 @@ function handlePicksClick(e) {
     const avail = SERIES.filter(s => s.r === r && isSeriesAvailable(s.id));
     const allDone = avail.every(s => getPick(currentUserId, s.id).winner && getPick(currentUserId, s.id).games);
     if (!allDone) return; // guarded by disabled attr, but double-check
+    if (r === 4 && state.finalsGap[currentUserId] == null) {
+      const warn = saveBtn.closest('.round-col, .blist-round')?.querySelector('.gap-warn');
+      if (warn) { warn.textContent = '⚠ Add a Game 1 gap for the tiebreaker!'; warn.style.display = 'block'; }
+      setTimeout(() => { if (warn) warn.style.display = 'none'; }, 4000);
+      // Don't block — allow saving without gap
+    }
     if (!state.picksSubmitted[currentUserId]) state.picksSubmitted[currentUserId] = {};
     state.picksSubmitted[currentUserId][r] = true;
     editingState = { pid: null, round: null };
@@ -966,6 +995,16 @@ function renderPicksTab() {
 
 function renderResults() {
   const el = document.getElementById('tab-participants');
+  const isAdmin = state.participants.find(p => p.id === currentUserId)?.name.toLowerCase() === 'fogel';
+
+  const actualGapCtrl = isAdmin ? `
+    <div class="game1-gap-ctrl">
+      <label class="gap-label">Finals Game 1 actual gap:</label>
+      <input type="number" id="actual-gap-input" class="gap-input" min="1" max="50"
+             value="${state.finalsGame1ActualGap ?? ''}" placeholder="pts" />
+      <button class="btn-sm btn-primary" id="actual-gap-btn">Set</button>
+      <span id="actual-gap-msg" class="gap-set-msg"></span>
+    </div>` : '';
 
   el.innerHTML = `
     <div class="bracket-instructions">
@@ -974,7 +1013,22 @@ function renderResults() {
         ? `<span class="scores-updated">Last sync: ${scoresData.updated.replace('T', ' ').replace('Z', ' UTC')}</span>`
         : ''}
     </div>
+    ${actualGapCtrl}
     ${renderBracketLayout('results', null)}`;
+
+  if (isAdmin) {
+    document.getElementById('actual-gap-btn').addEventListener('click', () => {
+      const val = parseInt(document.getElementById('actual-gap-input').value);
+      if (isNaN(val) || val < 1) return;
+      state.finalsGame1ActualGap = val;
+      save();
+      syncPicksToGitHub();
+      renderLeaderboard();
+      const msg = document.getElementById('actual-gap-msg');
+      msg.textContent = '✓ Saved';
+      setTimeout(() => { msg.textContent = ''; }, 3000);
+    });
+  }
 }
 
 // ============================================================
@@ -991,7 +1045,18 @@ function renderLeaderboard() {
 
   const rows = state.participants
     .map(p => ({ ...p, ...computeScore(p.id) }))
-    .sort((a, b) => b.score - a.score || b.correct - a.correct);
+    .sort((a, b) => {
+      if (b.score !== a.score) return b.score - a.score;
+      if (b.correct !== a.correct) return b.correct - a.correct;
+      const actual = state.finalsGame1ActualGap;
+      if (actual == null) return 0;
+      const hasA = state.finalsGap[a.id] != null;
+      const hasB = state.finalsGap[b.id] != null;
+      if (!hasA && !hasB) return 0;
+      if (!hasA) return 1;
+      if (!hasB) return -1;
+      return Math.abs(state.finalsGap[a.id] - actual) - Math.abs(state.finalsGap[b.id] - actual);
+    });
 
   el.innerHTML = `
     <div class="leaderboard-wrap">
@@ -1070,6 +1135,22 @@ function renderPickBreakdown(rows) {
     }
     html += '</div></div>';
   }
+  // Finals Game 1 gap tiebreaker summary
+  const actual = state.finalsGame1ActualGap;
+  html += '<div class="breakdown-round"><h4>Game 1 Finals Gap (Tiebreaker)</h4><div class="breakdown-grid">';
+  html += '<div class="breakdown-series"><div class="picks-list">';
+  for (const p of rows) {
+    const gap = state.finalsGap[p.id];
+    const hasGap = gap != null;
+    let chipText = `${p.name.split(' ')[0]}: `;
+    if (!hasGap) { chipText += '–'; }
+    else if (actual != null) { chipText += `${gap} pts (diff: ${Math.abs(gap - actual)})`; }
+    else { chipText += `${gap} pts`; }
+    html += `<span class="pick-chip pick-pending">${chipText}</span>`;
+  }
+  if (actual != null) html += `<div class="actual-result" style="margin-top:4px">Actual: <strong>${actual} pts</strong></div>`;
+  html += '</div></div></div></div>';
+
   return html + '</div>';
 }
 
@@ -1114,6 +1195,7 @@ function renderInfo() {
           </tbody>
         </table>
         <p class="info-detail">The upset bonus is based on fan pick % from picks.nba.com. Example: picking a team favored at 92% and being correct gives you an extra floor(10 × (92−50)/100) = <strong>4 bonus pts</strong>.</p>
+        <p class="info-detail"><strong>Tiebreaker:</strong> If scores are equal, the player whose predicted Game 1 NBA Finals score margin is closest to the actual margin wins the higher place. Equal distance = shared place.</p>
       </section>
 
       <section class="info-section">
@@ -1180,6 +1262,14 @@ async function beginApp() {
     document.getElementById(id).addEventListener('keydown', e => { if (e.key === 'Enter') attemptLogin(); }));
 
   document.getElementById('tab-bracket').addEventListener('click', handlePicksClick);
+  document.getElementById('tab-bracket').addEventListener('input', e => {
+    const inp = e.target.closest('.gap-input[data-gap-pid]');
+    if (!inp) return;
+    const val = parseInt(inp.value);
+    state.finalsGap[currentUserId] = isNaN(val) ? undefined : val;
+    if (isNaN(val)) delete state.finalsGap[currentUserId];
+    save();
+  });
 
   const loginBtn = document.getElementById('login-btn');
   const loginMsg = document.getElementById('login-msg');
