@@ -997,7 +997,7 @@ function renderResults() {
   const el = document.getElementById('tab-participants');
   const isAdmin = state.participants.find(p => p.id === currentUserId)?.name.toLowerCase() === 'fogel';
 
-  const actualGapCtrl = isAdmin ? `
+  const actualGapCtrl = isAdmin && isSeriesAvailable('FINALS') ? `
     <div class="game1-gap-ctrl">
       <label class="gap-label">Finals Game 1 actual gap:</label>
       <input type="number" id="actual-gap-input" class="gap-input" min="1" max="50"
