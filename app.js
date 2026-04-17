@@ -55,7 +55,7 @@ const ROUND_NAMES  = ['', 'First Round', 'Conf. Semifinals', 'Conf. Finals', 'NB
 const ROUND_POINTS = [0, 1, 2, 4, 8];
 const GAMES_BONUS  = 1; // bonus point for predicting correct game count
 
-// Default first-game UTC timestamps per series (deadline = -8 hours)
+// Default first-game UTC timestamps per series (deadline = -3 hours)
 const DEFAULT_GAME_TIMES = {
   E1v8: '2026-04-19T17:30:00Z',
   E4v5: '2026-04-20T17:00:00Z',
@@ -340,17 +340,17 @@ function getGameTime(sid) {
   return scoresData?.gameTimes?.[sid] ?? DEFAULT_GAME_TIMES[sid] ?? null;
 }
 
-// Series locks 8 hours before its first game
+// Series locks 3 hours before its first game
 function isSeriesLocked(sid) {
   const gt = getGameTime(sid);
   if (!gt) return false;
-  return Date.now() > new Date(gt).getTime() - 8 * 3600 * 1000;
+  return Date.now() > new Date(gt).getTime() - 3 * 3600 * 1000;
 }
 
 function formatDeadline(sid) {
   const gt = getGameTime(sid);
   if (!gt) return null;
-  const dl = new Date(new Date(gt).getTime() - 8 * 3600 * 1000);
+  const dl = new Date(new Date(gt).getTime() - 3 * 3600 * 1000);
   return dl.toLocaleString('en-US', {
     month: 'short', day: 'numeric',
     hour: 'numeric', minute: '2-digit',
@@ -670,6 +670,23 @@ function cardPicks(sid, t1, t2, pid) {
 
 // ---- View card (another user's picks, read-only) ----
 function cardView(sid, t1, t2, pid) {
+  const locked = isSeriesLocked(sid);
+
+  // Picks are hidden until the series locks (starts)
+  if (!locked) {
+    function rowHidden(key) {
+      const t = TEAMS[key];
+      return `<div class="team-row no-pointer">
+        <span class="seed-num">${t.seed ?? ''}</span>
+        <span class="team-name">${t.name}</span>
+      </div>`;
+    }
+    return `<div class="matchup-card card-hidden-picks" data-series="${sid}">
+      ${rowHidden(t1)}<div class="series-divider"></div>${rowHidden(t2)}
+      <div class="card-footer footer-hidden">🔒 Picks hidden until series starts</div>
+    </div>`;
+  }
+
   const pick   = getPick(pid, sid);
   const actual = state.results[sid] || null;
 
@@ -934,21 +951,25 @@ function renderPickBreakdown(rows) {
       const actual = state.results[def.id];
       const [t1, t2] = resolveTeams(def.id);
       const ag = getActualGames(def.id);
+      const seriesLocked = isSeriesLocked(def.id);
       html += `<div class="breakdown-series">
         <div class="series-title">${t1 ? TEAMS[t1].abbr : '?'} vs ${t2 ? TEAMS[t2].abbr : '?'}</div>
         <div class="actual-result">${actual
           ? `<strong style="color:${TEAMS[actual].color}">${TEAMS[actual].abbr}</strong>${ag ? ` in ${ag}` : ''}`
           : 'Pending'}</div>
         <div class="picks-list">
-          ${rows.map(p => {
-            const pick = getPick(p.id, def.id);
-            const ok   = actual && pick.winner && actual === pick.winner;
-            const bad  = actual && pick.winner && actual !== pick.winner;
-            const gok  = ok && ag && pick.games && ag === pick.games;
-            return `<span class="pick-chip ${ok ? 'pick-correct' : bad ? 'pick-wrong' : 'pick-pending'}" title="${p.name}">
-              ${p.name.split(' ')[0]}: ${pick.winner ? TEAMS[pick.winner]?.abbr : '?'}${pick.games ? ` in ${pick.games}${gok ? '✓' : ''}` : ''}
-            </span>`;
-          }).join('')}
+          ${seriesLocked
+            ? rows.map(p => {
+                const pick = getPick(p.id, def.id);
+                const ok   = actual && pick.winner && actual === pick.winner;
+                const bad  = actual && pick.winner && actual !== pick.winner;
+                const gok  = ok && ag && pick.games && ag === pick.games;
+                return `<span class="pick-chip ${ok ? 'pick-correct' : bad ? 'pick-wrong' : 'pick-pending'}" title="${p.name}">
+                  ${p.name.split(' ')[0]}: ${pick.winner ? TEAMS[pick.winner]?.abbr : '?'}${pick.games ? ` in ${pick.games}${gok ? '✓' : ''}` : ''}
+                </span>`;
+              }).join('')
+            : `<span class="pick-chip pick-hidden">🔒 Hidden until series starts</span>`
+          }
         </div>
       </div>`;
     }

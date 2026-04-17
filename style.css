@@ -867,6 +867,7 @@ main { padding: 24px; }
 .pick-correct { background: color-mix(in srgb, var(--green) 20%, transparent); color: var(--green); }
 .pick-wrong   { background: color-mix(in srgb, var(--red)   20%, transparent); color: var(--red); text-decoration: line-through; }
 .pick-pending { background: var(--surface2); color: var(--text-dim); }
+.pick-hidden  { background: var(--surface2); color: var(--text-dim); font-style: italic; }
 
 /* ============================================================
    BUTTONS
@@ -940,6 +941,7 @@ main { padding: 24px; }
 
 .footer-locked   { color: #888; }
 .footer-deadline { color: var(--text-dim); }
+.footer-hidden   { color: var(--text-dim); font-style: italic; }
 .footer-correct  { color: var(--green); font-weight: 600; }
 .footer-wrong    { color: var(--red);   font-weight: 600; }
 
