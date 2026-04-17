@@ -1033,7 +1033,8 @@ main { padding: 24px; }
 }
 
 .footer-locked   { color: #888; }
-.footer-deadline { color: var(--text-dim); }
+.footer-deadline  { color: var(--text-dim); }
+.footer-countdown { color: var(--accent); font-weight: 600; }
 .footer-record   { font-weight: 600; }
 .footer-winner   { font-weight: 600; }
 .footer-hidden   { color: var(--text-dim); font-style: italic; }

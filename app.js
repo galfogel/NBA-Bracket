@@ -424,6 +424,34 @@ function isSeriesLocked(sid) {
   return Date.now() > new Date(gt).getTime() - 3 * 3600 * 1000;
 }
 
+function formatCountdown(lockTs) {
+  const diff = lockTs - Date.now();
+  if (diff <= 0) return '🔒 Locked';
+  const totalMins = Math.floor(diff / 60000);
+  const days  = Math.floor(totalMins / 1440);
+  const hours = Math.floor((totalMins % 1440) / 60);
+  const mins  = totalMins % 60;
+  if (days > 0)  return `Locks in ${days}d ${hours}h`;
+  if (hours > 0) return `Locks in ${hours}h ${mins}m`;
+  return `Locks in ${mins}m`;
+}
+
+let _countdownTimer = null;
+function startCountdownTimer() {
+  if (_countdownTimer) return;
+  _countdownTimer = setInterval(() => {
+    const els = document.querySelectorAll('.footer-countdown[data-lock-ts]');
+    if (!els.length) return;
+    let needsRerender = false;
+    els.forEach(el => {
+      const lockTs = parseInt(el.dataset.lockTs);
+      if (Date.now() >= lockTs) { needsRerender = true; return; }
+      el.textContent = formatCountdown(lockTs);
+    });
+    if (needsRerender) renderBracket();
+  }, 30000);
+}
+
 function formatDeadline(sid) {
   const gt = getGameTime(sid);
   if (!gt) return null;
@@ -772,10 +800,12 @@ function cardPicks(sid, t1, t2, pid) {
       }).join('')}
     </div>` : '';
 
+  const gt = getGameTime(sid);
+  const lockTs = gt ? new Date(gt).getTime() - 3 * 3600 * 1000 : null;
   const footer = locked
     ? `<div class="card-footer footer-locked">🔒 Locked</div>`
-    : dl
-      ? `<div class="card-footer footer-deadline">Locks ${dl}</div>`
+    : lockTs
+      ? `<div class="card-footer footer-countdown" data-lock-ts="${lockTs}">${formatCountdown(lockTs)}</div>`
       : '';
 
   const gapRow = sid === 'FINALS' ? (() => {
@@ -1320,6 +1350,7 @@ async function beginApp() {
 
   initLogin();
   fetchScores();
+  startCountdownTimer();
 }
 
 document.addEventListener('DOMContentLoaded', () => {
