@@ -69,9 +69,9 @@ const ROUND_POINTS = [0, 1, 2, 4, 8];
 // ============================================================
 // STATE
 // ============================================================
-let state = loadState();
-
 const STORAGE_KEY = 'nba-bracket-2026';
+
+let state = loadState();
 
 function loadState() {
   try {
