@@ -1,5 +1,11 @@
 {
   "updated": "2026-04-17T00:00:00Z",
   "records": {},
+  "deadlines": {
+    "1": "2026-04-18T22:00:00Z",
+    "2": null,
+    "3": null,
+    "4": null
+  },
   "error": null
 }

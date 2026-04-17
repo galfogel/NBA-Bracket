@@ -416,13 +416,127 @@ main { padding: 24px; }
   cursor: pointer;
 }
 
-.picks-instructions {
-  color: var(--text-dim);
-  font-size: 12px;
-  margin-bottom: 16px;
+.picks-rounds {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  max-width: 900px;
 }
 
-.picks-bracket { overflow-x: auto; }
+/* ---- Round section ---- */
+.picks-round-section {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px 20px 20px;
+}
+
+.picks-round-inactive {
+  opacity: 0.5;
+}
+
+.picks-round-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+}
+
+.picks-round-header h3 {
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.round-status-area {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.round-status {
+  font-size: 12px;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 99px;
+}
+
+.status-open     { background: color-mix(in srgb, var(--accent2) 15%, transparent); color: var(--accent2); }
+.status-submitted { background: color-mix(in srgb, var(--green) 15%, transparent);  color: var(--green); }
+.status-locked   { background: color-mix(in srgb, #888 15%, transparent);            color: #888; }
+.status-waiting  { background: var(--surface2); color: var(--text-dim); }
+
+/* ---- Cards grid ---- */
+.picks-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+/* ---- Pick card ---- */
+.pick-card {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.pick-card-locked { opacity: 0.75; }
+
+.pick-card-tbd { opacity: 0.4; }
+
+.pick-team-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 10px;
+  cursor: pointer;
+  transition: background 0.1s;
+}
+
+.pick-team-row:hover:not(.tbd-row):not(.no-pointer) {
+  background: color-mix(in srgb, var(--tc, #fff) 12%, var(--surface2));
+}
+
+.pick-team-row.is-picked {
+  background: color-mix(in srgb, var(--tc) 22%, var(--surface2));
+  border-left: 3px solid var(--tc);
+}
+
+.pick-team-row.tbd-row {
+  cursor: default;
+  color: var(--text-dim);
+}
+
+.pick-team-row.no-pointer { cursor: default; }
+
+.pick-check {
+  margin-left: auto;
+  color: var(--green);
+  font-size: 13px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+/* ---- Outline edit button ---- */
+.btn-outline-sm {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+  padding: 4px 10px;
+  border-radius: var(--radius);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.btn-outline-sm:hover {
+  border-color: var(--accent2);
+  color: var(--accent2);
+}
 
 /* ============================================================
    PARTICIPANTS TAB

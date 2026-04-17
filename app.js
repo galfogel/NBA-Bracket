@@ -66,6 +66,15 @@ const SERIES_MAP = Object.fromEntries(SERIES.map(s => [s.id, s]));
 const ROUND_NAMES  = ['', 'First Round', 'Conf. Semifinals', 'Conf. Finals', 'NBA Finals'];
 const ROUND_POINTS = [0, 1, 2, 4, 8];
 
+// Deadline = 6:00 PM ET (22:00 UTC) before the first game of each round.
+// Rounds 2-4 are null until the GitHub Action populates them in scores.json.
+const DEFAULT_DEADLINES = {
+  1: '2026-04-18T22:00:00Z',
+  2: null,
+  3: null,
+  4: null,
+};
+
 // ============================================================
 // STATE
 // ============================================================
@@ -76,9 +85,14 @@ let state = loadState();
 function loadState() {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
-    if (raw) return JSON.parse(raw);
+    if (raw) {
+      const s = JSON.parse(raw);
+      if (!s.picksSubmitted) s.picksSubmitted = {};
+      if (!s.playIn) s.playIn = { E8: null, W8: null };
+      return s;
+    }
   } catch (_) {}
-  return { results: {}, participants: [], picks: {}, playIn: { E8: null, W8: null } };
+  return { results: {}, participants: [], picks: {}, playIn: { E8: null, W8: null }, picksSubmitted: {} };
 }
 
 function save() {
@@ -90,6 +104,51 @@ function save() {
 // ============================================================
 
 let scoresData = null;
+
+// Runtime edit state — which participant+round is currently unlocked for editing.
+// Not persisted; resets on page load or participant switch.
+let editingState = { pid: null, round: null };
+
+// ---- Deadline helpers ----
+
+function getRoundDeadline(round) {
+  const fromScores = scoresData?.deadlines?.[String(round)];
+  return fromScores ?? DEFAULT_DEADLINES[round] ?? null;
+}
+
+function isPastDeadline(round) {
+  const dl = getRoundDeadline(round);
+  if (!dl) return false;
+  return Date.now() > new Date(dl).getTime();
+}
+
+function formatDeadline(round) {
+  const dl = getRoundDeadline(round);
+  if (!dl) return null;
+  return new Date(dl).toLocaleString('en-US', {
+    month: 'short', day: 'numeric',
+    hour: 'numeric', minute: '2-digit',
+    timeZone: 'America/New_York', timeZoneName: 'short',
+  });
+}
+
+// A series is available to pick when both teams are confirmed.
+// R1: play-in slots must be resolved; R2+: actual results must exist for feeder series.
+function isSeriesAvailable(sid) {
+  const def = SERIES_MAP[sid];
+  if (def.t1) {
+    const t2 = def.t2 || (def.t2Slot ? state.playIn[def.t2Slot] : null);
+    return !!t2;
+  }
+  return !!state.results[def.from[0]] && !!state.results[def.from[1]];
+}
+
+// Can this participant currently edit picks for this round?
+function canEditRound(pid, round) {
+  if (isPastDeadline(round)) return false;
+  if (!state.picksSubmitted[pid]?.[round]) return true;
+  return editingState.pid === pid && editingState.round === round;
+}
 
 async function fetchScores() {
   try {
@@ -397,104 +456,140 @@ function renderPicksTab() {
     return;
   }
 
-  // Default to first participant if none selected
   if (!picksParticipant || !state.participants.find(p => p.id === picksParticipant)) {
     picksParticipant = state.participants[0].id;
+    editingState = { pid: null, round: null };
   }
-
-  const participant = state.participants.find(p => p.id === picksParticipant);
-  const picks = state.picks[picksParticipant] || {};
 
   el.innerHTML = `
     <div class="picks-header">
-      <label for="picks-select">Editing picks for:</label>
+      <label for="picks-select">Picks for:</label>
       <select id="picks-select">
         ${state.participants.map(p =>
           `<option value="${p.id}" ${p.id === picksParticipant ? 'selected' : ''}>${p.name}</option>`
         ).join('')}
       </select>
-      <button id="clear-picks-btn" class="btn-danger-sm">Clear All Picks</button>
     </div>
-    <div class="picks-instructions">Click a team to pick them as series winner. Picks cascade through the bracket.</div>
-
-    <div class="picks-bracket">
-      ${renderPicksBracket(picks)}
+    <div class="picks-rounds">
+      ${[1, 2, 3, 4].map(r => renderPicksRound(picksParticipant, r)).join('')}
     </div>
   `;
 
   el.querySelector('#picks-select').addEventListener('change', e => {
     picksParticipant = e.target.value;
+    editingState = { pid: null, round: null };
     renderPicksTab();
   });
 
-  el.querySelector('#clear-picks-btn').addEventListener('click', () => {
-    if (confirm(`Clear all picks for ${participant.name}?`)) {
-      state.picks[picksParticipant] = {};
+  // Pick clicks
+  el.querySelectorAll('.pick-team-row[data-series][data-team]').forEach(row => {
+    row.addEventListener('click', () => {
+      const sid = row.dataset.series;
+      const round = SERIES_MAP[sid].r;
+      if (!canEditRound(picksParticipant, round)) return;
+      handlePickClick(sid, row.dataset.team);
+    });
+  });
+
+  // Save buttons
+  el.querySelectorAll('.save-round-btn[data-round]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const round = parseInt(btn.dataset.round);
+      if (!state.picksSubmitted[picksParticipant]) state.picksSubmitted[picksParticipant] = {};
+      state.picksSubmitted[picksParticipant][round] = true;
+      editingState = { pid: null, round: null };
       save();
       renderPicksTab();
       renderLeaderboard();
-    }
+    });
   });
 
-  el.querySelectorAll('.matchup-card[data-series]').forEach(card => {
-    card.querySelectorAll('.team-row[data-team]').forEach(row => {
-      row.addEventListener('click', () => {
-        const sid = card.dataset.series;
-        const tid = row.dataset.team;
-        handlePickClick(sid, tid);
-      });
+  // Edit buttons
+  el.querySelectorAll('.edit-round-btn[data-round]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      editingState = { pid: picksParticipant, round: parseInt(btn.dataset.round) };
+      renderPicksTab();
     });
   });
 }
 
-function renderPicksBracket(picks) {
-  function col(ids, round, side, overrideId) {
-    const label = round === 1 ? 'First Round' : round === 2 ? 'Semifinals' : 'Conf. Finals';
-    const realIds = overrideId ? [overrideId] : ids;
-    return `
-      <div class="bracket-col r${round} ${side}">
-        <div class="round-label">${label}</div>
-        <div class="col-series">
-          ${realIds.map(id => renderSeries(id, picks, 'picks')).join('')}
-        </div>
-      </div>
-    `;
+function renderPicksRound(pid, round) {
+  const seriesInRound  = SERIES.filter(s => s.r === round);
+  const available      = seriesInRound.filter(s => isSeriesAvailable(s.id));
+  const unavailable    = seriesInRound.filter(s => !isSeriesAvailable(s.id));
+  const picks          = state.picks[pid] || {};
+  const submitted      = !!state.picksSubmitted[pid]?.[round];
+  const pastDeadline   = isPastDeadline(round);
+  const editable       = canEditRound(pid, round);
+  const isEditing      = editingState.pid === pid && editingState.round === round;
+  const dl             = formatDeadline(round);
+  const picksMade      = available.filter(s => picks[s.id]).length;
+  const hasAny         = available.length > 0;
+
+  // Status badge + action button
+  let statusHtml;
+  if (pastDeadline) {
+    statusHtml = `<span class="round-status status-locked">🔒 Locked</span>`;
+  } else if (submitted && !isEditing) {
+    statusHtml = `
+      <span class="round-status status-submitted">✓ Submitted</span>
+      <button class="edit-round-btn btn-outline-sm" data-round="${round}">Edit</button>`;
+  } else if (!hasAny) {
+    statusHtml = `<span class="round-status status-waiting">Waiting for previous round results</span>`;
+  } else {
+    const lockNote = dl ? `Locks ${dl}` : 'No deadline set yet';
+    statusHtml = `<span class="round-status status-open">Open · ${lockNote}</span>`;
   }
 
+  // Series cards
+  const cards = available.map(def => {
+    const [t1, t2] = resolveTeams(def.id, state.results);
+    const pick = picks[def.id];
+
+    function pickRow(key) {
+      if (!key) return `<div class="pick-team-row tbd-row"><span class="team-name">TBD</span></div>`;
+      const t = TEAMS[key];
+      const isPicked = pick === key;
+      return `<div class="pick-team-row ${isPicked ? 'is-picked' : ''} ${editable ? '' : 'no-pointer'}"
+                   data-series="${def.id}" data-team="${key}"
+                   style="--tc:${t.color}">
+        <span class="seed-num">${t.seed ?? ''}</span>
+        <span class="team-name">${t.name}</span>
+        ${isPicked ? '<span class="pick-check">✓</span>' : ''}
+      </div>`;
+    }
+
+    return `<div class="pick-card ${!editable ? 'pick-card-locked' : ''}">
+      ${pickRow(t1)}
+      <div class="series-divider"></div>
+      ${pickRow(t2)}
+    </div>`;
+  }).join('');
+
+  const tbdCards = unavailable.map(() => `
+    <div class="pick-card pick-card-tbd">
+      <div class="pick-team-row tbd-row"><span class="team-name">TBD</span></div>
+      <div class="series-divider"></div>
+      <div class="pick-team-row tbd-row"><span class="team-name">TBD</span></div>
+    </div>
+  `).join('');
+
+  const saveBtn = editable && hasAny
+    ? `<button class="save-round-btn btn-primary" data-round="${round}">
+         Save ${ROUND_NAMES[round]} Picks (${picksMade}/${available.length})
+       </button>`
+    : '';
+
   return `
-    <div class="bracket-wrap">
-      <div class="conf-label east-label">EASTERN CONFERENCE</div>
-      <div class="conf-label west-label">WESTERN CONFERENCE</div>
-      <div class="bracket">
-        <div class="half east">
-          ${col(['E1v8','E4v5','E2v7','E3v6'], 1, 'east')}
-          ${col(['EQ1','EQ2'], 2, 'east')}
-          ${col(['ECF'], 3, 'east')}
-        </div>
-        <div class="finals-col">
-          <div class="round-label">NBA Finals</div>
-          ${renderSeries('FINALS', picks, 'picks')}
-          <div class="champion-slot">
-            ${picks['FINALS']
-              ? `<div class="champion-badge" style="--team-color:${TEAMS[picks['FINALS']].color}">🏆 ${TEAMS[picks['FINALS']].name}</div>`
-              : '<div class="champion-tbd">🏆 Pick a champion</div>'}
-          </div>
-        </div>
-        <div class="half west">
-          ${col([], 3, 'west', 'WCF')}
-          ${col(['WQ1','WQ2'], 2, 'west')}
-          ${col(['W1v8','W4v5','W2v7','W3v6'], 1, 'west')}
-        </div>
+    <div class="picks-round-section ${!hasAny && !pastDeadline ? 'picks-round-inactive' : ''}">
+      <div class="picks-round-header">
+        <h3>${ROUND_NAMES[round]}</h3>
+        <div class="round-status-area">${statusHtml}</div>
       </div>
-      <div class="round-labels-row">
-        <div class="round-labels east-rounds">
-          <span>First Round</span><span>Semifinals</span><span>Conf. Finals</span>
-        </div>
-        <div class="round-labels-spacer"></div>
-        <div class="round-labels west-rounds">
-          <span>Conf. Finals</span><span>Semifinals</span><span>First Round</span>
-        </div>
+      <div class="picks-cards-grid">
+        ${cards}${tbdCards}
       </div>
+      ${saveBtn}
     </div>
   `;
 }
@@ -504,10 +599,9 @@ function handlePickClick(sid, tid) {
   const picks = state.picks[picksParticipant];
 
   if (picks[sid] === tid) {
-    clearDownstream(sid, picks);
+    delete picks[sid];
   } else {
     picks[sid] = tid;
-    propagateClear(sid, picks);
   }
   save();
   renderPicksTab();

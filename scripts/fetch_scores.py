@@ -88,6 +88,17 @@ def main():
     )
     os.makedirs(os.path.dirname(out_path), exist_ok=True)
 
+    # Preserve existing deadlines — the script only updates records/scores,
+    # not the deadlines (those are set manually or by a separate process).
+    existing_deadlines = {"1": "2026-04-18T22:00:00Z", "2": None, "3": None, "4": None}
+    if os.path.exists(out_path):
+        try:
+            with open(out_path) as f:
+                existing = json.load(f)
+            existing_deadlines = existing.get("deadlines", existing_deadlines)
+        except Exception:
+            pass
+
     records = {}
     error = None
 
@@ -104,6 +115,7 @@ def main():
     output = {
         "updated": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
         "records": records,
+        "deadlines": existing_deadlines,
         "error": error,
     }
 
