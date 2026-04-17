@@ -394,7 +394,7 @@ function switchUser() {
 
 function startApp() {
   updateUserDisplay();
-  switchTab('bracket');
+  switchTab(activeTab);
 }
 
 function updateUserDisplay() {
