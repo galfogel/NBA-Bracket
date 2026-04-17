@@ -52,8 +52,8 @@ const SERIES = [
 
 const SERIES_MAP   = Object.fromEntries(SERIES.map(s => [s.id, s]));
 const ROUND_NAMES  = ['', 'First Round', 'Conf. Semifinals', 'Conf. Finals', 'NBA Finals'];
-const ROUND_POINTS = [0, 1, 2, 4, 8];
-const GAMES_BONUS  = 1; // bonus point for predicting correct game count
+const ROUND_POINTS = [0, 10, 20, 40, 80];
+const GAMES_BONUS  = 10; // bonus point for predicting correct game count
 
 // Default first-game UTC timestamps per series (deadline = -3 hours)
 const DEFAULT_GAME_TIMES = {
