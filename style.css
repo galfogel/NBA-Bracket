@@ -15,7 +15,8 @@
   --green: #22c55e;
   --red: #ef4444;
   --radius: 8px;
-  --card-w: 160px;
+  /* card width scales to fill viewport across all 7 columns */
+  --card-w: clamp(96px, calc((100vw - 96px) / 7.4), 160px);
 }
 
 body {
@@ -835,6 +836,15 @@ main { padding: 24px; }
   transition: opacity 0.15s;
 }
 .btn-primary:hover { opacity: 0.85; }
+
+.btn-primary.btn-disabled,
+.btn-primary:disabled {
+  background: var(--surface2);
+  color: var(--text-dim);
+  border: 1px solid var(--border);
+  cursor: not-allowed;
+  opacity: 1;
+}
 
 .btn-danger-sm {
   background: color-mix(in srgb, var(--red) 15%, var(--surface2));

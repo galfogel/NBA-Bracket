@@ -95,6 +95,42 @@ function save() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
 }
 
+// ── GitHub picks sync ──────────────────────────────────────────
+// Set GITHUB_TOKEN to a PAT with contents:write on this repo.
+// Leave blank to skip — all picks still stored in localStorage.
+const GITHUB_REPO  = 'galfogel/NBA-Bracket';
+const GITHUB_TOKEN = '';   // ← add your token here
+
+async function syncPicksToGitHub() {
+  if (!GITHUB_TOKEN) return;
+  const data = {
+    updated: new Date().toISOString(),
+    participants: state.participants.map(({ id, name }) => ({ id, name })),
+    picks: state.picks,
+  };
+  const apiUrl = `https://api.github.com/repos/${GITHUB_REPO}/contents/data/picks.json`;
+  try {
+    const headers = {
+      Authorization: `token ${GITHUB_TOKEN}`,
+      'Content-Type': 'application/json',
+    };
+    const getResp = await fetch(apiUrl, { headers });
+    const existing = getResp.ok ? await getResp.json() : null;
+    const sha      = existing?.sha;
+    const bytes    = new TextEncoder().encode(JSON.stringify(data, null, 2));
+    const content  = btoa(Array.from(bytes, b => String.fromCharCode(b)).join(''));
+    await fetch(apiUrl, {
+      method: 'PUT',
+      headers,
+      body: JSON.stringify({
+        message: `Update picks ${new Date().toISOString().slice(0, 10)}`,
+        content,
+        ...(sha ? { sha } : {}),
+      }),
+    });
+  } catch (_) {}
+}
+
 // Pick accessor — normalises legacy string format to { winner, games }
 function getPick(pid, sid) {
   const raw = (state.picks[pid] || {})[sid];
@@ -291,8 +327,30 @@ async function fetchScores() {
 
 // Auto-advance bracket when API shows a team with 4 wins
 function syncResultsFromAPI() {
-  if (!scoresData?.records) return;
+  if (!scoresData) return;
   let changed = false;
+
+  // Auto-detect play-in 8-seeds: whichever play-in candidate appears in
+  // the Playoffs records is the confirmed #8 seed.
+  const allAbbrs = new Set(
+    Object.keys(scoresData.records || {}).flatMap(k => k.split('-'))
+  );
+  for (const [slot, candidates] of [['E8', ['ORL', 'CHA']], ['W8', ['GSW', 'PHX']]]) {
+    if (!state.playIn[slot]) {
+      const found = candidates.find(a => allAbbrs.has(a));
+      if (found) { state.playIn[slot] = found; changed = true; }
+    }
+  }
+
+  // Also honour explicit playIn field written by fetch_scores.py
+  if (scoresData.playIn) {
+    for (const slot of ['E8', 'W8']) {
+      if (scoresData.playIn[slot] && !state.playIn[slot]) {
+        state.playIn[slot] = scoresData.playIn[slot]; changed = true;
+      }
+    }
+  }
+
   for (const def of SERIES) {
     if (state.results[def.id]) continue;
     const [t1, t2] = resolveTeams(def.id);
@@ -537,6 +595,7 @@ function renderRoundControls(pid) {
     const isEditing  = editingState.pid === pid && editingState.round === r;
     const picked     = avail.filter(s => getPick(pid, s.id).winner).length;
     const games      = avail.filter(s => getPick(pid, s.id).games).length;
+    const allDone    = picked === avail.length && games === avail.length;
 
     let badge, action;
     if (locked) {
@@ -546,8 +605,15 @@ function renderRoundControls(pid) {
       badge  = `<span class="rc-badge rc-saved">✓ Saved</span>`;
       action = `<button class="edit-round-btn btn-outline-sm" data-round="${r}">Edit</button>`;
     } else {
+      const missing = [];
+      if (picked < avail.length) missing.push(`${avail.length - picked} winner${avail.length - picked > 1 ? 's' : ''}`);
+      if (games  < avail.length) missing.push(`${avail.length - games}  game count${avail.length - games > 1 ? 's' : ''}`);
       badge  = `<span class="rc-badge rc-open">Open</span>`;
-      action = `<button class="save-round-btn btn-primary" data-round="${r}">Save ${ROUND_NAMES[r]} · ${picked}/${avail.length} picks · ${games}/${avail.length} games</button>`;
+      action = allDone
+        ? `<button class="save-round-btn btn-primary" data-round="${r}">Save ${ROUND_NAMES[r]}</button>`
+        : `<button class="save-round-btn btn-primary btn-disabled" disabled data-round="${r}" title="Still missing: ${missing.join(', ')}">
+             Missing: ${missing.join(' · ')}
+           </button>`;
     }
 
     return [`<div class="round-control-row">
@@ -594,12 +660,17 @@ function handlePicksClick(e) {
 
   // Save round
   const saveBtn = e.target.closest('.save-round-btn[data-round]');
-  if (saveBtn) {
-    const r = parseInt(saveBtn.dataset.round);
+  if (saveBtn && !saveBtn.disabled) {
+    const r     = parseInt(saveBtn.dataset.round);
+    const avail = SERIES.filter(s => s.r === r && isSeriesAvailable(s.id));
+    const allDone = avail.every(s => getPick(currentUserId, s.id).winner && getPick(currentUserId, s.id).games);
+    if (!allDone) return; // guarded by disabled attr, but double-check
     if (!state.picksSubmitted[currentUserId]) state.picksSubmitted[currentUserId] = {};
     state.picksSubmitted[currentUserId][r] = true;
     editingState = { pid: null, round: null };
-    save(); renderBracket(); renderLeaderboard();
+    save();
+    syncPicksToGitHub();
+    renderBracket(); renderLeaderboard();
     return;
   }
 
@@ -642,7 +713,6 @@ function renderPicksTab() {
       </div>
       <div class="allpicks-right">
         <span class="allpicks-score">${correct} correct · ${score} pts</span>
-        <button class="btn-primary" id="dl-excel-btn">⬇ Excel</button>
       </div>
     </div>
     ${renderBracketLayout('view', viewingPid)}`;
@@ -651,7 +721,6 @@ function renderPicksTab() {
     viewingPid = e.target.value;
     renderPicksTab();
   });
-  el.querySelector('#dl-excel-btn').addEventListener('click', downloadExcel);
 }
 
 // ============================================================
@@ -662,7 +731,6 @@ function renderResults() {
   const el = document.getElementById('tab-participants');
 
   el.innerHTML = `
-    ${renderPlayInBanner()}
     <div class="bracket-instructions">
       Actual results — updated automatically from the NBA API every hour.
       ${scoresData
@@ -670,49 +738,6 @@ function renderResults() {
         : ''}
     </div>
     ${renderBracketLayout('results', null)}`;
-
-  // Play-in commissioner buttons (only interactive element on this tab)
-  el.querySelectorAll('.playin-btn[data-slot]').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const slot = btn.dataset.slot;
-      const team = btn.dataset.team;
-      state.playIn[slot] = state.playIn[slot] === team ? null : team;
-      if (!state.playIn[slot]) clearResultDownstream(slot === 'E8' ? 'E1v8' : 'W1v8');
-      save();
-      renderResults();
-      if (activeTab === 'bracket') renderBracket();
-    });
-  });
-}
-
-function renderPlayInBanner() {
-  if (state.playIn.E8 && state.playIn.W8) return '';
-
-  function slot(key) {
-    const pi = PLAYIN[key];
-    const w  = state.playIn[key];
-    const tA = TEAMS[pi.teamA], tB = TEAMS[pi.teamB];
-    return `<div class="playin-slot">
-      <div class="playin-slot-label">${pi.label}</div>
-      <div class="playin-game-note">${pi.game}</div>
-      <div class="playin-choices">
-        <button class="playin-btn ${w === pi.teamA ? 'selected' : ''}"
-                data-slot="${key}" data-team="${pi.teamA}"
-                style="--tc:${tA.color}">${tA.name}</button>
-        <span class="playin-vs">vs</span>
-        <button class="playin-btn ${w === pi.teamB ? 'selected' : ''}"
-                data-slot="${key}" data-team="${pi.teamB}"
-                style="--tc:${tB.color}">${tB.name}</button>
-      </div>
-      ${w ? `<div class="playin-set">✓ ${TEAMS[w].name} is the #8 seed</div>` : ''}
-    </div>`;
-  }
-
-  return `<div class="playin-banner">
-    <div class="playin-banner-title">⏳ Set Play-In Results (commissioner only)</div>
-    <div class="playin-banner-sub">Click the winner to unlock their first-round series for all participants.</div>
-    <div class="playin-slots">${slot('E8')}${slot('W8')}</div>
-  </div>`;
 }
 
 // ============================================================
@@ -803,74 +828,6 @@ function renderPickBreakdown(rows) {
     html += '</div></div>';
   }
   return html + '</div>';
-}
-
-// ============================================================
-// EXCEL EXPORT  (client-side via SheetJS)
-// ============================================================
-
-function downloadExcel() {
-  if (typeof XLSX === 'undefined') {
-    alert('Excel library not loaded. Check your internet connection.');
-    return;
-  }
-  const wb = XLSX.utils.book_new();
-
-  // Summary sheet
-  const headers = [
-    'Round', 'Series',
-    ...state.participants.flatMap(p => [`${p.name} — Pick`, `${p.name} — Games`]),
-    'Actual Winner', 'Actual Games',
-  ];
-  const summaryRows = SERIES.filter(s => isSeriesAvailable(s.id)).map(def => {
-    const [t1, t2] = resolveTeams(def.id);
-    const actual   = state.results[def.id];
-    const ag       = getActualGames(def.id);
-    return [
-      ROUND_NAMES[def.r],
-      `${t1 ? TEAMS[t1].abbr : '?'} vs ${t2 ? TEAMS[t2].abbr : '?'}`,
-      ...state.participants.flatMap(p => {
-        const pick = getPick(p.id, def.id);
-        return [pick.winner ? TEAMS[pick.winner]?.abbr || '' : '', pick.games || ''];
-      }),
-      actual ? TEAMS[actual]?.abbr || '' : '',
-      ag || '',
-    ];
-  });
-  XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet([headers, ...summaryRows]), 'Summary');
-
-  // One sheet per participant
-  for (const p of state.participants) {
-    const sheetRows = [['Round', 'Series', 'Your Pick', 'Games Prediction', 'Actual Winner', 'Actual Games', 'Points']];
-    for (const def of SERIES) {
-      if (!isSeriesAvailable(def.id)) continue;
-      const [t1, t2] = resolveTeams(def.id);
-      const pick   = getPick(p.id, def.id);
-      const actual = state.results[def.id];
-      const ag     = getActualGames(def.id);
-      let pts = '';
-      if (actual && pick.winner && actual === pick.winner) {
-        pts = ROUND_POINTS[def.r];
-        if (ag && pick.games === ag) pts += GAMES_BONUS;
-      }
-      sheetRows.push([
-        ROUND_NAMES[def.r],
-        `${t1 ? TEAMS[t1].abbr : '?'} vs ${t2 ? TEAMS[t2].abbr : '?'}`,
-        pick.winner ? TEAMS[pick.winner]?.abbr || '' : '',
-        pick.games || '',
-        actual ? TEAMS[actual]?.abbr || '' : '',
-        ag || '',
-        pts,
-      ]);
-    }
-    const { score, correct } = computeScore(p.id);
-    sheetRows.push(['', 'TOTAL', '', '', `${correct} correct`, '', score]);
-    XLSX.utils.book_append_sheet(wb,
-      XLSX.utils.aoa_to_sheet(sheetRows),
-      p.name.replace(/[\\/*?[\]:]/g, '_').slice(0, 31));
-  }
-
-  XLSX.writeFile(wb, `NBA_Bracket_2026_${new Date().toISOString().slice(0, 10)}.xlsx`);
 }
 
 // ============================================================
