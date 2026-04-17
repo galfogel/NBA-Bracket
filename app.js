@@ -76,6 +76,17 @@ function getWinPct(sid, teamKey) {
   return teamKey === t1key ? pct.t1 : pct.t2;
 }
 
+function getUpsetBonus(sid, pickedKey, roundPts) {
+  const pct = WIN_PCT[sid];
+  if (!pct) return 0;
+  const def = SERIES_MAP[sid];
+  const t1key = def.t1 || state.results[def.from?.[0]];
+  const pickedPct = pickedKey === t1key ? pct.t1 : pct.t2;
+  const favPct = Math.max(pct.t1, pct.t2);
+  if (pickedPct >= favPct) return 0;
+  return Math.floor(roundPts * favPct / 100);
+}
+
 // Default first-game UTC timestamps per series (deadline = -3 hours)
 const DEFAULT_GAME_TIMES = {
   E1v8: '2026-04-19T17:30:00Z',
@@ -530,6 +541,7 @@ function computeScore(pid) {
       let pts = ROUND_POINTS[def.r];
       const ag = getActualGames(def.id);
       if (ag && pick.games && ag === pick.games) pts += GAMES_BONUS;
+      pts += getUpsetBonus(def.id, pick.winner, ROUND_POINTS[def.r]);
       score += pts;
       correct++;
     }
@@ -1004,6 +1016,7 @@ function renderLeaderboard() {
                 let pts = ROUND_POINTS[def.r];
                 const ag = getActualGames(def.id);
                 if (ag && pick.games === ag) pts += GAMES_BONUS;
+                pts += getUpsetBonus(def.id, pick.winner, ROUND_POINTS[def.r]);
                 rs[def.r - 1] += pts;
               }
             }
