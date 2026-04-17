@@ -672,8 +672,10 @@ function cardPicks(sid, t1, t2, pid) {
 function cardView(sid, t1, t2, pid) {
   const locked = isSeriesLocked(sid);
 
-  // Picks are hidden until the series locks (starts)
-  if (!locked) {
+  const isAdmin = state.participants.find(p => p.id === currentUserId)?.name.toLowerCase() === 'fogel';
+
+  // Picks are hidden until the series locks (starts), except for the admin
+  if (!locked && !isAdmin) {
     function rowHidden(key) {
       const t = TEAMS[key];
       return `<div class="team-row no-pointer">
@@ -952,13 +954,14 @@ function renderPickBreakdown(rows) {
       const [t1, t2] = resolveTeams(def.id);
       const ag = getActualGames(def.id);
       const seriesLocked = isSeriesLocked(def.id);
+      const isAdmin = state.participants.find(p => p.id === currentUserId)?.name.toLowerCase() === 'fogel';
       html += `<div class="breakdown-series">
         <div class="series-title">${t1 ? TEAMS[t1].abbr : '?'} vs ${t2 ? TEAMS[t2].abbr : '?'}</div>
         <div class="actual-result">${actual
           ? `<strong style="color:${TEAMS[actual].color}">${TEAMS[actual].abbr}</strong>${ag ? ` in ${ag}` : ''}`
           : 'Pending'}</div>
         <div class="picks-list">
-          ${seriesLocked
+          ${seriesLocked || isAdmin
             ? rows.map(p => {
                 const pick = getPick(p.id, def.id);
                 const ok   = actual && pick.winner && actual === pick.winner;
