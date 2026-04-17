@@ -17,6 +17,8 @@
   --radius: 8px;
   /* card width scales to fill viewport across all 7 columns */
   --card-w: clamp(96px, calc((100vw - 96px) / 7.4), 160px);
+  /* explicit bracket height so flex stretch chain is definite */
+  --bracket-h: 580px;
 }
 
 body {
@@ -303,7 +305,7 @@ main { padding: 24px; }
   gap: 0;
   overflow-x: auto;
   padding: 24px 0 8px;
-  min-height: 560px;
+  height: var(--bracket-h);   /* definite height → flex stretch chain works */
 }
 
 /* ---- Conference half ---- */
@@ -311,6 +313,7 @@ main { padding: 24px; }
   display: flex;
   flex: 1;
   min-width: 0;
+  height: 100%;               /* inherit bracket height so columns can stretch */
 }
 
 .half.east { flex-direction: row; }
@@ -323,6 +326,7 @@ main { padding: 24px; }
   align-items: stretch;
   width: var(--card-w);
   flex-shrink: 0;
+  height: 100%;               /* fill the half's height → col-series can flex: 1 */
 }
 
 .half.east .bracket-col { border-right: 1px solid var(--border); padding-right: 8px; margin-right: 8px; }
@@ -1078,6 +1082,7 @@ main { padding: 24px; }
 @media (max-width: 600px) {
   :root {
     --card-w: 96px;
+    --bracket-h: 480px;
   }
 
   /* ── Header: title+user on row 1, nav on row 2 ── */
@@ -1122,7 +1127,7 @@ main { padding: 24px; }
   main { padding: 8px; }
 
   /* ── Bracket ── */
-  .bracket { padding: 20px 0 8px; min-height: 480px; }
+  .bracket { padding: 20px 0 8px; }
   .conf-label { font-size: 9px; letter-spacing: 0.06em; }
 
   /* ── Picks tab ── */
