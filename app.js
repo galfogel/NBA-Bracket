@@ -95,23 +95,20 @@ function save() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
 }
 
-// ── Shared picks database (data/picks.json in repo) ───────────
-// Set GITHUB_TOKEN to a fine-grained PAT with contents:write on
-// this repo so saved picks are pushed to the shared database.
-// All users can READ picks.json without a token (public repo).
-// Leave blank → app works locally only; other users won't appear.
-const GITHUB_REPO  = 'galfogel/NBA-Bracket';
-const GITHUB_TOKEN = '';   // ← add your token here
+// ── Shared picks database (Firebase Firestore) ────────────────
+const FIRESTORE_API_KEY = 'AIzaSyDIzbGO0lnNwKYYRuEd0ap4f7yX_uFtXus';
+const FIRESTORE_PROJECT = 'nba-bracket-f91f1';
+firebase.initializeApp({ apiKey: FIRESTORE_API_KEY, projectId: FIRESTORE_PROJECT });
+const db = firebase.firestore();
 
-// ── Read picks from repo ───────────────────────────────────────
+// ── Read picks from Firestore ──────────────────────────────────
 async function fetchPicks() {
   try {
-    const resp = await fetch('data/picks.json?_=' + Date.now());
-    if (!resp.ok) return;
-    const remote = await resp.json();
-    mergeRemoteState(remote);
+    const snap = await db.collection('brackets').doc('nba-2026').get();
+    if (!snap.exists) return;
+    mergeRemoteState(snap.data());
     save();
-  } catch (_) {}
+  } catch (err) { console.warn('fetchPicks error:', err); }
 }
 
 // Merge remote participants + picks into local state.
@@ -146,51 +143,21 @@ function mergeRemoteState(remote) {
   }
 }
 
-// ── Write picks to repo ────────────────────────────────────────
+// ── Write picks to Firestore ───────────────────────────────────
 async function syncPicksToGitHub() {
-  if (!GITHUB_TOKEN) return;
-  const apiUrl = `https://api.github.com/repos/${GITHUB_REPO}/contents/data/picks.json`;
-  const headers = {
-    Authorization: `token ${GITHUB_TOKEN}`,
-    'Content-Type': 'application/json',
-  };
   try {
-    // Get current SHA (required for update; also merges any concurrent saves)
-    const getResp = await fetch(apiUrl, { headers });
-    let sha = null;
-    if (getResp.ok) {
-      const existing = await getResp.json();
-      sha = existing.sha;
-      // Merge any concurrent changes from other users
-      try {
-        const current = JSON.parse(atob(existing.content.replace(/\n/g, '')));
-        mergeRemoteState(current);
-        save();
-      } catch (_) {}
-    }
-
-    const payload = {
-      updated:         new Date().toISOString(),
-      participants:    state.participants.map(({ id, name }) => ({ id, name })),
-      picks:           state.picks,
-      picksSubmitted:  state.picksSubmitted,
-    };
-    const bytes   = new TextEncoder().encode(JSON.stringify(payload, null, 2));
-    const content = btoa(Array.from(bytes, b => String.fromCharCode(b)).join(''));
-
-    const putResp = await fetch(apiUrl, {
-      method: 'PUT',
-      headers,
-      body: JSON.stringify({
-        message: `picks: update ${new Date().toISOString().slice(0, 10)}`,
-        content,
-        ...(sha ? { sha } : {}),
-      }),
+    const ref = db.collection('brackets').doc('nba-2026');
+    await db.runTransaction(async (tx) => {
+      const snap = await tx.get(ref);
+      if (snap.exists) { mergeRemoteState(snap.data()); save(); }
+      tx.set(ref, {
+        updated:        new Date().toISOString(),
+        participants:   state.participants.map(({ id, name }) => ({ id, name })),
+        picks:          state.picks,
+        picksSubmitted: state.picksSubmitted,
+      });
     });
-    if (!putResp.ok) console.warn('picks sync failed', putResp.status);
-  } catch (err) {
-    console.warn('syncPicksToGitHub error:', err);
-  }
+  } catch (err) { console.warn('syncPicksToGitHub error:', err); }
 }
 
 // Pick accessor — normalises legacy string format to { winner, games }

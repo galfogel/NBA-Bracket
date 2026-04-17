@@ -1,9 +1,6 @@
 name: Generate Excel Bracket
 
 on:
-  push:
-    paths:
-      - 'data/picks.json'
   schedule:
     - cron: '15 * * * *'   # 15 min after scores run (scores run on the hour)
   workflow_dispatch:
