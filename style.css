@@ -506,6 +506,48 @@ main { padding: 24px; }
   flex-shrink: 0;
 }
 
+/* ---- Mobile list view (hidden on desktop, shown on mobile) ---- */
+.bracket-list { display: none; }
+
+.blist-conf {
+  margin-bottom: 20px;
+}
+
+.blist-conf-header {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 10px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--border);
+}
+
+.blist-round {
+  margin-bottom: 12px;
+}
+
+.blist-round-title {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-bottom: 6px;
+}
+
+.blist-cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+}
+
+.blist-champion {
+  text-align: center;
+  margin-top: 10px;
+}
+
 /* ---- Instructions ---- */
 .bracket-instructions {
   color: var(--text-dim);
@@ -1126,8 +1168,9 @@ main { padding: 24px; }
   /* ── Main content ── */
   main { padding: 8px; }
 
-  /* ── Bracket ── */
-  .bracket { padding: 20px 0 8px; }
+  /* ── Bracket: hide diagram, show list ── */
+  .bracket-wrap { display: none; }
+  .bracket-list { display: block; }
   .conf-label { font-size: 9px; letter-spacing: 0.06em; }
 
   /* ── Picks tab ── */

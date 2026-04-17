@@ -519,6 +519,37 @@ function renderBracketLayout(mode, pid) {
           ${bracketCol(['W1v8','W4v5','W2v7','W3v6'], 1, 'west', mode, pid)}
         </div>
       </div>
+    </div>
+    ${renderBracketList(mode, pid)}`;
+}
+
+function renderBracketList(mode, pid) {
+  const conf = (name, r1ids, r2ids, r3id) => `
+    <div class="blist-conf">
+      <div class="blist-conf-header">${name}</div>
+      <div class="blist-round">
+        <div class="blist-round-title">First Round</div>
+        <div class="blist-cards">${r1ids.map(id => bracketCard(id, mode, pid)).join('')}</div>
+      </div>
+      <div class="blist-round">
+        <div class="blist-round-title">Semifinals</div>
+        <div class="blist-cards">${r2ids.map(id => bracketCard(id, mode, pid)).join('')}</div>
+      </div>
+      <div class="blist-round">
+        <div class="blist-round-title">Conference Finals</div>
+        <div class="blist-cards">${bracketCard(r3id, mode, pid)}</div>
+      </div>
+    </div>`;
+
+  return `
+    <div class="bracket-list">
+      ${conf('Eastern Conference', ['E1v8','E4v5','E2v7','E3v6'], ['EQ1','EQ2'], 'ECF')}
+      ${conf('Western Conference', ['W1v8','W4v5','W2v7','W3v6'], ['WQ1','WQ2'], 'WCF')}
+      <div class="blist-conf">
+        <div class="blist-conf-header">NBA Finals</div>
+        <div class="blist-cards">${bracketCard('FINALS', mode, pid)}</div>
+        <div class="blist-champion">${renderChampion(mode, pid)}</div>
+      </div>
     </div>`;
 }
 
