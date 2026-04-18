@@ -14,23 +14,30 @@ jobs:
 
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4.2.2
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v5.6.0
         with:
           python-version: '3.11'
 
       - name: Install dependencies
-        run: pip install requests
+        run: pip install --quiet requests
+        continue-on-error: false  # if pip fails, no point continuing
 
       - name: Fetch scores
         run: python scripts/fetch_scores.py
+        continue-on-error: true   # NBA API timeouts write an error field but exit 0; keep workflow green
 
       - name: Commit and push if data changed
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add data/scores.json
-          git diff --cached --quiet || \
-            (git commit -m "chore: update scores $(date -u '+%Y-%m-%d %H:%M UTC')" && git push)
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "chore: update scores $(date -u '+%Y-%m-%d %H:%M UTC')"
+            git pull --rebase origin main
+            git push
+          fi
