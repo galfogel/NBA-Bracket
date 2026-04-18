@@ -1325,3 +1325,38 @@ main { padding: 24px; }
   .login-box { padding: 24px 16px; }
   .login-logo { font-size: 36px; }
 }
+
+/* ============================================================
+   SYNC ERROR BANNER
+   ============================================================ */
+.sync-toast {
+  position: fixed;
+  top: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2000;
+  max-width: min(640px, calc(100vw - 24px));
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  background: color-mix(in srgb, var(--red) 20%, var(--surface));
+  border: 1px solid color-mix(in srgb, var(--red) 55%, transparent);
+  border-radius: var(--radius);
+  color: var(--text);
+  font-size: 13px;
+  line-height: 1.4;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.35);
+}
+.sync-toast.hidden { display: none; }
+.sync-toast-msg { flex: 1; }
+.sync-toast-close {
+  background: transparent;
+  border: none;
+  color: var(--text-dim);
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0 4px;
+}
+.sync-toast-close:hover { color: var(--text); }

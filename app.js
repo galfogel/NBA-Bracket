@@ -167,11 +167,26 @@ async function hashPassword(pass) {
   return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
 }
 
+// ── Sync error banner ─────────────────────────────────────────
+function showSyncError(action, err) {
+  const el = document.getElementById('sync-error');
+  if (!el) return;
+  const detail = err?.message || String(err);
+  el.querySelector('.sync-toast-msg').textContent =
+    `Couldn't ${action} — your picks may not be saved. ` +
+    `Check your connection; if you're on a network that blocks Google services (e.g. China/Iran), try a VPN. ` +
+    `(${detail})`;
+  el.classList.remove('hidden');
+}
+function clearSyncError() {
+  document.getElementById('sync-error')?.classList.add('hidden');
+}
+
 // ── Read picks from Firestore ──────────────────────────────────
 async function fetchPicks() {
   try {
     const snap = await db.collection('brackets').doc('nba-2026').get();
-    if (!snap.exists) return;
+    if (!snap.exists) { clearSyncError(); return; }
     const data = snap.data();
     data.picks = picksToKeys(data.picks);
     mergeRemoteState(data);
@@ -182,7 +197,11 @@ async function fetchPicks() {
       if (!remoteIds.has(currentUserId)) { switchUser(); return; }
     }
     save();
-  } catch (err) { console.warn('fetchPicks error:', err); }
+    clearSyncError();
+  } catch (err) {
+    console.warn('fetchPicks error:', err);
+    showSyncError('load picks from the server', err);
+  }
 }
 
 // Merge remote participants + picks into local state.
@@ -284,9 +303,11 @@ async function syncPicksToGitHub() {
     // Signup confirmed — from this point on, the removed-user check applies to this id.
     if (pendingSignupId && pendingSignupId === currentUserId) pendingSignupId = null;
     save();
+    clearSyncError();
 
   } catch (err) {
     console.error('syncPicksToGitHub error:', err);
+    showSyncError('save your picks to the server', err);
   }
 }
 
@@ -1475,6 +1496,7 @@ async function beginApp() {
 document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('gate-btn').addEventListener('click', attemptGate);
   document.getElementById('gate-pass').addEventListener('keydown', e => { if (e.key === 'Enter') attemptGate(); });
+  document.querySelector('#sync-error .sync-toast-close').addEventListener('click', clearSyncError);
 
   if (initGate()) beginApp();
 });
