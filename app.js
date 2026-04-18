@@ -471,9 +471,9 @@ function formatCountdown(lockTs, gameTs) {
   const days  = Math.floor(totalMins / 1440);
   const hours = Math.floor((totalMins % 1440) / 60);
   const mins  = totalMins % 60;
-  if (days > 0)  return `Game 1 in ${days}d ${hours}h`;
-  if (hours > 0) return `Game 1 in ${hours}h ${mins}m`;
-  return `Game 1 in ${mins}m`;
+  if (days > 0)  return `Locks in ${days}d ${hours}h`;
+  if (hours > 0) return `Locks in ${hours}h ${mins}m`;
+  return `Locks in ${mins}m`;
 }
 
 let _countdownTimer = null;
