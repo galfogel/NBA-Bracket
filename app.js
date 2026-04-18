@@ -1352,7 +1352,7 @@ function renderInfo() {
           <thead><tr><th>Matchup</th><th>Game 1 Tip-off</th></tr></thead>
           <tbody>${deadlineRows}</tbody>
         </table>
-        <p class="info-detail">R2–Finals deadlines shown once the NBA announces the schedule. All times in Israel Standard Time (IST).</p>
+        <p class="info-detail">SF, CF &amp; Finals deadlines shown once the NBA announces the schedule. All times in Israel Standard Time (IST).</p>
       </section>
     </div>
   `;
