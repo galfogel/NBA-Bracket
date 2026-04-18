@@ -363,6 +363,7 @@ async function attemptLogin() {
   }
 
   localStorage.setItem(USER_KEY, currentUserId);
+  activeTab = 'bracket';
   setTimeout(() => {
     document.getElementById('login-overlay').classList.add('hidden');
     startApp();
