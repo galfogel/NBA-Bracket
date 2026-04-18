@@ -311,9 +311,21 @@ function initLogin() {
   }
 }
 
+let loginMode = 'signin'; // 'signin' | 'signup'
+
+function setLoginMode(mode) {
+  loginMode = mode;
+  document.querySelectorAll('.login-tab').forEach(t =>
+    t.classList.toggle('active', t.dataset.mode === mode));
+  document.getElementById('login-btn').textContent = mode === 'signin' ? 'Sign In' : 'Sign Up';
+  document.getElementById('login-msg').textContent = '';
+}
+
 function showLoginOverlay(canGoBack = false) {
   const overlay = document.getElementById('login-overlay');
   overlay.classList.remove('hidden');
+  setLoginMode('signin');
+
   let backBtn = overlay.querySelector('.login-back-btn');
   if (canGoBack) {
     if (!backBtn) {
@@ -344,11 +356,10 @@ async function attemptLogin() {
   const pass = passInput.value;
 
   if (!name) {
-    msg.textContent = 'Please enter your name.';
+    msg.textContent = 'Please enter your username.';
     msg.className = 'login-msg msg-error';
     return;
   }
-
   if (!pass) {
     msg.textContent = 'Password is required.';
     msg.className = 'login-msg msg-error';
@@ -359,7 +370,12 @@ async function attemptLogin() {
   const hash     = await hashPassword(pass);
   const existing = state.participants.find(p => p.name.toLowerCase() === name.toLowerCase());
 
-  if (existing) {
+  if (loginMode === 'signin') {
+    if (!existing) {
+      msg.textContent = 'Username not found. Sign up to create an account.';
+      msg.className = 'login-msg msg-error';
+      return;
+    }
     if (existing.passwordHash !== hash) {
       msg.textContent = 'Incorrect password.';
       msg.className = 'login-msg msg-error';
@@ -370,11 +386,17 @@ async function attemptLogin() {
     msg.className = 'login-msg msg-welcome';
     currentUserId = existing.id;
   } else {
+    // signup
+    if (existing) {
+      msg.textContent = 'Username already taken. Sign in instead.';
+      msg.className = 'login-msg msg-error';
+      return;
+    }
     const id = 'p_' + Date.now();
     state.participants.push({ id, name, passwordHash: hash });
     state.picks[id] = {};
     save();
-    syncPicksToGitHub(); // register new user in shared DB immediately
+    syncPicksToGitHub();
     msg.textContent = `Welcome, ${name}! Account created.`;
     msg.className = 'login-msg msg-welcome';
     currentUserId = id;
@@ -1348,6 +1370,8 @@ async function beginApp() {
     btn.addEventListener('click', () => switchTab(btn.dataset.tab)));
 
   document.getElementById('login-btn').addEventListener('click', attemptLogin);
+  document.querySelectorAll('.login-tab').forEach(btn =>
+    btn.addEventListener('click', () => setLoginMode(btn.dataset.mode)));
   ['login-name', 'login-pass'].forEach(id =>
     document.getElementById(id).addEventListener('keydown', e => { if (e.key === 'Enter') attemptLogin(); }));
 
