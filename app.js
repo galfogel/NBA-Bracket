@@ -265,9 +265,13 @@ async function syncPicksToGitHub() {
       }
       if (remote.finalsGame1ActualGap != null) state.finalsGame1ActualGap = remote.finalsGame1ActualGap;
 
-      // Prune local participants to only those authorised in Firestore (plus the pending signup, if any)
+      // Prune local participants (and their picks/submitted/gap) to only those in Firestore
+      // (plus the pending signup, if any) so removed users' stale data isn't re-written.
       const allowedIds = pendingSignupId ? new Set([...remoteIds, pendingSignupId]) : remoteIds;
       state.participants = state.participants.filter(p => allowedIds.has(p.id));
+      for (const pid of Object.keys(state.picks))          if (!allowedIds.has(pid)) delete state.picks[pid];
+      for (const pid of Object.keys(state.picksSubmitted)) if (!allowedIds.has(pid)) delete state.picksSubmitted[pid];
+      for (const pid of Object.keys(state.finalsGap))      if (!allowedIds.has(pid)) delete state.finalsGap[pid];
     }
     await ref.set({
       updated:              new Date().toISOString(),
