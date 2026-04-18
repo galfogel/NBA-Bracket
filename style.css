@@ -542,7 +542,7 @@ main { padding: 24px; }
 .bracket-list--single .games-label { display: none; }
 .bracket-list--single .games-btn   { flex: 1; }
 .bracket-list--single .card-tbd    { min-height: 185px; }
-.bracket-list--single .team-row.tbd-row { min-height: 56px; }
+.tbd-spacer { display: inline-block; flex-shrink: 0; }
 
 .blist-champion {
   text-align: center;

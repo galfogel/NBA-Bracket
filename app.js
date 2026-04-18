@@ -801,7 +801,7 @@ function bracketCard(sid, mode, pid) {
   // At least one team known — show partial card (non-interactive)
   if (!t1 || !t2) {
     function teamRow(key) {
-      if (!key) return `<div class="team-row tbd-row"><span class="team-name">TBD</span></div>`;
+      if (!key) return `<div class="team-row tbd-row"><span class="seed-num"></span><span class="team-logo tbd-spacer"></span><span class="team-name">TBD</span></div>`;
       const t = TEAMS[key];
       const pct = getWinPct(sid, key);
       return `<div class="team-row tbd-row">
