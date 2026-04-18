@@ -1063,7 +1063,7 @@ function renderRoundControls(pid) {
       const canSave = !(r === 4 && state.finalsGap[pid] == null);
       badge  = `<span class="rc-badge rc-open">Open</span>`;
       action = canSave
-        ? `<button class="save-round-btn btn-primary" data-round="${r}">Save ${ROUND_NAMES[r]}${missing.length ? ` (${missing.join(' · ')})` : ''}</button>`
+        ? `<button class="save-round-btn btn-primary" data-round="${r}">${isTestUser() ? 'Save' : `Save ${ROUND_NAMES[r]}${missing.length ? ` (${missing.join(' · ')})` : ''}`}</button>`
         : `<button class="save-round-btn btn-primary btn-disabled" disabled data-round="${r}" title="Still missing: ${missing.join(', ')}">
              Missing: ${missing.join(' · ')}
            </button>`;
