@@ -1234,7 +1234,6 @@ main { padding: 24px; }
   /* Compact team rows so cards are shorter */
   .team-row { padding: 4px 6px; }
   .team-logo { width: 16px; height: 16px; }
-  .team-name { font-size: 10px; }
 }
 
 /* ── Mobile (≤ 600px) ─────────────────────────────────────── */
@@ -1243,6 +1242,8 @@ main { padding: 24px; }
     --card-w: 96px;
     --bracket-h: 480px;
   }
+
+  body { overflow-x: hidden; }
 
   /* ── Header: title+user on row 1, nav on row 2 ── */
   header {

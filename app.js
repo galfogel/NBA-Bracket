@@ -1311,23 +1311,26 @@ function renderInfo() {
           <tbody>
             ${pointsRows}
             <tr><td>Correct series length</td><td>+${GAMES_BONUS} pts</td></tr>
-            <tr class="upset-row"><td>Upset bonus <span class="info-note">(picking the underdog correctly)</span></td><td>+2 × pts × (floor10(fav%) − 50%) / 100</td></tr>
-          </tbody>
-        </table>
-        <p class="info-detail">Upset bonus uses fan pick % from picks.nba.com, floored to the nearest 10%. If the favorite is below 60%, a minimum gap of 5% applies. Example: picking ORL (92% fav → floored 90%) correctly in R1 gives <strong>2 × 10 × 40% = +8 bonus pts</strong>.</p>
-        <p class="info-detail">Upset bonus table (underdog potential pts = base + bonus):</p>
-        <table class="info-table">
-          <thead><tr><th>Fav% range</th><th>R1</th><th>R2</th><th>R3</th><th>Finals</th></tr></thead>
-          <tbody>
-            <tr><td>50–59%</td><td>10 +1</td><td>20 +2</td><td>40 +4</td><td>80 +8</td></tr>
-            <tr><td>60–69%</td><td>10 +2</td><td>20 +4</td><td>40 +8</td><td>80 +16</td></tr>
-            <tr><td>70–79%</td><td>10 +4</td><td>20 +8</td><td>40 +16</td><td>80 +32</td></tr>
-            <tr><td>80–89%</td><td>10 +6</td><td>20 +12</td><td>40 +24</td><td>80 +48</td></tr>
-            <tr><td>90–99%</td><td>10 +8</td><td>20 +16</td><td>40 +32</td><td>80 +64</td></tr>
+            <tr class="upset-row"><td>Upset bonus <span class="info-note">(picking the underdog correctly)</span></td><td>see table below</td></tr>
           </tbody>
         </table>
         <p class="info-detail"><strong>Tiebreaker:</strong> If scores are equal, the player whose predicted Game 1 NBA Finals score margin is closest to the actual margin wins the higher place. Equal distance = shared place.</p>
       </section>
+
+      <section class="info-section">
+        <h2>Upset Bonus</h2>
+        <p class="info-detail">Based on fan pick % from picks.nba.com, floored to the nearest 10%. Minimum gap 5% when fav% is below 60%. Formula: <strong>2 × pts × (floor10(fav%) − 50%) / 100</strong>.</p>
+        <p class="info-detail">Underdog potential pts = <span style="color:var(--text-dim)">base</span> + <span style="color:var(--green)">bonus</span>:</p>
+        <table class="info-table">
+          <thead><tr><th>Fav% range</th><th>R1</th><th>R2</th><th>R3</th><th>Finals</th></tr></thead>
+          <tbody>
+            <tr><td>50–59%</td><td><span class="pot-base">10</span> <span class="pot-bonus">+1</span></td><td><span class="pot-base">20</span> <span class="pot-bonus">+2</span></td><td><span class="pot-base">40</span> <span class="pot-bonus">+4</span></td><td><span class="pot-base">80</span> <span class="pot-bonus">+8</span></td></tr>
+            <tr><td>60–69%</td><td><span class="pot-base">10</span> <span class="pot-bonus">+2</span></td><td><span class="pot-base">20</span> <span class="pot-bonus">+4</span></td><td><span class="pot-base">40</span> <span class="pot-bonus">+8</span></td><td><span class="pot-base">80</span> <span class="pot-bonus">+16</span></td></tr>
+            <tr><td>70–79%</td><td><span class="pot-base">10</span> <span class="pot-bonus">+4</span></td><td><span class="pot-base">20</span> <span class="pot-bonus">+8</span></td><td><span class="pot-base">40</span> <span class="pot-bonus">+16</span></td><td><span class="pot-base">80</span> <span class="pot-bonus">+32</span></td></tr>
+            <tr><td>80–89%</td><td><span class="pot-base">10</span> <span class="pot-bonus">+6</span></td><td><span class="pot-base">20</span> <span class="pot-bonus">+12</span></td><td><span class="pot-base">40</span> <span class="pot-bonus">+24</span></td><td><span class="pot-base">80</span> <span class="pot-bonus">+48</span></td></tr>
+            <tr><td>90–99%</td><td><span class="pot-base">10</span> <span class="pot-bonus">+8</span></td><td><span class="pot-base">20</span> <span class="pot-bonus">+16</span></td><td><span class="pot-base">40</span> <span class="pot-bonus">+32</span></td><td><span class="pot-base">80</span> <span class="pot-bonus">+64</span></td></tr>
+          </tbody>
+        </table>
 
       <section class="info-section">
         <h2>Prizes</h2>
