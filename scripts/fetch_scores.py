@@ -45,12 +45,19 @@ def fetch_playoff_games():
         "SeasonType": "Playoffs",
         "LeagueID": "00",
     }
-    resp = requests.get(url, headers=HEADERS, params=params, timeout=30)
-    resp.raise_for_status()
-    data = resp.json()
-    rs = data["resultSets"][0]
-    columns = rs["headers"]
-    return [dict(zip(columns, row)) for row in rs["rowSet"]]
+    last_exc = None
+    for attempt in range(3):
+        try:
+            resp = requests.get(url, headers=HEADERS, params=params, timeout=30)
+            resp.raise_for_status()
+            data = resp.json()
+            rs = data["resultSets"][0]
+            columns = rs["headers"]
+            return [dict(zip(columns, row)) for row in rs["rowSet"]]
+        except Exception as exc:
+            last_exc = exc
+            print(f"Attempt {attempt + 1} failed: {exc}", file=sys.stderr)
+    raise last_exc
 
 
 def compute_records(games):
