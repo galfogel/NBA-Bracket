@@ -1061,9 +1061,14 @@ function renderRoundControls(pid) {
       if (games  < avail.length) missing.push(`${avail.length - games} game count${avail.length - games > 1 ? 's' : ''}`);
       if (r === 4 && state.finalsGap[pid] == null) missing.push('Game 1 gap');
       const canSave = !(r === 4 && state.finalsGap[pid] == null);
+      const nothingPicked = picked === 0;
+      const unchangedEdit = isEditing && editingState.snapshot === JSON.stringify(
+        SERIES.filter(s => s.r === r).reduce((acc, s) => { acc[s.id] = getPick(pid, s.id); return acc; }, {})
+      );
+      const testDisabled = isTestUser() && (nothingPicked || unchangedEdit);
       badge  = `<span class="rc-badge rc-open">Open</span>`;
       action = canSave
-        ? `<button class="save-round-btn btn-primary" data-round="${r}">${isTestUser() ? 'Save' : `Save ${ROUND_NAMES[r]}${missing.length ? ` (${missing.join(' · ')})` : ''}`}</button>`
+        ? `<button class="save-round-btn btn-primary${testDisabled ? ' btn-disabled' : ''}" ${testDisabled ? 'disabled ' : ''}data-round="${r}">${isTestUser() ? 'Save' : `Save ${ROUND_NAMES[r]}${missing.length ? ` (${missing.join(' · ')})` : ''}`}</button>`
         : `<button class="save-round-btn btn-primary btn-disabled" disabled data-round="${r}" title="Still missing: ${missing.join(', ')}">
              Missing: ${missing.join(' · ')}
            </button>`;
@@ -1135,7 +1140,9 @@ function handlePicksClick(e) {
   // Edit round
   const editBtn = e.target.closest('.edit-round-btn[data-round]');
   if (editBtn) {
-    editingState = { pid: currentUserId, round: parseInt(editBtn.dataset.round) };
+    const er = parseInt(editBtn.dataset.round);
+    const snap = SERIES.filter(s => s.r === er).reduce((acc, s) => { acc[s.id] = getPick(currentUserId, s.id); return acc; }, {});
+    editingState = { pid: currentUserId, round: er, snapshot: JSON.stringify(snap) };
     renderBracket();
   }
 }
