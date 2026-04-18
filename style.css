@@ -541,7 +541,6 @@ main { padding: 24px; }
 .bracket-list--single .pot-pts    { font-size: 13px; }
 .bracket-list--single .games-label { display: none; }
 .bracket-list--single .games-btn   { flex: 1; }
-.bracket-list--single .card-tbd    { min-height: 185px; }
 .tbd-spacer { display: inline-block; flex-shrink: 0; }
 
 .blist-champion {
