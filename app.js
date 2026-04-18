@@ -495,8 +495,7 @@ function startCountdownTimer() {
 function formatDeadline(sid) {
   const gt = getGameTime(sid);
   if (!gt) return null;
-  const dl = new Date(new Date(gt).getTime() - 3 * 3600 * 1000);
-  return dl.toLocaleString('en-US', {
+  return new Date(gt).toLocaleString('en-US', {
     month: 'short', day: 'numeric',
     hour: 'numeric', minute: '2-digit',
     timeZone: 'Asia/Jerusalem', timeZoneName: 'short',
@@ -808,7 +807,7 @@ function cardPicks(sid, t1, t2, pid) {
       <img class="team-logo" src="${t.logo}" alt="${t.abbr}" />
       <span class="team-name">${t.name}</span>
       ${pct !== null ? `<span class="fan-pct">${pct}%</span>` : ''}
-      <span class="pot-pts ${pct === null ? 'pot-pts-push' : ''} ${isUpset ? 'pot-pts-upset' : ''}">${potPts}pts</span>
+      <span class="pot-pts ${pct === null ? 'pot-pts-push' : ''} ${isUpset ? 'pot-pts-upset' : ''}">${potPts}</span>
       ${mark ? `<span class="win-mark">${mark}</span>` : ''}
     </div>`;
   }
@@ -1291,8 +1290,7 @@ function renderInfo() {
     const gameTs = scoresData?.gameTimes?.[s.id] ?? DEFAULT_GAME_TIMES[s.id];
     let deadlineStr = '—';
     if (gameTs) {
-      const d = new Date(new Date(gameTs).getTime() - 3 * 60 * 60 * 1000);
-      deadlineStr = d.toLocaleString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit', timeZone: 'Asia/Jerusalem' }) + ' (IST)';
+      deadlineStr = new Date(gameTs).toLocaleString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit', timeZone: 'Asia/Jerusalem' }) + ' (IST)';
     }
     return `<tr><td><div class="info-matchup-cell">${matchup}</div></td><td>${deadlineStr}</td></tr>`;
   }).join('');
@@ -1330,7 +1328,7 @@ function renderInfo() {
         <h2>Pick Deadlines — First Round</h2>
         <p class="info-detail">Picks lock <strong>3 hours</strong> before the first game of each series. Later rounds lock when the matchup is confirmed.</p>
         <table class="info-table">
-          <thead><tr><th>Matchup</th><th>Deadline</th></tr></thead>
+          <thead><tr><th>Matchup</th><th>Game 1 Tip-off (IST)</th></tr></thead>
           <tbody>${deadlineRows}</tbody>
         </table>
       </section>

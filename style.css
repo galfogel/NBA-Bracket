@@ -345,8 +345,8 @@ main { padding: 24px; }
 .team-row {
   display: flex;
   align-items: center;
-  gap: 6px;
-  padding: 6px 8px;
+  gap: 4px;
+  padding: 6px 6px;
   cursor: default;
   transition: background 0.1s;
   position: relative;
@@ -399,7 +399,7 @@ main { padding: 24px; }
   color: var(--text-dim);
   margin-left: auto;
   flex-shrink: 0;
-  padding-right: 4px;
+  padding-right: 2px;
 }
 
 .pot-pts {
@@ -1211,6 +1211,8 @@ main { padding: 24px; }
 @media (max-width: 900px) {
   :root { --card-w: clamp(130px, calc((100vw - 80px) / 7.2), 180px); }
   main { padding: 16px; }
+  .fan-pct { display: none; }
+  .pot-pts { margin-left: auto; }
 }
 
 /* ── Landscape phone (short viewport) ────────────────────── */
@@ -1280,6 +1282,11 @@ main { padding: 24px; }
   .bracket-wrap { display: none; }
   .bracket-list { display: block; }
   .conf-label { font-size: 9px; letter-spacing: 0.06em; }
+
+  /* ── Compact team row on mobile ── */
+  .team-logo { width: 18px; height: 18px; }
+  .fan-pct { display: none; }
+  .pot-pts-push { margin-left: auto; }
 
   /* ── Picks tab ── */
   .picks-cards-grid { grid-template-columns: 1fr 1fr; gap: 6px; }
