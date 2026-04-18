@@ -170,6 +170,7 @@ async function hashPassword(pass) {
 const ADMIN_NAME = 'Fogel';
 const HIDDEN_USER_NAMES = new Set(['Test', 'Testt']);
 const isHiddenUser = p => HIDDEN_USER_NAMES.has(p.name);
+const isTestUser   = () => state.participants.find(p => p.id === currentUserId)?.name === 'Test';
 
 function isAdmin(pid = currentUserId) {
   const p = state.participants.find(p => p.id === pid);
@@ -765,7 +766,7 @@ function renderBracketList(mode, pid) {
     </div>`;
 
   return `
-    <div class="bracket-list">
+    <div class="bracket-list${isTestUser() ? ' bracket-list--single' : ''}">
       ${conf('Eastern Conference', ['E1v8','E4v5','E2v7','E3v6'], ['EQ1','EQ2'], 'ECF')}
       ${conf('Western Conference', ['W1v8','W4v5','W2v7','W3v6'], ['WQ1','WQ2'], 'WCF')}
       <div class="blist-conf">

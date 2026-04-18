@@ -530,6 +530,7 @@ main { padding: 24px; }
   grid-template-columns: 1fr 1fr;
   gap: 6px;
 }
+.bracket-list--single .blist-cards { grid-template-columns: 1fr; }
 
 .blist-champion {
   text-align: center;
