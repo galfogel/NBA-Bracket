@@ -222,6 +222,14 @@ function mergeRemoteState(remote) {
   }
   // Commissioner-set actual gap: remote always wins
   if (remote.finalsGame1ActualGap != null) state.finalsGame1ActualGap = remote.finalsGame1ActualGap;
+  // Play-in seeds: remote wins (commissioner sets via Results tab and it propagates)
+  if (remote.playIn) {
+    for (const slot of ['E8', 'W8']) {
+      if (remote.playIn[slot] && !state.playIn[slot]) {
+        state.playIn[slot] = remote.playIn[slot];
+      }
+    }
+  }
 }
 
 // ── Write picks to Firestore ───────────────────────────────────
@@ -244,6 +252,12 @@ async function syncPicksToGitHub() {
       }
       if (remote.finalsGame1ActualGap != null) state.finalsGame1ActualGap = remote.finalsGame1ActualGap;
     }
+    // Preserve remote playIn unless local has a value (commissioner sets it)
+    const remotePlayIn = snap.exists ? snap.data().playIn || {} : {};
+    const mergedPlayIn = {
+      E8: state.playIn.E8 || remotePlayIn.E8 || null,
+      W8: state.playIn.W8 || remotePlayIn.W8 || null,
+    };
     await ref.set({
       updated:              new Date().toISOString(),
       participants:         state.participants.map(({ id, name, passwordHash }) => ({ id, name, passwordHash: passwordHash || null })),
@@ -251,6 +265,7 @@ async function syncPicksToGitHub() {
       picksSubmitted:       state.picksSubmitted,
       finalsGap:            state.finalsGap,
       finalsGame1ActualGap: state.finalsGame1ActualGap ?? null,
+      playIn:               mergedPlayIn,
     });
     save();
     console.log('picks saved to Firestore ✓');
@@ -1069,14 +1084,47 @@ function renderPicksTab() {
 // RESULTS TAB  (read-only bracket + commissioner play-in setup)
 // ============================================================
 
+async function setPlayInSeed(slot, team) {
+  state.playIn[slot] = team;
+  save();
+  try {
+    await db.collection('brackets').doc('nba-2026').update({ [`playIn.${slot}`]: team });
+  } catch (_) {
+    await syncPicksToGitHub();
+  }
+  renderResults();
+}
+
 function renderResults() {
   const el = document.getElementById('tab-participants');
+  const isCommissioner = state.participants.find(p => p.id === currentUserId)?.name.toLowerCase() === 'fogel';
+
   const gapDisplay = state.finalsGame1ActualGap != null
     ? `<div class="game1-gap-ctrl">
         <span class="gap-label">Finals Game 1 actual gap:</span>
         <strong>${state.finalsGame1ActualGap} pts</strong>
        </div>`
     : '';
+
+  let playInControls = '';
+  if (isCommissioner) {
+    const slots = [
+      { slot: 'E8', label: 'East #8 Seed', teams: ['ORL', 'CHA'] },
+      { slot: 'W8', label: 'West #8 Seed', teams: ['GSW', 'PHX'] },
+    ];
+    const rows = slots.map(({ slot, label, teams }) => {
+      const current = state.playIn[slot];
+      if (current) return '';
+      const btns = teams.map(abbr => {
+        const t = Object.values(TEAMS).find(t => t.abbr === abbr);
+        return `<button class="playin-btn" data-playin-slot="${slot}" data-playin-team="${Object.keys(TEAMS).find(k => TEAMS[k].abbr === abbr)}">
+          <img src="${t?.logo ?? ''}" style="width:18px;height:18px;vertical-align:middle;margin-right:4px" />${abbr} won
+        </button>`;
+      }).join('');
+      return `<div class="playin-ctrl-row"><span class="gap-label">${label}:</span>${btns}</div>`;
+    }).join('');
+    if (rows.trim()) playInControls = `<div class="game1-gap-ctrl">${rows}</div>`;
+  }
 
   el.innerHTML = `
     <div class="bracket-instructions">
@@ -1085,8 +1133,12 @@ function renderResults() {
         ? `<span class="scores-updated">Last sync: ${new Date(scoresData.updated).toLocaleString('en-GB', { timeZone: 'Asia/Jerusalem', day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })} (IST)</span>`
         : ''}
     </div>
-    ${gapDisplay}
+    ${gapDisplay}${playInControls}
     ${renderBracketLayout('results', null)}`;
+
+  el.querySelectorAll('.playin-btn').forEach(btn => {
+    btn.addEventListener('click', () => setPlayInSeed(btn.dataset.playinSlot, btn.dataset.playinTeam));
+  });
 }
 
 // ============================================================

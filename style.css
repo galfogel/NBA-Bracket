@@ -1075,13 +1075,20 @@ main { padding: 24px; }
 .gap-warn { font-size: 11px; color: var(--accent-warn, #e59b20); margin-left: 6px; }
 .game1-gap-ctrl {
   display: flex;
-  align-items: center;
-  gap: 8px;
+  flex-direction: column;
+  gap: 6px;
   padding: 8px 16px;
   background: var(--surface2);
   border-bottom: 1px solid var(--border);
   font-size: 13px;
 }
+.playin-ctrl-row { display: flex; align-items: center; gap: 8px; }
+.playin-btn {
+  display: inline-flex; align-items: center;
+  padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: 600;
+  background: var(--surface); border: 1px solid var(--border); cursor: pointer; color: var(--text);
+}
+.playin-btn:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
 .gap-set-msg { font-size: 12px; color: var(--accent); }
 
 .games-selector {
