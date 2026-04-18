@@ -44,7 +44,7 @@ const SERIES = [
 ];
 
 const SERIES_MAP   = Object.fromEntries(SERIES.map(s => [s.id, s]));
-const ROUND_NAMES  = ['', 'R1', 'R2', 'R3', 'Finals'];
+const ROUND_NAMES  = ['', 'First Round', 'Conf. Semifinals', 'Conf. Finals', 'NBA Finals'];
 const ROUND_POINTS = [0, 10, 20, 40, 80];
 const GAMES_BONUS  = 10; // bonus point for predicting correct game count
 
@@ -642,7 +642,7 @@ function renderBracketLayout(mode, pid) {
           ${bracketCol(['ECF'],                        3, 'east', mode, pid)}
         </div>
         <div class="finals-col">
-          <div class="round-label">Finals</div>
+          <div class="round-label">NBA Finals</div>
           ${bracketCard('FINALS', mode, pid)}
           <div class="champion-slot">${renderChampion(mode, pid)}</div>
         </div>
@@ -661,15 +661,15 @@ function renderBracketList(mode, pid) {
     <div class="blist-conf">
       <div class="blist-conf-header">${name}</div>
       <div class="blist-round">
-        <div class="blist-round-title">R1</div>
+        <div class="blist-round-title">First Round</div>
         <div class="blist-cards">${r1ids.map(id => bracketCard(id, mode, pid)).join('')}</div>
       </div>
       <div class="blist-round">
-        <div class="blist-round-title">R2</div>
+        <div class="blist-round-title">Semifinals</div>
         <div class="blist-cards">${r2ids.map(id => bracketCard(id, mode, pid)).join('')}</div>
       </div>
       <div class="blist-round">
-        <div class="blist-round-title">R3</div>
+        <div class="blist-round-title">Conference Finals</div>
         <div class="blist-cards">${bracketCard(r3id, mode, pid)}</div>
       </div>
     </div>`;
@@ -687,7 +687,7 @@ function renderBracketList(mode, pid) {
 }
 
 function bracketCol(ids, round, side, mode, pid) {
-  const label = round === 1 ? 'R1' : round === 2 ? 'R2' : 'R3';
+  const label = round === 1 ? 'First Round' : round === 2 ? 'Semifinals' : 'Conf. Finals';
   return `
     <div class="bracket-col r${round} ${side}">
       <div class="round-label">${label}</div>
@@ -1346,7 +1346,7 @@ function renderInfo() {
       </section>
 
       <section class="info-section">
-        <h2>Pick Deadlines — R1</h2>
+        <h2>Pick Deadlines — First Round</h2>
         <p class="info-detail">Picks lock <strong>3 hours</strong> before the first game of each series. Later rounds lock when the matchup is confirmed.</p>
         <table class="info-table">
           <thead><tr><th>Matchup</th><th>Game 1 Tip-off (IST)</th></tr></thead>
