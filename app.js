@@ -616,10 +616,10 @@ function getRecord(sid) {
 
 // Actual game count from API (available once series ends)
 function getActualGames(sid) {
+  if (!state.results[sid]) return null;
   const rec = getRecord(sid);
   if (!rec) return null;
-  const total = rec.t1Wins + rec.t2Wins;
-  return total >= 4 ? total : null;
+  return rec.t1Wins + rec.t2Wins;
 }
 
 async function fetchScores() {
@@ -910,11 +910,20 @@ function cardPicks(sid, t1, t2, pid) {
 
   const gt = getGameTime(sid);
   const lockTs = gt ? new Date(gt).getTime() : null;
-  const footer = locked
-    ? `<div class="card-footer footer-locked">🔒 Locked</div>`
-    : lockTs
-      ? `<div class="card-footer footer-countdown" data-lock-ts="${lockTs}" data-game-ts="${lockTs}">${formatCountdown(lockTs, lockTs)}</div>`
-      : '';
+  const ptsEarned = seriesPoints(pid, sid);
+  let footer;
+  if (actual && pick.winner) {
+    const correct = pick.winner === actual;
+    footer = `<div class="card-footer ${correct ? 'footer-correct' : 'footer-wrong'}">
+      ${correct ? '✓' : '✗'} <span class="pts-badge">${ptsEarned} pts</span>
+    </div>`;
+  } else if (locked) {
+    footer = `<div class="card-footer footer-locked">🔒 Locked</div>`;
+  } else if (lockTs) {
+    footer = `<div class="card-footer footer-countdown" data-lock-ts="${lockTs}" data-game-ts="${lockTs}">${formatCountdown(lockTs, lockTs)}</div>`;
+  } else {
+    footer = '';
+  }
 
   const gapRow = sid === 'FINALS' ? (() => {
     const val = state.finalsGap[pid] ?? '';
