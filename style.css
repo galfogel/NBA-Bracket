@@ -403,14 +403,17 @@ main { padding: 24px; }
 }
 
 .pot-pts {
-  font-size: 10px;
-  font-weight: 700;
-  color: var(--text-dim);
+  display: flex;
+  align-items: center;
   flex-shrink: 0;
   padding-right: 2px;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1;
 }
 .pot-pts-push { margin-left: auto; }
-.pot-pts-upset { color: var(--green); }
+.pot-base  { color: var(--text-dim); }
+.pot-bonus { color: var(--green); }
 
 .team-name {
   font-size: 11px;

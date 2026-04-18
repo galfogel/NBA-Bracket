@@ -76,7 +76,9 @@ function getUpsetBonus(sid, pickedKey, roundPts) {
   const pickedPct = pickedKey === t1key ? pct.t1 : pct.t2;
   const favPct = Math.max(pct.t1, pct.t2);
   if (pickedPct >= favPct) return 0;
-  return Math.floor(roundPts * (favPct - 50) / 100);
+  const favFloored = Math.floor(favPct / 10) * 10;
+  const gap = favFloored <= 50 ? 5 : favFloored - 50;
+  return 2 * roundPts * gap / 100;
 }
 
 // Default first-game UTC timestamps per series (deadline = -3 hours)
@@ -800,15 +802,18 @@ function cardPicks(sid, t1, t2, pid) {
     const mark     = isPicked ? (isOk ? '✓' : isBad ? '✗' : '') : '';
     const pct      = getWinPct(sid, key);
     const basePts  = ROUND_POINTS[SERIES_MAP[sid].r];
-    const potPts   = basePts + getUpsetBonus(sid, key, basePts);
-    const isUpset  = potPts > basePts;
+    const bonus    = getUpsetBonus(sid, key, basePts);
+    const push     = pct === null ? 'pot-pts-push' : '';
+    const ptsBadge = bonus > 0
+      ? `<span class="pot-pts ${push}"><span class="pot-base">${basePts}</span><span class="pot-bonus"> +${bonus}</span></span>`
+      : `<span class="pot-pts ${push}"><span class="pot-base">${basePts}</span></span>`;
     return `<div class="team-row ${cls} ${editable ? 'is-clickable' : ''}"
                  data-ps="${sid}" data-pt="${key}">
       <span class="seed-num">${t.seed ?? ''}</span>
       <img class="team-logo" src="${t.logo}" alt="${t.abbr}" />
       <span class="team-name">${t.name}</span>
       ${pct !== null ? `<span class="fan-pct">${pct}%</span>` : ''}
-      <span class="pot-pts ${pct === null ? 'pot-pts-push' : ''} ${isUpset ? 'pot-pts-upset' : ''}">${potPts}</span>
+      ${ptsBadge}
       ${mark ? `<span class="win-mark">${mark}</span>` : ''}
     </div>`;
   }
@@ -1306,10 +1311,21 @@ function renderInfo() {
           <tbody>
             ${pointsRows}
             <tr><td>Correct series length</td><td>+${GAMES_BONUS} pts</td></tr>
-            <tr class="upset-row"><td>Upset bonus <span class="info-note">(picking the underdog correctly)</span></td><td>+floor(pts × (fav%−50) / 100)</td></tr>
+            <tr class="upset-row"><td>Upset bonus <span class="info-note">(picking the underdog correctly)</span></td><td>+2 × pts × (floor10(fav%) − 50%) / 100</td></tr>
           </tbody>
         </table>
-        <p class="info-detail">The upset bonus is based on fan pick % from picks.nba.com. Example: picking a team favored at 92% and being correct gives you an extra floor(10 × (92−50)/100) = <strong>4 bonus pts</strong>.</p>
+        <p class="info-detail">Upset bonus uses fan pick % from picks.nba.com, floored to the nearest 10%. If the favorite is below 60%, a minimum gap of 5% applies. Example: picking ORL (92% fav → floored 90%) correctly in R1 gives <strong>2 × 10 × 40% = +8 bonus pts</strong>.</p>
+        <p class="info-detail">Upset bonus table (underdog potential pts = base + bonus):</p>
+        <table class="info-table">
+          <thead><tr><th>Fav% range</th><th>R1</th><th>R2</th><th>R3</th><th>Finals</th></tr></thead>
+          <tbody>
+            <tr><td>50–59%</td><td>10 +1</td><td>20 +2</td><td>40 +4</td><td>80 +8</td></tr>
+            <tr><td>60–69%</td><td>10 +2</td><td>20 +4</td><td>40 +8</td><td>80 +16</td></tr>
+            <tr><td>70–79%</td><td>10 +4</td><td>20 +8</td><td>40 +16</td><td>80 +32</td></tr>
+            <tr><td>80–89%</td><td>10 +6</td><td>20 +12</td><td>40 +24</td><td>80 +48</td></tr>
+            <tr><td>90–99%</td><td>10 +8</td><td>20 +16</td><td>40 +32</td><td>80 +64</td></tr>
+          </tbody>
+        </table>
         <p class="info-detail"><strong>Tiebreaker:</strong> If scores are equal, the player whose predicted Game 1 NBA Finals score margin is closest to the actual margin wins the higher place. Equal distance = shared place.</p>
       </section>
 
