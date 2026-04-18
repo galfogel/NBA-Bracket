@@ -175,6 +175,11 @@ async function fetchPicks() {
     const data = snap.data();
     data.picks = picksToKeys(data.picks);
     mergeRemoteState(data);
+    // If logged-in user was removed from Firestore, log them out immediately
+    if (currentUserId) {
+      const remoteIds = new Set((data.participants || []).map(p => p.id));
+      if (!remoteIds.has(currentUserId)) { switchUser(); return; }
+    }
     save();
   } catch (err) { console.warn('fetchPicks error:', err); }
 }
@@ -225,6 +230,14 @@ async function syncPicksToGitHub() {
     const snap = await ref.get();
     if (snap.exists) {
       const remote = snap.data();
+      const remoteIds = new Set((remote.participants || []).map(p => p.id));
+
+      // If current user was removed from Firestore, log them out — don't write
+      if (currentUserId && !remoteIds.has(currentUserId)) {
+        switchUser();
+        return;
+      }
+
       // Merge other users in from remote; skip current user — local is authoritative
       for (const rp of (remote.participants || [])) {
         if (rp.id === currentUserId) continue;
@@ -236,6 +249,9 @@ async function syncPicksToGitHub() {
         if (remote.finalsGap?.[rp.id] != null) state.finalsGap[rp.id]  = remote.finalsGap[rp.id];
       }
       if (remote.finalsGame1ActualGap != null) state.finalsGame1ActualGap = remote.finalsGame1ActualGap;
+
+      // Prune local participants to only those authorised in Firestore
+      state.participants = state.participants.filter(p => remoteIds.has(p.id));
     }
     await ref.set({
       updated:              new Date().toISOString(),

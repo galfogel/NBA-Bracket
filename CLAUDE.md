@@ -86,4 +86,4 @@ The bracket has two parallel HTML outputs:
 - **GitHub Actions git push**: both workflows do `git pull --rebase origin main` before pushing to handle concurrent commits between the two workflows.
 - **Leaderboard total points**: styled via `.total-cell` in `style.css` — currently green (`var(--green)`).
 - **"Log out" button**: rendered in `updateUserDisplay()` as `.btn-switch-user`; clicking calls `switchUser()` which shows the login overlay.
-- **Removed users re-syncing**: `syncPicksToGitHub()` writes the full `state.participants` from localStorage — if a removed user's browser still has old state and they sync, they restore themselves. Mitigate by bumping the gate session key (forces re-auth) and cleaning up Firestore promptly.
+- **Removed users re-syncing**: `syncPicksToGitHub()` checks Firestore participants on every save — if the current user is not in the remote list, `switchUser()` is called immediately (logged out, write aborted). `fetchPicks()` on page load performs the same check. Local `state.participants` is also pruned to only Firestore-authorised IDs before each write, so stale localStorage cannot restore removed users.
