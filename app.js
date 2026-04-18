@@ -432,11 +432,19 @@ function getGameTime(sid) {
   return scoresData?.gameTimes?.[sid] ?? DEFAULT_GAME_TIMES[sid] ?? null;
 }
 
-// Series locks 3 hours before its first game
+// Series locks 3 hours before its first game (R1), or immediately once games appear in records (R2+)
 function isSeriesLocked(sid) {
   const gt = getGameTime(sid);
-  if (!gt) return false;
-  return Date.now() > new Date(gt).getTime() - 3 * 3600 * 1000;
+  if (gt) return Date.now() > new Date(gt).getTime() - 3 * 3600 * 1000;
+  if (state.results[sid]) return true;
+  if (scoresData?.records) {
+    const [t1, t2] = resolveTeams(sid);
+    if (t1 && t2) {
+      const a1 = TEAMS[t1]?.abbr, a2 = TEAMS[t2]?.abbr;
+      if (a1 && a2 && scoresData.records[[a1, a2].sort().join('-')]) return true;
+    }
+  }
+  return false;
 }
 
 function formatCountdown(lockTs) {
@@ -1436,6 +1444,7 @@ async function beginApp() {
   initLogin();
   fetchScores();
   startCountdownTimer();
+  setInterval(() => fetchScores(), 5 * 60 * 1000);
 }
 
 document.addEventListener('DOMContentLoaded', () => {
