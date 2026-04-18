@@ -1,9 +1,13 @@
 {
-  "updated": "2026-04-18T21:28:07Z",
+  "updated": "2026-04-18T22:27:16Z",
   "records": {
     "CLE-TOR": {
       "CLE": 1,
       "TOR": 0
+    },
+    "DEN-MIN": {
+      "DEN": 1,
+      "MIN": 0
     }
   },
   "gameTimes": {
