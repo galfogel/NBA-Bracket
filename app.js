@@ -931,7 +931,7 @@ function renderRoundControls(pid) {
     } else {
       const missing = [];
       if (picked < avail.length) missing.push(`${avail.length - picked} winner${avail.length - picked > 1 ? 's' : ''}`);
-      if (games  < avail.length) missing.push(`${avail.length - games}  game count${avail.length - games > 1 ? 's' : ''}`);
+      if (games  < avail.length) missing.push(`${avail.length - games} game count${avail.length - games > 1 ? 's' : ''}`);
       if (r === 4 && state.finalsGap[pid] == null) missing.push('Game 1 gap');
       const canSave = allDone && !(r === 4 && state.finalsGap[pid] == null);
       badge  = `<span class="rc-badge rc-open">Open</span>`;
