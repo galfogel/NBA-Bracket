@@ -526,7 +526,9 @@ function getGameTime(sid) {
 // Series locks at its first game time (R1), or immediately once games appear in records (R2+)
 function isSeriesLocked(sid) {
   const gt = getGameTime(sid);
-  if (gt) return Date.now() >= new Date(gt).getTime();
+  if (gt && Date.now() >= new Date(gt).getTime()) return true;
+  const defaultGt = DEFAULT_GAME_TIMES[sid];
+  if (defaultGt && Date.now() >= new Date(defaultGt).getTime()) return true;
   if (state.results[sid]) return true;
   if (scoresData?.records) {
     const [t1, t2] = resolveTeams(sid);
@@ -963,7 +965,12 @@ function cardView(sid, t1, t2, pid) {
       </div>`;
     }
     const gt = getGameTime(sid);
-    const lockTs = gt ? new Date(gt).getTime() : null;
+    const defaultGt = DEFAULT_GAME_TIMES[sid];
+    const lockTs = gt && defaultGt
+      ? Math.min(new Date(gt).getTime(), new Date(defaultGt).getTime())
+      : gt ? new Date(gt).getTime()
+      : defaultGt ? new Date(defaultGt).getTime()
+      : null;
     return `<div class="matchup-card card-hidden-picks" data-series="${sid}">
       ${rowHidden(t1)}<div class="series-divider"></div>${rowHidden(t2)}
       <div class="card-footer footer-hidden"${lockTs ? ` data-lock-ts="${lockTs}"` : ''}>🔒 Picks hidden until series starts</div>
