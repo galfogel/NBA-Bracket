@@ -15,10 +15,10 @@
   --green: #22c55e;
   --red: #ef4444;
   --radius: 8px;
-  /* card width scales to fill viewport across all 7 columns */
-  --card-w: clamp(150px, calc((100vw - 80px) / 7.2), 210px);
-  /* explicit bracket height so flex stretch chain is definite */
-  --bracket-h: 580px;
+  /* 7 cols × card-w + 80px spacing + 48px main padding = 100vw → card-w = (100vw - 128px) / 7 */
+  --card-w: min(calc((100vw - 128px) / 7), 200px);
+  /* bracket height fills viewport minus header + padding */
+  --bracket-h: clamp(360px, calc(100vh - 200px), 680px);
 }
 
 body {
@@ -265,7 +265,7 @@ main { padding: 24px; }
   display: flex;
   align-items: stretch;
   gap: 0;
-  overflow-x: auto;
+  overflow: hidden;
   padding: 24px 0 8px;
   height: var(--bracket-h);   /* definite height → flex stretch chain works */
 }
@@ -1209,7 +1209,6 @@ main { padding: 24px; }
 
 /* ── Tablet (≤ 900px) ─────────────────────────────────────── */
 @media (max-width: 900px) {
-  :root { --card-w: clamp(130px, calc((100vw - 80px) / 7.2), 180px); }
   main { padding: 16px; }
   .fan-pct { display: none; }
   .pot-pts { margin-left: auto; }
