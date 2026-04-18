@@ -813,7 +813,7 @@ main { padding: 24px; }
 
 .leaderboard-table .leader-row { background: color-mix(in srgb, var(--accent) 8%, transparent); }
 .p-name-cell { font-weight: 600; }
-.total-cell { font-weight: 700; color: var(--accent); }
+.total-cell { font-weight: 700; color: var(--green); }
 
 /* ---- Pick breakdown ---- */
 .pick-breakdown h3 { font-size: 16px; margin-bottom: 16px; }
