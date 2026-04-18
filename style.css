@@ -537,6 +537,9 @@ main { padding: 24px; }
 .bracket-list--single .card-footer { font-size: 13px; }
 .bracket-list--single .games-btn  { font-size: 14px; padding: 4px 10px; }
 .bracket-list--single .pts-badge  { font-size: 13px; }
+.bracket-list--single .seed-num   { font-size: 13px; }
+.bracket-list--single .pot-pts    { font-size: 13px; }
+.bracket-list--single .games-label { font-size: 13px; }
 
 .blist-champion {
   text-align: center;
