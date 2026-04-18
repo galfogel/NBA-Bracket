@@ -531,6 +531,9 @@ main { padding: 24px; }
   gap: 6px;
 }
 .bracket-list--single .blist-cards { grid-template-columns: 1fr; }
+.bracket-list--single .team-row { padding: 12px 8px; }
+.bracket-list--single .team-logo { width: 32px; height: 32px; }
+.bracket-list--single .team-name { font-size: 15px; }
 
 .blist-champion {
   text-align: center;
