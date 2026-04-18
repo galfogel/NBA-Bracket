@@ -1145,7 +1145,7 @@ function renderLeaderboard() {
       <h2>Leaderboard</h2>
       <table class="leaderboard-table">
         <thead>
-          <tr><th>#</th><th>Name</th><th>R1</th><th>R2</th><th>CF</th><th>Finals</th><th>Total</th></tr>
+          <tr><th>#</th><th>Name</th><th>R1</th><th>SF</th><th>CF</th><th>Finals</th><th>Total</th></tr>
         </thead>
         <tbody>
           ${rows.map((p, i) => {
@@ -1297,7 +1297,7 @@ function renderInfo() {
     const gameTs = scoresData?.gameTimes?.[s.id] ?? DEFAULT_GAME_TIMES[s.id];
     let deadlineStr = '—';
     if (gameTs) {
-      deadlineStr = new Date(gameTs).toLocaleString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit', timeZone: 'Asia/Jerusalem' }) + ' (IST)';
+      deadlineStr = new Date(gameTs).toLocaleString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit', timeZone: 'Asia/Jerusalem' });
     }
     return `<tr><td><div class="info-matchup-cell">${matchup}</div></td><td>${deadlineStr}</td></tr>`;
   }).join('');
@@ -1322,7 +1322,7 @@ function renderInfo() {
         <p class="info-detail">Based on fan pick % from picks.nba.com, floored to the nearest 10%. Minimum gap 5% when fav% is below 60%. Formula: <strong>2 × pts × (floor10(fav%) − 50%) / 100</strong>.</p>
         <p class="info-detail">Underdog potential pts = <span style="color:var(--text-dim)">base</span> + <span style="color:var(--green)">bonus</span>:</p>
         <table class="info-table">
-          <thead><tr><th>Fav% range</th><th>R1</th><th>R2</th><th>R3</th><th>Finals</th></tr></thead>
+          <thead><tr><th>Fav% range</th><th>R1</th><th>SF</th><th>CF</th><th>Finals</th></tr></thead>
           <tbody>
             <tr><td>50–59%</td><td><span class="pot-base">10</span> <span class="pot-bonus">+1</span></td><td><span class="pot-base">20</span> <span class="pot-bonus">+2</span></td><td><span class="pot-base">40</span> <span class="pot-bonus">+4</span></td><td><span class="pot-base">80</span> <span class="pot-bonus">+8</span></td></tr>
             <tr><td>60–69%</td><td><span class="pot-base">10</span> <span class="pot-bonus">+2</span></td><td><span class="pot-base">20</span> <span class="pot-bonus">+4</span></td><td><span class="pot-base">40</span> <span class="pot-bonus">+8</span></td><td><span class="pot-base">80</span> <span class="pot-bonus">+16</span></td></tr>
@@ -1347,11 +1347,12 @@ function renderInfo() {
 
       <section class="info-section">
         <h2>Pick Deadlines — First Round</h2>
-        <p class="info-detail">Picks lock <strong>3 hours</strong> before the first game of each series. Later rounds lock when the matchup is confirmed.</p>
+        <p class="info-detail">Picks lock at game time. Later rounds lock when the matchup is confirmed.</p>
         <table class="info-table">
-          <thead><tr><th>Matchup</th><th>Game 1 Tip-off (IST)</th></tr></thead>
+          <thead><tr><th>Matchup</th><th>Game 1 Tip-off</th></tr></thead>
           <tbody>${deadlineRows}</tbody>
         </table>
+        <p class="info-detail">All times in Israel Standard Time (IST).</p>
       </section>
     </div>
   `;
