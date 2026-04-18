@@ -17,8 +17,7 @@
   --radius: 8px;
   /* 7 cols × card-w + 80px spacing + 48px main padding = 100vw → card-w = (100vw - 128px) / 7 */
   --card-w: min(calc((100vw - 128px) / 7), 200px);
-  /* bracket height: viewport minus header(56) + controls(~220) + padding/misc(80) */
-  --bracket-h: clamp(300px, calc(100vh - 360px), 560px);
+  --bracket-h: 520px;
 }
 
 body {
@@ -265,7 +264,6 @@ main { padding: 24px; }
   display: flex;
   align-items: stretch;
   gap: 0;
-  overflow-x: hidden;
   padding: 24px 0 8px;
   height: var(--bracket-h);   /* definite height → flex stretch chain works */
 }
