@@ -1,5 +1,6 @@
 // ============================================================
-// TEAMS  (play-in teams included — seed assigned once confirmed)
+// ============================================================
+// TEAMS
 // ============================================================
 const ESPN = s => `https://a.espncdn.com/i/teamlogos/nba/500/${s}.png`;
 const TEAMS = {
@@ -10,6 +11,7 @@ const TEAMS = {
   E5:  { name: 'Toronto Raptors',           abbr: 'TOR', seed: 5, conf: 'East', color: '#CE1141', logo: ESPN('tor') },
   E6:  { name: 'Atlanta Hawks',             abbr: 'ATL', seed: 6, conf: 'East', color: '#E03A3E', logo: ESPN('atl') },
   E7:  { name: 'Philadelphia 76ers',        abbr: 'PHI', seed: 7, conf: 'East', color: '#006BB6', logo: ESPN('phi') },
+  E8:  { name: 'Orlando Magic',             abbr: 'ORL', seed: 8, conf: 'East', color: '#0077C0', logo: ESPN('orl') },
   W1:  { name: 'Oklahoma City Thunder',     abbr: 'OKC', seed: 1, conf: 'West', color: '#007AC1', logo: ESPN('okc') },
   W2:  { name: 'San Antonio Spurs',         abbr: 'SAS', seed: 2, conf: 'West', color: '#1d1160', logo: ESPN('sa')  },
   W3:  { name: 'Denver Nuggets',            abbr: 'DEN', seed: 3, conf: 'West', color: '#0E2240', logo: ESPN('den') },
@@ -17,28 +19,18 @@ const TEAMS = {
   W5:  { name: 'Houston Rockets',           abbr: 'HOU', seed: 5, conf: 'West', color: '#CE1141', logo: ESPN('hou') },
   W6:  { name: 'Minnesota Timberwolves',    abbr: 'MIN', seed: 6, conf: 'West', color: '#236192', logo: ESPN('min') },
   W7:  { name: 'Portland Trail Blazers',    abbr: 'POR', seed: 7, conf: 'West', color: '#E03A3E', logo: ESPN('por') },
-  // Play-In candidates — only visible after commissioner confirms 8-seed
-  ORL: { name: 'Orlando Magic',             abbr: 'ORL', seed: 8, conf: 'East', color: '#0077C0', logo: ESPN('orl') },
-  CHA: { name: 'Charlotte Hornets',         abbr: 'CHA', seed: 8, conf: 'East', color: '#00788C', logo: ESPN('cha') },
-  GSW: { name: 'Golden State Warriors',     abbr: 'GSW', seed: 8, conf: 'West', color: '#1D428A', logo: ESPN('gs')  },
-  PHX: { name: 'Phoenix Suns',              abbr: 'PHX', seed: 8, conf: 'West', color: '#E56020', logo: ESPN('phx') },
-};
-
-// Play-In game definitions (tonight, Apr 17 — commissioner sets winners)
-const PLAYIN = {
-  E8: { label: 'East #8 Seed', teamA: 'ORL', teamB: 'CHA', game: 'Charlotte @ Orlando — 7:30 PM ET' },
-  W8: { label: 'West #8 Seed', teamA: 'GSW', teamB: 'PHX', game: 'Golden State @ Phoenix — 10:00 PM ET' },
+  W8:  { name: 'Phoenix Suns',              abbr: 'PHX', seed: 8, conf: 'West', color: '#E56020', logo: ESPN('phx') },
 };
 
 // ============================================================
 // BRACKET STRUCTURE
 // ============================================================
 const SERIES = [
-  { id: 'E1v8', r: 1, conf: 'East', t1: 'E1', t2Slot: 'E8' },
+  { id: 'E1v8', r: 1, conf: 'East', t1: 'E1', t2: 'E8' },
   { id: 'E4v5', r: 1, conf: 'East', t1: 'E4', t2: 'E5' },
   { id: 'E2v7', r: 1, conf: 'East', t1: 'E2', t2: 'E7' },
   { id: 'E3v6', r: 1, conf: 'East', t1: 'E3', t2: 'E6' },
-  { id: 'W1v8', r: 1, conf: 'West', t1: 'W1', t2Slot: 'W8' },
+  { id: 'W1v8', r: 1, conf: 'West', t1: 'W1', t2: 'W8' },
   { id: 'W4v5', r: 1, conf: 'West', t1: 'W4', t2: 'W5' },
   { id: 'W2v7', r: 1, conf: 'West', t1: 'W2', t2: 'W7' },
   { id: 'W3v6', r: 1, conf: 'West', t1: 'W3', t2: 'W6' },
@@ -117,13 +109,12 @@ function loadState() {
       s.picks          = s.picks          || {};
       s.results        = s.results        || {};
       s.picksSubmitted      = s.picksSubmitted      || {};
-      s.playIn              = s.playIn              || { E8: null, W8: null };
       s.finalsGap           = s.finalsGap           || {};
       s.finalsGame1ActualGap = s.finalsGame1ActualGap ?? null;
       return s;
     }
   } catch (_) {}
-  return { results: {}, participants: [], picks: {}, playIn: { E8: null, W8: null }, picksSubmitted: {}, finalsGap: {}, finalsGame1ActualGap: null };
+  return { results: {}, participants: [], picks: {}, picksSubmitted: {}, finalsGap: {}, finalsGame1ActualGap: null };
 }
 
 function save() {
@@ -222,14 +213,6 @@ function mergeRemoteState(remote) {
   }
   // Commissioner-set actual gap: remote always wins
   if (remote.finalsGame1ActualGap != null) state.finalsGame1ActualGap = remote.finalsGame1ActualGap;
-  // Play-in seeds: remote wins (commissioner sets via Results tab and it propagates)
-  if (remote.playIn) {
-    for (const slot of ['E8', 'W8']) {
-      if (remote.playIn[slot] && !state.playIn[slot]) {
-        state.playIn[slot] = remote.playIn[slot];
-      }
-    }
-  }
 }
 
 // ── Write picks to Firestore ───────────────────────────────────
@@ -252,12 +235,6 @@ async function syncPicksToGitHub() {
       }
       if (remote.finalsGame1ActualGap != null) state.finalsGame1ActualGap = remote.finalsGame1ActualGap;
     }
-    // Preserve remote playIn unless local has a value (commissioner sets it)
-    const remotePlayIn = snap.exists ? snap.data().playIn || {} : {};
-    const mergedPlayIn = {
-      E8: state.playIn.E8 || remotePlayIn.E8 || null,
-      W8: state.playIn.W8 || remotePlayIn.W8 || null,
-    };
     await ref.set({
       updated:              new Date().toISOString(),
       participants:         state.participants.map(({ id, name, passwordHash }) => ({ id, name, passwordHash: passwordHash || null })),
@@ -265,7 +242,6 @@ async function syncPicksToGitHub() {
       picksSubmitted:       state.picksSubmitted,
       finalsGap:            state.finalsGap,
       finalsGame1ActualGap: state.finalsGame1ActualGap ?? null,
-      playIn:               mergedPlayIn,
     });
     save();
     console.log('picks saved to Firestore ✓');
@@ -489,10 +465,7 @@ function formatDeadline(sid) {
 // A series is available to pick when both teams are known
 function isSeriesAvailable(sid) {
   const def = SERIES_MAP[sid];
-  if (def.t1) {
-    const t2 = def.t2 || (def.t2Slot ? state.playIn[def.t2Slot] : null);
-    return !!t2;
-  }
+  if (def.t1) return !!def.t2;
   return !!state.results[def.from[0]] && !!state.results[def.from[1]];
 }
 
@@ -554,27 +527,6 @@ function syncResultsFromAPI() {
   if (!scoresData) return;
   let changed = false;
 
-  // Auto-detect play-in 8-seeds: whichever play-in candidate appears in
-  // the Playoffs records is the confirmed #8 seed.
-  const allAbbrs = new Set(
-    Object.keys(scoresData.records || {}).flatMap(k => k.split('-'))
-  );
-  for (const [slot, candidates] of [['E8', ['ORL', 'CHA']], ['W8', ['GSW', 'PHX']]]) {
-    if (!state.playIn[slot]) {
-      const found = candidates.find(a => allAbbrs.has(a));
-      if (found) { state.playIn[slot] = found; changed = true; }
-    }
-  }
-
-  // Also honour explicit playIn field written by fetch_scores.py
-  if (scoresData.playIn) {
-    for (const slot of ['E8', 'W8']) {
-      if (scoresData.playIn[slot] && !state.playIn[slot]) {
-        state.playIn[slot] = scoresData.playIn[slot]; changed = true;
-      }
-    }
-  }
-
   for (const def of SERIES) {
     if (state.results[def.id]) continue;
     const [t1, t2] = resolveTeams(def.id);
@@ -594,10 +546,7 @@ function syncResultsFromAPI() {
 // Teams always resolved from state.results (actual winners)
 function resolveTeams(sid) {
   const def = SERIES_MAP[sid];
-  if (def.t1) {
-    const t2 = def.t2 || (def.t2Slot ? state.playIn[def.t2Slot] : null);
-    return [def.t1, t2 || null];
-  }
+  if (def.t1) return [def.t1, def.t2 || null];
   return [state.results[def.from[0]] || null, state.results[def.from[1]] || null];
 }
 
@@ -1089,23 +1038,11 @@ function renderPicksTab() {
 }
 
 // ============================================================
-// RESULTS TAB  (read-only bracket + commissioner play-in setup)
+// RESULTS TAB
 // ============================================================
-
-async function setPlayInSeed(slot, team) {
-  state.playIn[slot] = team;
-  save();
-  try {
-    await db.collection('brackets').doc('nba-2026').update({ [`playIn.${slot}`]: team });
-  } catch (_) {
-    await syncPicksToGitHub();
-  }
-  renderResults();
-}
 
 function renderResults() {
   const el = document.getElementById('tab-participants');
-  const isCommissioner = state.participants.find(p => p.id === currentUserId)?.name.toLowerCase() === 'fogel';
 
   const gapDisplay = state.finalsGame1ActualGap != null
     ? `<div class="game1-gap-ctrl">
@@ -1114,26 +1051,6 @@ function renderResults() {
        </div>`
     : '';
 
-  let playInControls = '';
-  if (isCommissioner) {
-    const slots = [
-      { slot: 'E8', label: 'East #8 Seed', teams: ['ORL', 'CHA'] },
-      { slot: 'W8', label: 'West #8 Seed', teams: ['GSW', 'PHX'] },
-    ];
-    const rows = slots.map(({ slot, label, teams }) => {
-      const current = state.playIn[slot];
-      if (current) return '';
-      const btns = teams.map(abbr => {
-        const t = Object.values(TEAMS).find(t => t.abbr === abbr);
-        return `<button class="playin-btn" data-playin-slot="${slot}" data-playin-team="${Object.keys(TEAMS).find(k => TEAMS[k].abbr === abbr)}">
-          <img src="${t?.logo ?? ''}" style="width:18px;height:18px;vertical-align:middle;margin-right:4px" />${abbr} won
-        </button>`;
-      }).join('');
-      return `<div class="playin-ctrl-row"><span class="gap-label">${label}:</span>${btns}</div>`;
-    }).join('');
-    if (rows.trim()) playInControls = `<div class="game1-gap-ctrl">${rows}</div>`;
-  }
-
   el.innerHTML = `
     <div class="bracket-instructions">
       Actual results — updated automatically from the NBA API every hour.
@@ -1141,12 +1058,8 @@ function renderResults() {
         ? `<span class="scores-updated">Last sync: ${new Date(scoresData.updated).toLocaleString('en-GB', { timeZone: 'Asia/Jerusalem', day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })} (IST)</span>`
         : ''}
     </div>
-    ${gapDisplay}${playInControls}
+    ${gapDisplay}
     ${renderBracketLayout('results', null)}`;
-
-  el.querySelectorAll('.playin-btn').forEach(btn => {
-    btn.addEventListener('click', () => setPlayInSeed(btn.dataset.playinSlot, btn.dataset.playinTeam));
-  });
 }
 
 // ============================================================
@@ -1324,7 +1237,7 @@ function renderInfo() {
   const r1Series = SERIES.filter(s => s.r === 1);
   const deadlineRows = r1Series.map(s => {
     const t1 = TEAMS[s.t1];
-    const t2key = s.t2 || (s.t2Slot ? state.playIn?.[s.t2Slot] : null);
+    const t2key = s.t2 || null;
     const t2 = t2key ? TEAMS[t2key] : null;
     const teamCell = (t) => t
       ? `<span class="info-team"><img src="${t.logo}" alt="${t.abbr}" class="info-team-logo" />${t.name}</span>`

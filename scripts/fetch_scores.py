@@ -123,27 +123,6 @@ def detect_finals_game1_gap(games):
     return None
 
 
-PLAYIN_CANDIDATES = {
-    "E8": ["ORL", "CHA"],
-    "W8": ["GSW", "PHX"],
-}
-
-
-def detect_playin_seeds(records):
-    """
-    Once a play-in team appears in the first-round Playoff records, it is the
-    confirmed #8 seed.  Returns {'E8': 'ORL'|'CHA'|None, 'W8': 'GSW'|'PHX'|None}.
-    """
-    all_abbrs = set()
-    for key in records:
-        all_abbrs.update(key.split("-"))
-
-    seeds = {}
-    for slot, candidates in PLAYIN_CANDIDATES.items():
-        seeds[slot] = next((a for a in candidates if a in all_abbrs), None)
-    return seeds
-
-
 def main():
     out_path = os.path.normpath(
         os.path.join(os.path.dirname(__file__), "..", "data", "scores.json")
@@ -161,19 +140,16 @@ def main():
             pass
 
     records          = {}
-    playin           = {"E8": None, "W8": None}
     finals_game1_gap = None
     error            = None
 
     try:
         games   = fetch_playoff_games()
         records = compute_records(games)
-        playin  = detect_playin_seeds(records)
         finals_game1_gap = detect_finals_game1_gap(games)
         print(f"Fetched {len(games)} game rows → {len(records)} series")
         for k, v in sorted(records.items()):
             print(f"  {k}: {v}")
-        print(f"Play-in seeds: {playin}")
         print(f"Finals Game 1 gap: {finals_game1_gap}")
     except Exception as exc:
         error = str(exc)
@@ -182,7 +158,6 @@ def main():
     output = {
         "updated":         datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
         "records":         records,
-        "playIn":          playin,
         "gameTimes":       existing_game_times,
         "finalsGame1Gap":  finals_game1_gap,
         "error":           error,
