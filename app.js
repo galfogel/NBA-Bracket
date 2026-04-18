@@ -168,6 +168,9 @@ async function hashPassword(pass) {
 
 // Commissioner / admin — identified by case-insensitive name match
 const ADMIN_NAME = 'Fogel';
+const HIDDEN_USER_NAMES = new Set(['Test', 'Testt']);
+const isHiddenUser = p => HIDDEN_USER_NAMES.has(p.name);
+
 function isAdmin(pid = currentUserId) {
   const p = state.participants.find(p => p.id === pid);
   return p?.name.toLowerCase() === ADMIN_NAME.toLowerCase();
@@ -1149,8 +1152,9 @@ function renderPicksTab() {
     return;
   }
 
-  if (!viewingPid || !state.participants.find(p => p.id === viewingPid)) {
-    viewingPid = currentUserId || state.participants[0].id;
+  const visibleParticipants = state.participants.filter(p => !isHiddenUser(p));
+  if (!viewingPid || !visibleParticipants.find(p => p.id === viewingPid)) {
+    viewingPid = currentUserId || visibleParticipants[0]?.id;
   }
 
   const { score, correct } = computeScore(viewingPid);
@@ -1160,7 +1164,7 @@ function renderPicksTab() {
       <div class="allpicks-left">
         <label>Viewing picks for:</label>
         <select id="view-select">
-          ${state.participants.map(p =>
+          ${visibleParticipants.map(p =>
             `<option value="${p.id}" ${p.id === viewingPid ? 'selected' : ''}>${p.name}</option>`
           ).join('')}
         </select>
@@ -1225,6 +1229,7 @@ function renderLeaderboard() {
   }
 
   const rows = state.participants
+    .filter(p => !isHiddenUser(p))
     .map(p => ({ ...p, ...computeScore(p.id) }))
     .sort((a, b) => {
       if (b.score !== a.score) return b.score - a.score;
@@ -1289,8 +1294,7 @@ function renderPickBreakdown(rows) {
 
   const series = SERIES.filter(s => s.r === bdRoundFilter && isSeriesAvailable(s.id));
   if (series.length) {
-    html += `<div class="breakdown-round"><div class="breakdown-grid">`;
-    for (const def of series) {
+    function renderSeriesCard(def) {
       const actual = state.results[def.id];
       const [t1k, t2k] = resolveTeams(def.id);
       const t1 = t1k ? TEAMS[t1k] : null;
@@ -1338,10 +1342,20 @@ function renderPickBreakdown(rows) {
       } else {
         pickRows = `<div class="bd-hidden">🔒 Hidden until series starts</div>`;
       }
-
-      html += `<div class="breakdown-series">${teamsHeader}${resultBar}<div class="bd-picks">${pickRows}</div></div>`;
+      return `<div class="breakdown-series">${teamsHeader}${resultBar}<div class="bd-picks">${pickRows}</div></div>`;
     }
-    html += '</div></div>';
+
+    const confs = bdRoundFilter < 4 ? ['East', 'West'] : [null];
+    for (const conf of confs) {
+      const confSeries = conf ? series.filter(s => s.conf === conf) : series;
+      if (!confSeries.length) continue;
+      const confLabel = conf === 'East' ? 'Eastern Conference' : conf === 'West' ? 'Western Conference' : '';
+      html += `<div class="breakdown-round">`;
+      if (confLabel) html += `<h4 class="bd-conf-title">${confLabel}</h4>`;
+      html += `<div class="breakdown-grid">`;
+      for (const def of confSeries) html += renderSeriesCard(def);
+      html += '</div></div>';
+    }
   }
 
   // Finals Game 1 gap — only when Finals round is selected

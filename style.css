@@ -825,6 +825,7 @@ main { padding: 24px; }
 .bd-user-tile.active { background: var(--accent, #4f8ef7); border-color: var(--accent, #4f8ef7); color: #fff; }
 
 .breakdown-round { margin-bottom: 28px; }
+.bd-conf-title { font-size: 12px; font-weight: 700; color: var(--text-muted, #666); text-transform: uppercase; letter-spacing: 0.06em; margin: 0 0 12px; }
 .breakdown-round h4 {
   font-size: 11px;
   text-transform: uppercase;
