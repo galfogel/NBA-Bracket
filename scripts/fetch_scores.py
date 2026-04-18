@@ -136,9 +136,25 @@ def detect_finals_game1_gap(games):
     def series_start(gids):
         return min(by_game_date.get(g, "") for g in gids)
 
-    finals_key = max(by_series, key=lambda k: series_start(by_series[k]))
+    series_starts = {k: series_start(v) for k, v in by_series.items()}
+    finals_key    = max(series_starts, key=lambda k: series_starts[k])
 
-    # Game 1 = earliest game in that series
+    # Sanity check: the Finals starts weeks after all other rounds.
+    # If the "latest" series started within 20 days of the earliest, it's not the Finals.
+    if len(series_starts) >= 2:
+        earliest_other = min(v for k, v in series_starts.items() if k != finals_key)
+        try:
+            fmt = "%Y-%m-%dT%H:%M:%SZ"
+            t_finals = datetime.strptime(series_starts[finals_key][:19] + "Z", fmt)
+            t_other  = datetime.strptime(earliest_other[:19] + "Z", fmt)
+            if (t_finals - t_other).days < 20:
+                return None
+        except Exception:
+            return None
+    else:
+        return None  # Only one series — can't distinguish Finals from R1
+
+    # Game 1 = earliest game in Finals
     game1_id = min(by_series[finals_key], key=lambda g: by_game_date.get(g, ""))
     pts = by_game_pts[game1_id]
     if len(pts) == 2:
