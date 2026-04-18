@@ -1347,7 +1347,7 @@ function renderInfo() {
 
       <section class="info-section">
         <h2>Pick Deadlines — First Round</h2>
-        <p class="info-detail">Picks lock at game time. Later rounds lock when the matchup is confirmed.</p>
+        <p class="info-detail">Picks lock at game time for all rounds. Later round deadlines will be shown once the NBA announces the schedule.</p>
         <table class="info-table">
           <thead><tr><th>Matchup</th><th>Game 1 Tip-off</th></tr></thead>
           <tbody>${deadlineRows}</tbody>
