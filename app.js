@@ -1311,6 +1311,7 @@ function renderInfo() {
 
       <section class="info-section">
         <h2>Prizes</h2>
+        <p class="info-detail">Buy-in: <strong>100 ₪</strong> per player.</p>
         <table class="info-table">
           <thead><tr><th>Place</th><th>Prize</th></tr></thead>
           <tbody>
