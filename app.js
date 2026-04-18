@@ -520,7 +520,6 @@ let scoresData  = null;
 let editingState = { pid: null, round: null };
 let bdRoundFilter = 0;
 let bdUserFilter  = new Set();
-let bdUserDropdownOpen = false;
 let bdRows = [];
 
 function getGameTime(sid) {
@@ -1209,19 +1208,12 @@ function renderResults() {
 
 function handleBdRoundFilter(sel) {
   bdRoundFilter = parseInt(sel.value);
-  bdUserDropdownOpen = false;
   renderLeaderboard();
 }
-function toggleBdUserDropdown() {
-  bdUserDropdownOpen = !bdUserDropdownOpen;
-  document.querySelector('.bd-user-panel')?.classList.toggle('open', bdUserDropdownOpen);
-}
-function handleBdUserCheck(cb) {
-  if (cb.checked) bdUserFilter.add(cb.value);
-  else bdUserFilter.delete(cb.value);
+function toggleBdUser(id) {
+  if (bdUserFilter.has(id)) bdUserFilter.delete(id);
+  else bdUserFilter.add(id);
   renderLeaderboard();
-  document.querySelector('.bd-user-panel')?.classList.add('open');
-  bdUserDropdownOpen = true;
 }
 
 function renderLeaderboard() {
@@ -1283,25 +1275,16 @@ function renderPickBreakdown(rows) {
   const roundOptions = availRounds
     .map(r => `<option value="${r}" ${bdRoundFilter === r ? 'selected' : ''}>${ROUND_NAMES[r]}</option>`)
     .join('');
-  const userLabel = bdUserFilter.size === 0 ? 'All Users' : `${bdUserFilter.size} Users`;
-  const userCheckboxes = rows.map(p => `
-    <label class="bd-user-option">
-      <input type="checkbox" value="${p.id}" ${bdUserFilter.has(p.id) ? 'checked' : ''} onchange="handleBdUserCheck(this)">
-      <span>${p.name}</span>
-    </label>`).join('');
+  const userTiles = rows.map(p => {
+    const active = bdUserFilter.has(p.id);
+    return `<button class="bd-user-tile${active ? ' active' : ''}" onclick="toggleBdUser('${p.id}')">${p.name}</button>`;
+  }).join('');
 
   let html = `<div class="pick-breakdown">
   <div class="bd-filter-bar">
     <h3>Pick Details</h3>
-    <div class="bd-filter-controls">
-      <select id="bd-round-filter" onchange="handleBdRoundFilter(this)">${roundOptions}</select>
-      <div class="bd-user-dropdown">
-        <button class="bd-user-btn" onclick="toggleBdUserDropdown()">
-          ${userLabel} <span class="bd-caret">▾</span>
-        </button>
-        <div class="bd-user-panel ${bdUserDropdownOpen ? 'open' : ''}">${userCheckboxes}</div>
-      </div>
-    </div>
+    <select id="bd-round-filter" onchange="handleBdRoundFilter(this)">${roundOptions}</select>
+    <div class="bd-user-tiles">${userTiles}</div>
   </div>`;
 
   const series = SERIES.filter(s => s.r === bdRoundFilter && isSeriesAvailable(s.id));
@@ -1542,13 +1525,6 @@ async function beginApp() {
 
   const savedTab = sessionStorage.getItem('nba-active-tab');
   if (savedTab && RENDERERS[savedTab]) activeTab = savedTab;
-
-  document.addEventListener('click', e => {
-    if (!e.target.closest('.bd-user-dropdown')) {
-      bdUserDropdownOpen = false;
-      document.querySelector('.bd-user-panel')?.classList.remove('open');
-    }
-  });
 
   initLogin();
   fetchScores();
