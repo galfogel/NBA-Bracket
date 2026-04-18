@@ -1321,7 +1321,7 @@ function renderInfo() {
         <h2>Upset Bonus</h2>
         <p class="info-detail">Based on fan pick % from picks.nba.com, floored to the nearest 10%. Minimum gap 5% when fav% is below 60%. Formula: <strong>2 × pts × (floor10(fav%) − 50%) / 100</strong>.</p>
         <p class="info-detail">Underdog potential pts = <span style="color:var(--text-dim)">base</span> + <span style="color:var(--green)">bonus</span>:</p>
-        <table class="info-table">
+        <table class="info-table info-table-auto">
           <thead><tr><th>Fav% range</th><th>R1</th><th>R2</th><th>R3</th><th>Finals</th></tr></thead>
           <tbody>
             <tr><td>50–59%</td><td><span class="pot-base">10</span> <span class="pot-bonus">+1</span></td><td><span class="pot-base">20</span> <span class="pot-bonus">+2</span></td><td><span class="pot-base">40</span> <span class="pot-bonus">+4</span></td><td><span class="pot-base">80</span> <span class="pot-bonus">+8</span></td></tr>
