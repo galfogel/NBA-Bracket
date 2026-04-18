@@ -1,0 +1,29 @@
+name: Cache Bust on Deploy
+
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - 'data/scores.json'   # hourly score updates don't need a cache bust
+
+permissions:
+  contents: write
+
+jobs:
+  bust:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Stamp commit SHA into asset URLs
+        run: |
+          SHORT_SHA=$(git rev-parse --short HEAD)
+          sed -i "s/?v=[^\"']*/?v=${SHORT_SHA}/g" index.html
+
+      - name: Commit if changed
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git diff --cached --quiet || \
+            git commit -m "chore: cache bust $(git rev-parse --short HEAD)" && git push
