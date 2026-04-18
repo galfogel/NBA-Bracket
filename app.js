@@ -518,6 +518,8 @@ function updateUserDisplay() {
 // ============================================================
 let scoresData  = null;
 let editingState = { pid: null, round: null };
+let bdRoundFilter = 1;
+let bdUserFilter  = new Set();
 
 function getGameTime(sid) {
   return scoresData?.gameTimes?.[sid] ?? DEFAULT_GAME_TIMES[sid] ?? null;
@@ -1203,6 +1205,15 @@ function renderResults() {
 // LEADERBOARD TAB
 // ============================================================
 
+function handleBdRoundFilter(sel) {
+  bdRoundFilter = parseInt(sel.value);
+  renderLeaderboard();
+}
+function handleBdUserFilter(sel) {
+  bdUserFilter = new Set([...sel.selectedOptions].map(o => o.value));
+  renderLeaderboard();
+}
+
 function renderLeaderboard() {
   const el = document.getElementById('tab-leaderboard');
 
@@ -1254,12 +1265,30 @@ function renderLeaderboard() {
 
 function renderPickBreakdown(rows) {
   const adminView = isAdmin();
-  let html = '<div class="pick-breakdown"><h3>Pick Details</h3>';
 
-  for (const r of [1, 2, 3, 4]) {
-    const series = SERIES.filter(s => s.r === r && isSeriesAvailable(s.id));
-    if (!series.length) continue;
-    html += `<div class="breakdown-round"><h4>${ROUND_NAMES[r]}</h4><div class="breakdown-grid">`;
+  const availRounds = [1,2,3,4].filter(r => SERIES.some(s => s.r === r && isSeriesAvailable(s.id)));
+  if (!availRounds.includes(bdRoundFilter)) bdRoundFilter = availRounds[0] ?? 1;
+  const filteredRows = bdUserFilter.size > 0 ? rows.filter(p => bdUserFilter.has(p.id)) : rows;
+
+  const roundOptions = availRounds
+    .map(r => `<option value="${r}" ${bdRoundFilter === r ? 'selected' : ''}>${ROUND_NAMES[r]}</option>`)
+    .join('');
+  const userOptions = rows
+    .map(p => `<option value="${p.id}" ${bdUserFilter.has(p.id) ? 'selected' : ''}>${p.name}</option>`)
+    .join('');
+
+  let html = `<div class="pick-breakdown">
+  <div class="bd-filter-bar">
+    <h3>Pick Details</h3>
+    <div class="bd-filter-controls">
+      <select id="bd-round-filter" onchange="handleBdRoundFilter(this)">${roundOptions}</select>
+      <select id="bd-user-filter" multiple size="4" onchange="handleBdUserFilter(this)">${userOptions}</select>
+    </div>
+  </div>`;
+
+  const series = SERIES.filter(s => s.r === bdRoundFilter && isSeriesAvailable(s.id));
+  if (series.length) {
+    html += `<div class="breakdown-round"><div class="breakdown-grid">`;
     for (const def of series) {
       const actual = state.results[def.id];
       const [t1k, t2k] = resolveTeams(def.id);
@@ -1284,7 +1313,7 @@ function renderPickBreakdown(rows) {
 
       let pickRows = '';
       if (seriesLocked || adminView) {
-        pickRows = rows.map(p => {
+        pickRows = filteredRows.map(p => {
           const pick = getPick(p.id, def.id);
           const pt = pick.winner ? TEAMS[pick.winner] : null;
           const ok  = actual && pick.winner && actual === pick.winner;
@@ -1314,30 +1343,32 @@ function renderPickBreakdown(rows) {
     html += '</div></div>';
   }
 
-  // Finals Game 1 gap — only show when at least one user has submitted a gap
-  const anyGap = rows.some(p => state.finalsGap[p.id] != null);
-  if (anyGap || state.finalsGame1ActualGap != null) {
-    const actualGap = state.finalsGame1ActualGap;
-    html += '<div class="breakdown-round"><h4>Game 1 Finals Gap (Tiebreaker)</h4><div class="breakdown-grid">';
-    html += '<div class="breakdown-series"><div class="bd-picks">';
-    for (const p of rows) {
-      const gap = state.finalsGap[p.id];
-      const isMe = p.id === currentUserId;
-      let diffStr = '';
-      if (gap != null && actualGap != null) {
-        const diff = Math.abs(gap - actualGap);
-        diffStr = `<span class="bd-pick-games">(diff: ${diff})</span>`;
+  // Finals Game 1 gap — only when Finals round is selected
+  if (bdRoundFilter === 4) {
+    const anyGap = filteredRows.some(p => state.finalsGap[p.id] != null);
+    if (anyGap || state.finalsGame1ActualGap != null) {
+      const actualGap = state.finalsGame1ActualGap;
+      html += '<div class="breakdown-round"><h4>Game 1 Finals Gap (Tiebreaker)</h4><div class="breakdown-grid">';
+      html += '<div class="breakdown-series"><div class="bd-picks">';
+      for (const p of filteredRows) {
+        const gap = state.finalsGap[p.id];
+        const isMe = p.id === currentUserId;
+        let diffStr = '';
+        if (gap != null && actualGap != null) {
+          const diff = Math.abs(gap - actualGap);
+          diffStr = `<span class="bd-pick-games">(diff: ${diff})</span>`;
+        }
+        html += `<div class="bd-gap-row${isMe ? ' my-row' : ''}">
+          <span class="bd-pick-name">${p.name}</span>
+          <span class="bd-pick-abbr">${gap != null ? `${gap} pts` : '–'}</span>
+          ${diffStr}
+        </div>`;
       }
-      html += `<div class="bd-gap-row${isMe ? ' my-row' : ''}">
-        <span class="bd-pick-name">${p.name}</span>
-        <span class="bd-pick-abbr">${gap != null ? `${gap} pts` : '–'}</span>
-        ${diffStr}
-      </div>`;
+      if (actualGap != null) {
+        html += `<div class="bd-gap-actual">Actual: <strong>${actualGap} pts</strong></div>`;
+      }
+      html += '</div></div></div></div>';
     }
-    if (actualGap != null) {
-      html += `<div class="bd-gap-actual">Actual: <strong>${actualGap} pts</strong></div>`;
-    }
-    html += '</div></div></div></div>';
   }
 
   return html + '</div>';

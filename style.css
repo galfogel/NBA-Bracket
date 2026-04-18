@@ -816,7 +816,11 @@ main { padding: 24px; }
 .total-cell { font-weight: 700; color: var(--green); }
 
 /* ---- Pick breakdown ---- */
-.pick-breakdown h3 { font-size: 16px; margin-bottom: 16px; }
+.bd-filter-bar { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; margin-bottom: 20px; }
+.bd-filter-bar h3 { font-size: 16px; margin: 0; }
+.bd-filter-controls { display: flex; gap: 10px; align-items: flex-start; }
+.bd-filter-controls select { font-size: 13px; padding: 4px 8px; border-radius: 6px; border: 1px solid var(--border); background: var(--card-bg); color: var(--text); cursor: pointer; }
+#bd-user-filter { min-width: 150px; }
 
 .breakdown-round { margin-bottom: 28px; }
 .breakdown-round h4 {
