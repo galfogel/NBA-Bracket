@@ -1,6 +1,11 @@
 {
-  "updated": "2026-04-18T19:36:42Z",
-  "records": {},
+  "updated": "2026-04-18T20:28:51Z",
+  "records": {
+    "CLE-TOR": {
+      "CLE": 1,
+      "TOR": 0
+    }
+  },
   "gameTimes": {
     "E4v5": "2026-04-18T19:00:00Z",
     "W3v6": "2026-04-18T19:30:00Z",
@@ -11,6 +16,6 @@
     "E1v8": "2026-04-19T22:30:00Z",
     "W2v7": "2026-04-20T01:00:00Z"
   },
-  "finalsGame1Gap": null,
+  "finalsGame1Gap": 13,
   "error": null
 }
