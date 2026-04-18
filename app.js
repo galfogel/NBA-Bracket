@@ -1,5 +1,4 @@
 // ============================================================
-// ============================================================
 // TEAMS
 // ============================================================
 const ESPN = s => `https://a.espncdn.com/i/teamlogos/nba/500/${s}.png`;
@@ -81,7 +80,7 @@ function getUpsetBonus(sid, pickedKey, roundPts) {
   return 2 * roundPts * gap / 100;
 }
 
-// Default first-game UTC timestamps per series (deadline = -3 hours)
+// Default first-game UTC timestamps per series. Series lock at tip-off.
 const DEFAULT_GAME_TIMES = {
   // EDT = UTC-4. Sources: NBA.com / CBS Sports official first-round schedule.
   E4v5: '2026-04-18T17:00:00Z',  // CLE vs TOR  – Apr 18, 1:00 PM ET
@@ -167,6 +166,21 @@ async function hashPassword(pass) {
   return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
 }
 
+// Commissioner / admin — identified by case-insensitive name match
+const ADMIN_NAME = 'Fogel';
+function isAdmin(pid = currentUserId) {
+  const p = state.participants.find(p => p.id === pid);
+  return p?.name.toLowerCase() === ADMIN_NAME.toLowerCase();
+}
+
+// Prune participants, picks, picksSubmitted, and finalsGap down to allowedIds
+function pruneStaleUserData(allowedIds) {
+  state.participants = state.participants.filter(p => allowedIds.has(p.id));
+  for (const pid of Object.keys(state.picks))          if (!allowedIds.has(pid)) delete state.picks[pid];
+  for (const pid of Object.keys(state.picksSubmitted)) if (!allowedIds.has(pid)) delete state.picksSubmitted[pid];
+  for (const pid of Object.keys(state.finalsGap))      if (!allowedIds.has(pid)) delete state.finalsGap[pid];
+}
+
 // ── Sync error banner ─────────────────────────────────────────
 function showSyncError(action, err) {
   const el = document.getElementById('sync-error');
@@ -246,10 +260,7 @@ function mergeRemoteState(remote) {
   const remoteIds = new Set(rParticipants.map(p => p.id));
   const keepIds   = new Set(remoteIds);
   if (pendingSignupId) keepIds.add(pendingSignupId);
-  state.participants = state.participants.filter(p => keepIds.has(p.id));
-  for (const pid of Object.keys(state.picks))          if (!keepIds.has(pid)) delete state.picks[pid];
-  for (const pid of Object.keys(state.picksSubmitted)) if (!keepIds.has(pid)) delete state.picksSubmitted[pid];
-  for (const pid of Object.keys(state.finalsGap))      if (!keepIds.has(pid)) delete state.finalsGap[pid];
+  pruneStaleUserData(keepIds);
 
   // Clear the pending-signup flag once a fetch confirms the user has been written.
   if (pendingSignupId && remoteIds.has(pendingSignupId)) pendingSignupId = null;
@@ -287,10 +298,7 @@ async function syncPicksToGitHub() {
       // Prune local participants (and their picks/submitted/gap) to only those in Firestore
       // (plus the pending signup, if any) so removed users' stale data isn't re-written.
       const allowedIds = pendingSignupId ? new Set([...remoteIds, pendingSignupId]) : remoteIds;
-      state.participants = state.participants.filter(p => allowedIds.has(p.id));
-      for (const pid of Object.keys(state.picks))          if (!allowedIds.has(pid)) delete state.picks[pid];
-      for (const pid of Object.keys(state.picksSubmitted)) if (!allowedIds.has(pid)) delete state.picksSubmitted[pid];
-      for (const pid of Object.keys(state.finalsGap))      if (!allowedIds.has(pid)) delete state.finalsGap[pid];
+      pruneStaleUserData(allowedIds);
     }
     await ref.set({
       updated:              new Date().toISOString(),
@@ -555,7 +563,7 @@ function startCountdownTimer() {
       const gameTs = el.dataset.gameTs ? parseInt(el.dataset.gameTs) : null;
       el.textContent = formatCountdown(lockTs, gameTs);
     });
-    if (needsRerender) renderBracket();
+    if (needsRerender && activeTab === 'bracket') renderBracket();
   }, 30000);
 }
 
@@ -618,9 +626,11 @@ async function fetchScores() {
   try {
     const resp = await fetch('data/scores.json?_=' + Date.now());
     if (!resp.ok) return;
-    scoresData = await resp.json();
+    const next = await resp.json();
+    if (scoresData && next.updated === scoresData.updated) return; // no-op refresh
+    scoresData = next;
     // Auto-populate Finals Game 1 gap from scores pipeline
-    if (scoresData.finalsGame1Gap != null) {
+    if (scoresData.finalsGame1Gap != null && scoresData.finalsGame1Gap !== state.finalsGame1ActualGap) {
       state.finalsGame1ActualGap = scoresData.finalsGame1Gap;
       save();
     }
@@ -657,20 +667,25 @@ function resolveTeams(sid) {
   return [state.results[def.from[0]] || null, state.results[def.from[1]] || null];
 }
 
+// Points earned for a single pick (0 if incorrect, missing, or pending)
+function seriesPoints(pid, sid) {
+  const actual = state.results[sid];
+  const pick   = getPick(pid, sid);
+  if (!actual || !pick.winner || actual !== pick.winner) return 0;
+  const r = SERIES_MAP[sid].r;
+  let pts = ROUND_POINTS[r];
+  const ag = getActualGames(sid);
+  if (ag && pick.games === ag) pts += GAMES_BONUS;
+  pts += getUpsetBonus(sid, pick.winner, ROUND_POINTS[r]);
+  return pts;
+}
+
 function computeScore(pid) {
   let score = 0, correct = 0, possible = 0;
   for (const def of SERIES) {
-    const actual = state.results[def.id];
-    const pick   = getPick(pid, def.id);
-    if (pick.winner) possible++;
-    if (actual && pick.winner && actual === pick.winner) {
-      let pts = ROUND_POINTS[def.r];
-      const ag = getActualGames(def.id);
-      if (ag && pick.games && ag === pick.games) pts += GAMES_BONUS;
-      pts += getUpsetBonus(def.id, pick.winner, ROUND_POINTS[def.r]);
-      score += pts;
-      correct++;
-    }
+    if (getPick(pid, def.id).winner) possible++;
+    const pts = seriesPoints(pid, def.id);
+    if (pts > 0) { score += pts; correct++; }
   }
   return { score, correct, possible };
 }
@@ -853,7 +868,6 @@ function cardPicks(sid, t1, t2, pid) {
   const pick     = getPick(pid, sid);
   const editable = canPickSeries(pid, sid);
   const locked   = isSeriesLocked(sid);
-  const dl       = !locked ? formatDeadline(sid) : null;
   const actual   = state.results[sid] || null;
   const ag       = getActualGames(sid);
 
@@ -895,12 +909,11 @@ function cardPicks(sid, t1, t2, pid) {
     </div>` : '';
 
   const gt = getGameTime(sid);
-  const lockTs  = gt ? new Date(gt).getTime() : null;
-  const gameTs  = gt ? new Date(gt).getTime() : null;
+  const lockTs = gt ? new Date(gt).getTime() : null;
   const footer = locked
     ? `<div class="card-footer footer-locked">🔒 Locked</div>`
     : lockTs
-      ? `<div class="card-footer footer-countdown" data-lock-ts="${lockTs}" data-game-ts="${gameTs}">${formatCountdown(lockTs, gameTs)}</div>`
+      ? `<div class="card-footer footer-countdown" data-lock-ts="${lockTs}" data-game-ts="${lockTs}">${formatCountdown(lockTs, lockTs)}</div>`
       : '';
 
   const gapRow = sid === 'FINALS' ? (() => {
@@ -923,11 +936,10 @@ function cardPicks(sid, t1, t2, pid) {
 function cardView(sid, t1, t2, pid) {
   const locked = isSeriesLocked(sid);
 
-  const isAdmin = state.participants.find(p => p.id === currentUserId)?.name.toLowerCase() === 'fogel';
   const isOwnPicks = pid === currentUserId;
 
   // Picks are hidden until the series locks (starts), except for the admin or the user viewing their own picks
-  if (!locked && !isAdmin && !isOwnPicks) {
+  if (!locked && !isAdmin() && !isOwnPicks) {
     function rowHidden(key) {
       const t = TEAMS[key];
       const pct = getWinPct(sid, key);
@@ -967,15 +979,7 @@ function cardView(sid, t1, t2, pid) {
   const ag2    = getActualGames(sid);
   const gOk    = pick.games && ag2 && pick.games === ag2;
   const gBad   = pick.games && ag2 && pick.games !== ag2;
-  const seriesDef = SERIES_MAP[sid];
-  const ptsEarned = actual && pick.winner && actual === pick.winner
-    ? (() => {
-        let p = ROUND_POINTS[seriesDef?.r ?? 1];
-        if (gOk) p += GAMES_BONUS;
-        p += getUpsetBonus(sid, pick.winner, ROUND_POINTS[seriesDef?.r ?? 1]);
-        return p;
-      })()
-    : 0;
+  const ptsEarned = seriesPoints(pid, sid);
   const footer = pick.games
     ? `<div class="card-footer ${gOk ? 'footer-correct' : gBad ? 'footer-wrong' : ''}">
          ${pick.games} games${gOk ? ' ✓' : gBad ? ` ✗ (actual ${ag2})` : ''}${ptsEarned ? ` · <span class="pts-badge">${ptsEarned} pts</span>` : ''}
@@ -1214,17 +1218,7 @@ function renderLeaderboard() {
         <tbody>
           ${rows.map((p, i) => {
             const rs = [0, 0, 0, 0];
-            for (const def of SERIES) {
-              const actual = state.results[def.id];
-              const pick   = getPick(p.id, def.id);
-              if (actual && pick.winner && actual === pick.winner) {
-                let pts = ROUND_POINTS[def.r];
-                const ag = getActualGames(def.id);
-                if (ag && pick.games === ag) pts += GAMES_BONUS;
-                pts += getUpsetBonus(def.id, pick.winner, ROUND_POINTS[def.r]);
-                rs[def.r - 1] += pts;
-              }
-            }
+            for (const def of SERIES) rs[def.r - 1] += seriesPoints(p.id, def.id);
             const medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : '';
             const isMe  = p.id === currentUserId;
             return `<tr class="${i === 0 && p.score > 0 ? 'leader-row' : ''} ${isMe ? 'my-row' : ''}">
@@ -1241,7 +1235,7 @@ function renderLeaderboard() {
 }
 
 function renderPickBreakdown(rows) {
-  const isAdmin = state.participants.find(p => p.id === currentUserId)?.name.toLowerCase() === 'fogel';
+  const adminView = isAdmin();
   let html = '<div class="pick-breakdown"><h3>Pick Details</h3>';
 
   for (const r of [1, 2, 3, 4]) {
@@ -1271,7 +1265,7 @@ function renderPickBreakdown(rows) {
         : 'Pending'}</div>`;
 
       let pickRows = '';
-      if (seriesLocked || isAdmin) {
+      if (seriesLocked || adminView) {
         pickRows = rows.map(p => {
           const pick = getPick(p.id, def.id);
           const pt = pick.winner ? TEAMS[pick.winner] : null;
@@ -1282,12 +1276,7 @@ function renderPickBreakdown(rows) {
           const isMe = p.id === currentUserId;
           const teamCls = ok ? 'bd-team-ok' : bad ? 'bd-team-bad' : '';
           const gamesCls = gok ? 'bd-games-ok' : gbad ? 'bd-games-bad' : '';
-          let ptsEarned = 0;
-          if (ok) {
-            ptsEarned = ROUND_POINTS[def.r];
-            if (gok) ptsEarned += GAMES_BONUS;
-            ptsEarned += getUpsetBonus(def.id, pick.winner, ROUND_POINTS[def.r]);
-          }
+          const ptsEarned = seriesPoints(p.id, def.id);
           return `<div class="bd-pick-row${isMe ? ' my-row' : ''}">
             <span class="bd-pick-name">${p.name.split(' ')[0]}</span>
             <span class="bd-pick-team ${teamCls}">
@@ -1358,7 +1347,7 @@ function renderInfo() {
       ? `<span class="info-team"><img src="${t.logo}" alt="${t.abbr}" class="info-team-logo" />${t.name}</span>`
       : `<span class="info-team">TBD</span>`;
     const matchup = `${teamCell(t1)} <span class="info-vs">vs</span> ${teamCell(t2)}`;
-    const gameTs = scoresData?.gameTimes?.[s.id] ?? DEFAULT_GAME_TIMES[s.id];
+    const gameTs = getGameTime(s.id);
     let deadlineStr = '—';
     if (gameTs) {
       deadlineStr = new Date(gameTs).toLocaleString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit', timeZone: 'Asia/Jerusalem' });
@@ -1447,7 +1436,7 @@ function switchTab(tab) {
   RENDERERS[tab]();
   // Refresh shared picks when switching to All Picks or Leaderboard
   if (tab === 'picks' || tab === 'leaderboard') {
-    fetchPicks().then(() => { save(); RENDERERS[tab](); });
+    fetchPicks().then(() => RENDERERS[tab]());
   }
 }
 
