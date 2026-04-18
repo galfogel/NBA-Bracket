@@ -451,10 +451,10 @@ function getGameTime(sid) {
   return scoresData?.gameTimes?.[sid] ?? DEFAULT_GAME_TIMES[sid] ?? null;
 }
 
-// Series locks 3 hours before its first game (R1), or immediately once games appear in records (R2+)
+// Series locks at its first game time (R1), or immediately once games appear in records (R2+)
 function isSeriesLocked(sid) {
   const gt = getGameTime(sid);
-  if (gt) return Date.now() > new Date(gt).getTime() - 3 * 3600 * 1000;
+  if (gt) return Date.now() >= new Date(gt).getTime();
   if (state.results[sid]) return true;
   if (scoresData?.records) {
     const [t1, t2] = resolveTeams(sid);
@@ -721,7 +721,7 @@ function bracketCard(sid, mode, pid) {
       </div>`;
     }
     const gt = getGameTime(sid);
-    const lockTs = gt ? new Date(gt).getTime() - 3 * 3600 * 1000 : null;
+    const lockTs = gt ? new Date(gt).getTime() : null;
     const locked = lockTs && Date.now() >= lockTs;
     const footer = mode === 'picks'
       ? (locked
@@ -831,7 +831,7 @@ function cardPicks(sid, t1, t2, pid) {
     </div>` : '';
 
   const gt = getGameTime(sid);
-  const lockTs  = gt ? new Date(gt).getTime() - 3 * 3600 * 1000 : null;
+  const lockTs  = gt ? new Date(gt).getTime() : null;
   const gameTs  = gt ? new Date(gt).getTime() : null;
   const footer = locked
     ? `<div class="card-footer footer-locked">🔒 Locked</div>`
@@ -1347,7 +1347,7 @@ function renderInfo() {
 
       <section class="info-section">
         <h2>Pick Deadlines — First Round</h2>
-        <p class="info-detail">Picks lock at game time for all rounds. Later round deadlines will be shown once the NBA announces the schedule.</p>
+        <p class="info-detail">Picks lock at each series' first game time. Later round deadlines will be shown once the NBA announces the schedule.</p>
         <table class="info-table">
           <thead><tr><th>Matchup</th><th>Game 1 Tip-off</th></tr></thead>
           <tbody>${deadlineRows}</tbody>
