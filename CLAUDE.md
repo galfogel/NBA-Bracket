@@ -16,6 +16,10 @@ python scripts/fetch_scores.py
 
 **One-off Firestore admin scripts** — use `python3 -` with inline script + `requests` library (SSL on macOS requires `requests`, not `urllib`). Firestore REST base URL: `https://firestore.googleapis.com/v1/projects/nba-bracket-f91f1/databases/(default)/documents`. API key is in `app.js` (`FIRESTORE_API_KEY`).
 
+**Remove a user from DB** — fetch the `brackets/nba-2026` document, filter `participants`, `picks`, `picksSubmitted`, `finalsGap` by the user's `id`, then PATCH back with `updateMask.fieldPaths` for each field. Always verify with a second GET after the PATCH. Use the participant's `id` field (e.g. `p_1776521786553`), not their name.
+
+**Force all users to re-enter the access code** — bump `PLATFORM_SESSION_KEY` in `app.js` (e.g. `'nba-gate-2026'` → `'nba-gate-2026-v2'`). Since the gate is stored in `sessionStorage` under that key, changing it invalidates all existing sessions.
+
 ## Architecture
 
 ### Stack
@@ -80,3 +84,6 @@ The bracket has two parallel HTML outputs:
 - **Firebase API key**: intentionally public (project identifier only). Security enforced by Firestore Rules.
 - **Cache busting**: `index.html` references `app.js?v=X` and `style.css?v=X`. The `cache_bust.yml` GitHub Action replaces `X` with the short commit SHA on every push to `main` (excluding `data/scores.json` changes). Never manually edit the `?v=` values.
 - **GitHub Actions git push**: both workflows do `git pull --rebase origin main` before pushing to handle concurrent commits between the two workflows.
+- **Leaderboard total points**: styled via `.total-cell` in `style.css` — currently green (`var(--green)`).
+- **"Log out" button**: rendered in `updateUserDisplay()` as `.btn-switch-user`; clicking calls `switchUser()` which shows the login overlay.
+- **Removed users re-syncing**: `syncPicksToGitHub()` writes the full `state.participants` from localStorage — if a removed user's browser still has old state and they sync, they restore themselves. Mitigate by bumping the gate session key (forces re-auth) and cleaning up Firestore promptly.
