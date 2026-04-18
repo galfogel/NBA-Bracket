@@ -175,6 +175,9 @@ def main():
 
     print(f"Wrote {out_path}")
 
+    if error:
+        sys.exit(1)
+
 
 if __name__ == "__main__":
     main()
