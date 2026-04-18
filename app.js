@@ -311,8 +311,26 @@ function initLogin() {
   }
 }
 
-function showLoginOverlay() {
-  document.getElementById('login-overlay').classList.remove('hidden');
+function showLoginOverlay(canGoBack = false) {
+  const overlay = document.getElementById('login-overlay');
+  overlay.classList.remove('hidden');
+  let backBtn = overlay.querySelector('.login-back-btn');
+  if (canGoBack) {
+    if (!backBtn) {
+      backBtn = document.createElement('button');
+      backBtn.className = 'login-back-btn';
+      backBtn.textContent = '← Back';
+      backBtn.addEventListener('click', () => {
+        overlay.classList.add('hidden');
+        currentUserId = localStorage.getItem(USER_KEY);
+        startApp();
+      });
+      overlay.querySelector('.login-box').appendChild(backBtn);
+    }
+    backBtn.style.display = '';
+  } else if (backBtn) {
+    backBtn.style.display = 'none';
+  }
   setTimeout(() => document.getElementById('login-name').focus(), 60);
 }
 
@@ -375,13 +393,13 @@ async function attemptLogin() {
 }
 
 function switchUser() {
+  const prevUserId = currentUserId;
   currentUserId = null;
   editingState  = { pid: null, round: null };
-  localStorage.removeItem(USER_KEY);
   document.getElementById('login-name').value = '';
   document.getElementById('login-pass').value = '';
   document.getElementById('login-msg').textContent = '';
-  showLoginOverlay();
+  showLoginOverlay(!!prevUserId);
 }
 
 function startApp() {
