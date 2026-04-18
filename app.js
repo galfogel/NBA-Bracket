@@ -518,7 +518,7 @@ function updateUserDisplay() {
 // ============================================================
 let scoresData  = null;
 let editingState = { pid: null, round: null };
-let bdRoundFilter = 1;
+let bdRoundFilter = 0;
 let bdUserFilter  = new Set();
 
 function getGameTime(sid) {
@@ -1267,7 +1267,7 @@ function renderPickBreakdown(rows) {
   const adminView = isAdmin();
 
   const availRounds = [1,2,3,4].filter(r => SERIES.some(s => s.r === r && isSeriesAvailable(s.id)));
-  if (!availRounds.includes(bdRoundFilter)) bdRoundFilter = availRounds[0] ?? 1;
+  if (!availRounds.includes(bdRoundFilter)) bdRoundFilter = availRounds[availRounds.length - 1] ?? 1;
   const filteredRows = bdUserFilter.size > 0 ? rows.filter(p => bdUserFilter.has(p.id)) : rows;
 
   const roundOptions = availRounds
