@@ -24,6 +24,8 @@ Pure vanilla JS + CSS static site hosted on GitHub Pages. No framework, no build
 ### Access control
 A platform-wide gate (`PLATFORM_PASSWORD = 'nba2026'`) must be passed via `initGate()` before the login overlay appears. Gate state is stored in `sessionStorage`. The user "Fogel" is the commissioner/admin — identified by name match in `isAdmin` checks throughout the code.
 
+The login overlay has two tabs — **Sign In** (existing user) and **Sign Up** (new user) — controlled by `loginMode` and `setLoginMode()`. Sign In rejects unknown usernames; Sign Up rejects already-taken names. Switching accounts shows a **← Back** button (`canGoBack = true` in `showLoginOverlay()`) that restores the previous session without logging out.
+
 ### State: two layers
 - **`localStorage`** (`nba-bracket-2026-v2`): full app state. Never leaves the device.
 - **Firestore** (`brackets/nba-2026`): shared picks. Passwords stored as SHA-256 hashes. Picks stored with **full team names** (e.g. `"Oklahoma City Thunder"`), not the short keys (`W1`) used internally. Conversion at the read/write boundary via `picksToNames()` / `picksToKeys()`. Each pick entry also includes a `round` field (1–4) for DB readability.
@@ -72,3 +74,4 @@ The bracket has two parallel HTML outputs:
 - **Mobile bracket height**: uses `height: var(--bracket-h)` (580px desktop / 480px mobile) — explicit height required so `flex: 1` and CSS Grid `1fr` rows resolve inside the column layout. Tablet (`≤900px`) card width stays at `120px`.
 - **ESPN logo abbreviation exception**: SAS → `'sa'`.
 - **Firebase API key**: intentionally public (project identifier only). Security enforced by Firestore Rules.
+- **Cache busting**: `index.html` references `app.js?v=X` and `style.css?v=X`. The `cache_bust.yml` GitHub Action replaces `X` with the short commit SHA on every push to `main` (excluding `data/scores.json` changes). Never manually edit the `?v=` values.
