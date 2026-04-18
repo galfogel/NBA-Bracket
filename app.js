@@ -1040,7 +1040,6 @@ function renderRoundControls(pid) {
     const isEditing  = editingState.pid === pid && editingState.round === r;
     const picked     = avail.filter(s => getPick(pid, s.id).winner).length;
     const games      = avail.filter(s => getPick(pid, s.id).games).length;
-    const allDone    = picked === avail.length && games === avail.length;
 
     let badge, action;
     if (locked) {
@@ -1054,10 +1053,10 @@ function renderRoundControls(pid) {
       if (picked < avail.length) missing.push(`${avail.length - picked} winner${avail.length - picked > 1 ? 's' : ''}`);
       if (games  < avail.length) missing.push(`${avail.length - games} game count${avail.length - games > 1 ? 's' : ''}`);
       if (r === 4 && state.finalsGap[pid] == null) missing.push('Game 1 gap');
-      const canSave = allDone && !(r === 4 && state.finalsGap[pid] == null);
+      const canSave = !(r === 4 && state.finalsGap[pid] == null);
       badge  = `<span class="rc-badge rc-open">Open</span>`;
       action = canSave
-        ? `<button class="save-round-btn btn-primary" data-round="${r}">Save ${ROUND_NAMES[r]}</button>`
+        ? `<button class="save-round-btn btn-primary" data-round="${r}">Save ${ROUND_NAMES[r]}${missing.length ? ` (${missing.join(' · ')})` : ''}</button>`
         : `<button class="save-round-btn btn-primary btn-disabled" disabled data-round="${r}" title="Still missing: ${missing.join(', ')}">
              Missing: ${missing.join(' · ')}
            </button>`;
@@ -1111,8 +1110,6 @@ function handlePicksClick(e) {
   if (saveBtn && !saveBtn.disabled) {
     const r     = parseInt(saveBtn.dataset.round);
     const avail = SERIES.filter(s => s.r === r && isSeriesAvailable(s.id));
-    const allDone = avail.every(s => getPick(currentUserId, s.id).winner && getPick(currentUserId, s.id).games);
-    if (!allDone) return; // guarded by disabled attr, but double-check
     if (r === 4 && state.finalsGap[currentUserId] == null) {
       const warn = saveBtn.closest('.round-col, .blist-round')?.querySelector('.gap-warn');
       if (warn) { warn.textContent = '⚠ Add a Game 1 gap for the tiebreaker!'; warn.style.display = 'block'; }
