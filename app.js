@@ -1346,13 +1346,13 @@ function renderInfo() {
       </section>
 
       <section class="info-section">
-        <h2>Pick Deadlines — First Round</h2>
-        <p class="info-detail">Picks lock at each series' first game time. Later round deadlines will be shown once the NBA announces the schedule.</p>
+        <h2>Pick Deadlines</h2>
+        <p class="info-detail">Picking opens when both teams are known. Picks close when the series' first game begins.</p>
         <table class="info-table">
           <thead><tr><th>Matchup</th><th>Game 1 Tip-off</th></tr></thead>
           <tbody>${deadlineRows}</tbody>
         </table>
-        <p class="info-detail">All times in Israel Standard Time (IST).</p>
+        <p class="info-detail">R2–Finals deadlines shown once the NBA announces the schedule. All times in Israel Standard Time (IST).</p>
       </section>
     </div>
   `;
