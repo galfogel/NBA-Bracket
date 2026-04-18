@@ -410,7 +410,7 @@ main { padding: 24px; }
   padding-right: 2px;
 }
 .pot-pts-push { margin-left: auto; }
-.pot-pts-upset { color: var(--accent); }
+.pot-pts-upset { color: var(--green); }
 
 .team-name {
   font-size: 11px;
