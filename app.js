@@ -1296,7 +1296,7 @@ function renderPickBreakdown(rows) {
           const gamesCls = gok ? 'bd-games-ok' : gbad ? 'bd-games-bad' : '';
           const ptsEarned = seriesPoints(p.id, def.id);
           return `<div class="bd-pick-row${isMe ? ' my-row' : ''}">
-            <span class="bd-pick-name">${p.name.split(' ')[0]}</span>
+            <span class="bd-pick-name">${p.name}</span>
             <span class="bd-pick-team ${teamCls}">
               ${pt ? `<img src="${pt.logo}" alt="${pt.abbr}" /><span class="bd-pick-abbr" style="color:${pt.color}">${pt.abbr}</span>` : '<span class="bd-pick-abbr">?</span>'}
               ${ok ? '<span class="bd-pick-mark ok">✓</span>' : bad ? '<span class="bd-pick-mark bad">✗</span>' : ''}
@@ -1329,7 +1329,7 @@ function renderPickBreakdown(rows) {
         diffStr = `<span class="bd-pick-games">(diff: ${diff})</span>`;
       }
       html += `<div class="bd-gap-row${isMe ? ' my-row' : ''}">
-        <span class="bd-pick-name">${p.name.split(' ')[0]}</span>
+        <span class="bd-pick-name">${p.name}</span>
         <span class="bd-pick-abbr">${gap != null ? `${gap} pts` : '–'}</span>
         ${diffStr}
       </div>`;
