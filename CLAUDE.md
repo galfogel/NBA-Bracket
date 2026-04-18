@@ -38,14 +38,18 @@ On page load: `fetchPicks()` reads Firestore → `mergeRemoteState()` folds remo
 - Teams keyed by short codes: `E1–E8`, `W1–W8`. E8 = Orlando Magic, W8 = Phoenix Suns (play-in winners, hardcoded).
 - Series IDs: `E1v8`, `E4v5`, `EQ1`, `ECF`, `WCF`, `FINALS`, etc.
 - R1 series have `t1`/`t2` directly. R2+ series have `from: [sid, sid]` and pull teams from prior round winners via `resolveTeams()`.
-- `DEFAULT_GAME_TIMES` holds first-game UTC timestamps for R1 (EDT = UTC−4); series lock **3 hours before** the first game (`isSeriesLocked()`). Lock deadlines display in **Israel time** (`Asia/Jerusalem`) via `formatDeadline()`.
-- **R2+ locking**: no hard-coded game times exist for later rounds. `isSeriesLocked()` falls back to: (1) if `state.results[sid]` is set → locked; (2) if the team pair appears in `scoresData.records` → locked (games have started).
+- `DEFAULT_GAME_TIMES` holds first-game UTC timestamps for R1 (EDT = UTC−4). Series lock **at tip-off** of Game 1 (`isSeriesLocked()`). Deadlines display in **Israel time** (`Asia/Jerusalem`) via `formatDeadline()`.
+- **R2+ locking**: no hard-coded game times for later rounds. `isSeriesLocked()` falls back to: (1) if `state.results[sid]` is set → locked; (2) if the team pair appears in `scoresData.records` → locked (games have started). Add R2+ times manually to `data/scores.json → gameTimes` when the NBA announces the schedule.
 - A series becomes pickable as soon as both feeder series have results (`isSeriesAvailable()`).
+
+### Round name conventions
+- **Diagram / mobile list / Rules long names**: First Round, Semifinals, Conf. Finals, NBA Finals (`ROUND_NAMES` constant)
+- **Table column abbreviations** (leaderboard, upset bonus table): R1, SF, CF, Finals
 
 ### Scoring
 `ROUND_POINTS = [0, 10, 20, 40, 80]` per round + `GAMES_BONUS = 10` for correct series length.
 
-**Upset bonus** (Formula B): `getUpsetBonus(sid, pickedKey, roundPts)` — correctly picking the underdog earns `floor(roundPts × (favPct − 50) / 100)`. Fan pick %s hardcoded in `WIN_PCT` (R1 only, from picks.nba.com).
+**Upset bonus**: `getUpsetBonus(sid, pickedKey, roundPts)` — correctly picking the underdog earns `2 × roundPts × gap / 100`, where `gap = floor10(favPct) − 50` (minimum 5). Fan pick %s hardcoded in `WIN_PCT` (R1 only, from picks.nba.com). `floor10` = floor to nearest 10%.
 
 **Tiebreaker**: `state.finalsGap[pid]` — each user predicts Game 1 Finals score margin (required before saving Finals picks). `state.finalsGame1ActualGap` is auto-populated from `scoresData.finalsGame1Gap` (detected by `fetch_scores.py`). Leaderboard sorts ties by closest gap prediction.
 
@@ -57,7 +61,7 @@ Five tabs: **My Picks**, **All Picks**, **Results**, **Leaderboard**, **Rules**.
 Three card render modes, all via `bracketCard(sid, mode, pid)`:
 - `'picks'` → `cardPicks()` — interactive, current user's bracket; shows countdown timer in footer
 - `'results'` → `cardResults()` — read-only, shows series record footer (`Tied 0–0` → `SAS leads 2–1` → `SAS wins in 6`)
-- `'view'` → `cardView()` — read-only, another user's picks (hidden until series locks, except admin/own). Countdown only shown in `'picks'` mode.
+- `'view'` → `cardView()` — read-only, another user's picks (hidden until series locks, except admin/own)
 
 The bracket has two parallel HTML outputs:
 - `.bracket-wrap` — 7-column horizontal diagram (hidden on mobile).
@@ -66,12 +70,13 @@ The bracket has two parallel HTML outputs:
 **Pick visibility**: other users' picks hidden until series locks — unless viewer is admin (Fogel) or viewing own picks. Gap prediction shown on Finals card in All Picks only when the viewed user has submitted one.
 
 ### Scores pipeline
-`scripts/fetch_scores.py` runs hourly via GitHub Actions, hits `stats.nba.com` (retries up to 3×), writes `data/scores.json` with: `records` (wins per series, all rounds), `gameTimes` (preserved from prior run — R1 only, R2+ added manually when NBA announces schedule), `finalsGame1Gap` (auto-detected from Game 1 point totals). Front-end `fetchScores()` runs on load and every 5 minutes: auto-sets series winners via `syncResultsFromAPI()`, auto-populates `state.finalsGame1ActualGap`.
+`scripts/fetch_scores.py` runs hourly via GitHub Actions, hits `stats.nba.com` (retries up to 3×), writes `data/scores.json` with: `records` (wins per series, all rounds), `gameTimes` (preserved from prior run — R1 only, R2+ added manually), `finalsGame1Gap` (auto-detected from Game 1 point totals). Front-end `fetchScores()` runs on load and every 5 minutes: auto-sets series winners via `syncResultsFromAPI()`, auto-populates `state.finalsGame1ActualGap`.
 
 ### Key non-obvious details
-- **gameTimes for R2+**: not auto-detected — only R1 times are in `DEFAULT_GAME_TIMES`. Add later-round times manually to `data/scores.json` → `gameTimes` when the NBA posts the schedule.
 - **Downstream clearing**: `clearResultDownstream()` recursively invalidates later-round results when a result is edited.
-- **Mobile bracket height**: uses `height: var(--bracket-h)` (580px desktop / 480px mobile) — explicit height required so `flex: 1` and CSS Grid `1fr` rows resolve inside the column layout. Tablet (`≤900px`) card width stays at `120px`.
+- **Mobile bracket height**: uses `height: var(--bracket-h)` (580px desktop / 480px mobile) — explicit height required so `flex: 1` and CSS Grid `1fr` rows resolve inside the column layout. Do not add `overflow` to `.bracket` — it clips the y-axis in Chrome/Safari.
+- **Bracket width formula**: `--card-w: min(calc((100vw - 128px) / 7), 200px)` — 7 columns × card-w + 80px spacing + 48px padding = 100vw, exact fit.
 - **ESPN logo abbreviation exception**: SAS → `'sa'`.
 - **Firebase API key**: intentionally public (project identifier only). Security enforced by Firestore Rules.
 - **Cache busting**: `index.html` references `app.js?v=X` and `style.css?v=X`. The `cache_bust.yml` GitHub Action replaces `X` with the short commit SHA on every push to `main` (excluding `data/scores.json` changes). Never manually edit the `?v=` values.
+- **GitHub Actions git push**: both workflows do `git pull --rebase origin main` before pushing to handle concurrent commits between the two workflows.

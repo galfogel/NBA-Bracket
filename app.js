@@ -246,7 +246,7 @@ async function syncPicksToGitHub() {
       finalsGame1ActualGap: state.finalsGame1ActualGap ?? null,
     });
     save();
-    console.log('picks saved to Firestore ✓');
+
   } catch (err) {
     console.error('syncPicksToGitHub error:', err);
   }
@@ -1331,6 +1331,7 @@ function renderInfo() {
             <tr><td>90–99%</td><td><span class="pot-base">10</span> <span class="pot-bonus">+8</span></td><td><span class="pot-base">20</span> <span class="pot-bonus">+16</span></td><td><span class="pot-base">40</span> <span class="pot-bonus">+32</span></td><td><span class="pot-base">80</span> <span class="pot-bonus">+64</span></td></tr>
           </tbody>
         </table>
+      </section>
 
       <section class="info-section">
         <h2>Prizes</h2>
