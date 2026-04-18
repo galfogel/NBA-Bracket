@@ -798,13 +798,17 @@ function cardPicks(sid, t1, t2, pid) {
     const isBad    = isPicked && actual && actual !== key;
     const cls      = isPicked ? (isBad ? 'is-wrong-pick' : 'is-winner') : '';
     const mark     = isPicked ? (isOk ? '✓' : isBad ? '✗' : '') : '';
-    const pct = getWinPct(sid, key);
+    const pct      = getWinPct(sid, key);
+    const basePts  = ROUND_POINTS[SERIES_MAP[sid].r];
+    const potPts   = basePts + getUpsetBonus(sid, key, basePts);
+    const isUpset  = potPts > basePts;
     return `<div class="team-row ${cls} ${editable ? 'is-clickable' : ''}"
                  data-ps="${sid}" data-pt="${key}">
       <span class="seed-num">${t.seed ?? ''}</span>
       <img class="team-logo" src="${t.logo}" alt="${t.abbr}" />
       <span class="team-name">${t.name}</span>
       ${pct !== null ? `<span class="fan-pct">${pct}%</span>` : ''}
+      <span class="pot-pts ${pct === null ? 'pot-pts-push' : ''} ${isUpset ? 'pot-pts-upset' : ''}">${potPts}pts</span>
       ${mark ? `<span class="win-mark">${mark}</span>` : ''}
     </div>`;
   }
