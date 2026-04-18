@@ -33,11 +33,12 @@ On page load: `fetchPicks()` reads Firestore → `mergeRemoteState()` folds remo
 **Firestore document fields**: `participants`, `picks`, `picksSubmitted`, `finalsGap`, `finalsGame1ActualGap`, `updated`.
 
 ### Team / series data model
-- Teams keyed by short codes: `E1–E7`, `W1–W7`, plus play-in candidates `ORL`, `CHA`, `GSW`, `PHX`.
+- Teams keyed by short codes: `E1–E8`, `W1–W8`. E8 = Orlando Magic, W8 = Phoenix Suns (play-in winners, hardcoded).
 - Series IDs: `E1v8`, `E4v5`, `EQ1`, `ECF`, `WCF`, `FINALS`, etc.
-- Series with `t2Slot` depend on the play-in result; series with `from: [sid, sid]` pull teams from prior round winners via `resolveTeams()`.
-- `DEFAULT_GAME_TIMES` holds first-game UTC timestamps (verified against NBA.com official schedule, EDT = UTC−4); series lock **3 hours before** the first game (`isSeriesLocked()`). Lock deadlines display in **Israel time** (`Asia/Jerusalem`) via `formatDeadline()`.
-- A series becomes pickable independently as soon as both feeder series have results (`isSeriesAvailable()`) — does not wait for the full round to finish.
+- R1 series have `t1`/`t2` directly. R2+ series have `from: [sid, sid]` and pull teams from prior round winners via `resolveTeams()`.
+- `DEFAULT_GAME_TIMES` holds first-game UTC timestamps for R1 (EDT = UTC−4); series lock **3 hours before** the first game (`isSeriesLocked()`). Lock deadlines display in **Israel time** (`Asia/Jerusalem`) via `formatDeadline()`.
+- **R2+ locking**: no hard-coded game times exist for later rounds. `isSeriesLocked()` falls back to: (1) if `state.results[sid]` is set → locked; (2) if the team pair appears in `scoresData.records` → locked (games have started).
+- A series becomes pickable as soon as both feeder series have results (`isSeriesAvailable()`).
 
 ### Scoring
 `ROUND_POINTS = [0, 10, 20, 40, 80]` per round + `GAMES_BONUS = 10` for correct series length.
@@ -49,26 +50,25 @@ On page load: `fetchPicks()` reads Firestore → `mergeRemoteState()` folds remo
 `computeScore(pid)` sums base + games bonus + upset bonus across all series.
 
 ### Rendering
-Five tabs: **My Picks**, **All Picks**, **Results**, **Leaderboard**, **Rules**. Each renderer registered in `RENDERERS`; corresponding `#tab-{name}` div in `index.html`.
+Five tabs: **My Picks**, **All Picks**, **Results**, **Leaderboard**, **Rules**. Each renderer registered in `RENDERERS`; corresponding `#tab-{name}` div in `index.html`. Active tab persisted in `sessionStorage`; restored on page refresh, reset to My Picks on login.
 
 Three card render modes, all via `bracketCard(sid, mode, pid)`:
-- `'picks'` → `cardPicks()` — interactive, current user's bracket
-- `'results'` → `cardResults()` — read-only, shows series record footer (`Tied 0–0` before games start → `SAS leads 2–1` / `Tied 1–1` → `SAS wins in 6`)
-- `'view'` → `cardView()` — read-only, another user's picks (picks hidden until series locks, except admin/own)
+- `'picks'` → `cardPicks()` — interactive, current user's bracket; shows countdown timer in footer
+- `'results'` → `cardResults()` — read-only, shows series record footer (`Tied 0–0` → `SAS leads 2–1` → `SAS wins in 6`)
+- `'view'` → `cardView()` — read-only, another user's picks (hidden until series locks, except admin/own). Countdown only shown in `'picks'` mode.
 
 The bracket has two parallel HTML outputs:
 - `.bracket-wrap` — 7-column horizontal diagram (hidden on mobile).
-- `.bracket-list` — list by conference/round (hidden on desktop; shown in landscape mobile via `@media (orientation: landscape) and (max-height: 500px)`).
+- `.bracket-list` — list by conference/round (shown on mobile).
 
 **Pick visibility**: other users' picks hidden until series locks — unless viewer is admin (Fogel) or viewing own picks. Gap prediction shown on Finals card in All Picks only when the viewed user has submitted one.
 
 ### Scores pipeline
-`scripts/fetch_scores.py` runs hourly via GitHub Actions, hits `stats.nba.com`, writes `data/scores.json` with: `records` (wins per series), `playIn` (confirmed 8-seeds), `gameTimes` (preserved from prior run), `finalsGame1Gap` (auto-detected from Game 1 point totals — identified as the series with the latest first-game date). Front-end `fetchScores()` reads this on load: auto-sets series winners, auto-populates `state.finalsGame1ActualGap`.
+`scripts/fetch_scores.py` runs hourly via GitHub Actions, hits `stats.nba.com` (retries up to 3×), writes `data/scores.json` with: `records` (wins per series, all rounds), `gameTimes` (preserved from prior run — R1 only, R2+ added manually when NBA announces schedule), `finalsGame1Gap` (auto-detected from Game 1 point totals). Front-end `fetchScores()` runs on load and every 5 minutes: auto-sets series winners via `syncResultsFromAPI()`, auto-populates `state.finalsGame1ActualGap`.
 
 ### Key non-obvious details
-- **Play-in 8-seeds**: `state.playIn = { E8: teamKey, W8: teamKey }` set by commissioner in Results tab. Until set, E1v8/W1v8 show TBD.
-- **gameTimes for R2+**: not yet auto-detected by the script — only R1 times are in `DEFAULT_GAME_TIMES`. Later-round lock deadlines won't show until the script is extended or times are added manually.
+- **gameTimes for R2+**: not auto-detected — only R1 times are in `DEFAULT_GAME_TIMES`. Add later-round times manually to `data/scores.json` → `gameTimes` when the NBA posts the schedule.
 - **Downstream clearing**: `clearResultDownstream()` recursively invalidates later-round results when a result is edited.
 - **Mobile bracket height**: uses `height: var(--bracket-h)` (580px desktop / 480px mobile) — explicit height required so `flex: 1` and CSS Grid `1fr` rows resolve inside the column layout. Tablet (`≤900px`) card width stays at `120px`.
-- **ESPN logo abbreviation exceptions**: SAS → `'sa'`, GSW → `'gs'`.
+- **ESPN logo abbreviation exception**: SAS → `'sa'`.
 - **Firebase API key**: intentionally public (project identifier only). Security enforced by Firestore Rules.
