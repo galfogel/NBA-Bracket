@@ -1222,13 +1222,19 @@ main { padding: 24px; }
   .bracket-wrap { display: none !important; }
   .bracket-list { display: block !important; }
 
-  /* 2-column card grid so content fits without scrolling too much */
-  .blist-cards { grid-template-columns: 1fr 1fr; }
+  /* 3-column grid fills the wider landscape width */
+  .blist-cards { grid-template-columns: 1fr 1fr 1fr; }
 
-  /* Compact header */
-  header { height: 44px; padding: 0 16px; }
-  header h1 { font-size: 15px; }
+  /* Compact header — keep nav on one row */
+  header { height: 44px; padding: 0 16px; flex-wrap: nowrap; }
+  header h1 { font-size: 14px; }
+  .tab-btn { padding: 8px 10px; font-size: 12px; }
   main { padding: 8px 12px; }
+
+  /* Compact team rows so cards are shorter */
+  .team-row { padding: 4px 6px; }
+  .team-logo { width: 16px; height: 16px; }
+  .team-name { font-size: 10px; }
 }
 
 /* ── Mobile (≤ 600px) ─────────────────────────────────────── */
