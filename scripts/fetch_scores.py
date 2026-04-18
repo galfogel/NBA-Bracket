@@ -19,45 +19,62 @@ except ImportError:
     print("ERROR: 'requests' package not installed.", file=sys.stderr)
     sys.exit(1)
 
-# Headers required to avoid NBA API blocks
+# cdn.nba.com is the public CDN that powers NBA.com itself — no aggressive
+# anti-bot filtering like stats.nba.com/stats/*, which silently drops requests.
+SCHEDULE_URL = "https://cdn.nba.com/static/json/staticData/scheduleLeagueV2.json"
 HEADERS = {
     "User-Agent": (
         "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
         "AppleWebKit/537.36 (KHTML, like Gecko) "
         "Chrome/123.0.0.0 Safari/537.36"
     ),
-    "Accept": "application/json, text/plain, */*",
-    "Accept-Language": "en-US,en;q=0.9",
-    "Referer": "https://www.nba.com/",
-    "Origin": "https://www.nba.com",
-    "x-nba-stats-origin": "stats",
-    "x-nba-stats-token": "true",
-    "Connection": "keep-alive",
 }
 
 
 def fetch_playoff_games():
-    """Return all team-game rows for the 2025-26 NBA Playoffs."""
-    url = "https://stats.nba.com/stats/leaguegamefinder"
-    params = {
-        "PlayerOrTeam": "T",
-        "Season": "2025-26",
-        "SeasonType": "Playoffs",
-        "LeagueID": "00",
-    }
+    """Return team-game rows for finished 2025-26 NBA Playoff games.
+
+    Output shape matches the old stats.nba.com adapter so downstream
+    functions (compute_records, detect_finals_game1_gap) don't need to change:
+      {GAME_ID, GAME_DATE, TEAM_ABBREVIATION, WL, PTS}
+    """
     last_exc = None
     for attempt in range(3):
         try:
-            resp = requests.get(url, headers=HEADERS, params=params, timeout=30)
+            resp = requests.get(SCHEDULE_URL, headers=HEADERS, timeout=10)
             resp.raise_for_status()
             data = resp.json()
-            rs = data["resultSets"][0]
-            columns = rs["headers"]
-            return [dict(zip(columns, row)) for row in rs["rowSet"]]
+            break
         except Exception as exc:
             last_exc = exc
             print(f"Attempt {attempt + 1} failed: {exc}", file=sys.stderr)
-    raise last_exc
+    else:
+        raise last_exc
+
+    rows = []
+    for gd in data.get("leagueSchedule", {}).get("gameDates", []):
+        for g in gd.get("games", []):
+            # Playoff filter: only playoff games have seriesGameNumber set.
+            if not g.get("seriesGameNumber"):
+                continue
+            # 3 = final. Skip upcoming (1) and live (2) — no result yet.
+            if g.get("gameStatus") != 3:
+                continue
+            home = g.get("homeTeam") or {}
+            away = g.get("awayTeam") or {}
+            h_abbr, a_abbr = home.get("teamTricode"), away.get("teamTricode")
+            h_pts, a_pts   = home.get("score") or 0, away.get("score") or 0
+            if not h_abbr or not a_abbr:
+                continue
+            h_wl = "W" if h_pts > a_pts else "L"
+            a_wl = "W" if a_pts > h_pts else "L"
+            gid  = g.get("gameId")
+            date = g.get("gameDateUTC") or g.get("gameDateEst") or ""
+            rows.append({"GAME_ID": gid, "GAME_DATE": date,
+                         "TEAM_ABBREVIATION": h_abbr, "WL": h_wl, "PTS": h_pts})
+            rows.append({"GAME_ID": gid, "GAME_DATE": date,
+                         "TEAM_ABBREVIATION": a_abbr, "WL": a_wl, "PTS": a_pts})
+    return rows
 
 
 def compute_records(games):
