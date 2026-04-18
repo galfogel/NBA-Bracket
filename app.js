@@ -554,16 +554,19 @@ let _countdownTimer = null;
 function startCountdownTimer() {
   if (_countdownTimer) return;
   _countdownTimer = setInterval(() => {
-    const els = document.querySelectorAll('.footer-countdown[data-lock-ts]');
+    const els = document.querySelectorAll('[data-lock-ts]');
     if (!els.length) return;
     let needsRerender = false;
     els.forEach(el => {
       const lockTs = parseInt(el.dataset.lockTs);
       if (Date.now() >= lockTs) { needsRerender = true; return; }
       const gameTs = el.dataset.gameTs ? parseInt(el.dataset.gameTs) : null;
-      el.textContent = formatCountdown(lockTs, gameTs);
+      if (el.classList.contains('footer-countdown')) el.textContent = formatCountdown(lockTs, gameTs);
     });
-    if (needsRerender && activeTab === 'bracket') renderBracket();
+    if (needsRerender) {
+      renderBracket();
+      if (activeTab !== 'bracket' && RENDERERS[activeTab]) RENDERERS[activeTab]();
+    }
   }, 30000);
 }
 
@@ -959,9 +962,11 @@ function cardView(sid, t1, t2, pid) {
         ${pct !== null ? `<span class="fan-pct">${pct}%</span>` : ''}
       </div>`;
     }
+    const gt = getGameTime(sid);
+    const lockTs = gt ? new Date(gt).getTime() : null;
     return `<div class="matchup-card card-hidden-picks" data-series="${sid}">
       ${rowHidden(t1)}<div class="series-divider"></div>${rowHidden(t2)}
-      <div class="card-footer footer-hidden">🔒 Picks hidden until series starts</div>
+      <div class="card-footer footer-hidden"${lockTs ? ` data-lock-ts="${lockTs}"` : ''}>🔒 Picks hidden until series starts</div>
     </div>`;
   }
 
