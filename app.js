@@ -270,7 +270,7 @@ function setPick(pid, sid, winner, games) {
 // PLATFORM GATE
 // ============================================================
 const PLATFORM_PASSWORD    = 'nba2026';
-const PLATFORM_SESSION_KEY = 'nba-gate-2026';
+const PLATFORM_SESSION_KEY = 'nba-gate-2026-v2';
 
 function initGate() {
   if (sessionStorage.getItem(PLATFORM_SESSION_KEY) === '1') {
