@@ -175,8 +175,9 @@ async function fetchPicks() {
     const data = snap.data();
     data.picks = picksToKeys(data.picks);
     mergeRemoteState(data);
-    // If logged-in user was removed from Firestore, log them out immediately
-    if (currentUserId) {
+    // If logged-in user was removed from Firestore, log them out immediately.
+    // A pending signup won't be in remote yet, so skip the check for them.
+    if (currentUserId && currentUserId !== pendingSignupId) {
       const remoteIds = new Set((data.participants || []).map(p => p.id));
       if (!remoteIds.has(currentUserId)) { switchUser(); return; }
     }
@@ -220,6 +221,19 @@ function mergeRemoteState(remote) {
   }
   // Commissioner-set actual gap: remote always wins
   if (remote.finalsGame1ActualGap != null) state.finalsGame1ActualGap = remote.finalsGame1ActualGap;
+
+  // Prune local participants (and their picks) not in remote, so a removed user's
+  // stale credentials can't be used to sign back in. Exempt a pending signup.
+  const remoteIds = new Set(rParticipants.map(p => p.id));
+  const keepIds   = new Set(remoteIds);
+  if (pendingSignupId) keepIds.add(pendingSignupId);
+  state.participants = state.participants.filter(p => keepIds.has(p.id));
+  for (const pid of Object.keys(state.picks))          if (!keepIds.has(pid)) delete state.picks[pid];
+  for (const pid of Object.keys(state.picksSubmitted)) if (!keepIds.has(pid)) delete state.picksSubmitted[pid];
+  for (const pid of Object.keys(state.finalsGap))      if (!keepIds.has(pid)) delete state.finalsGap[pid];
+
+  // Clear the pending-signup flag once a fetch confirms the user has been written.
+  if (pendingSignupId && remoteIds.has(pendingSignupId)) pendingSignupId = null;
 }
 
 // ── Write picks to Firestore ───────────────────────────────────
@@ -232,8 +246,9 @@ async function syncPicksToGitHub() {
       const remote = snap.data();
       const remoteIds = new Set((remote.participants || []).map(p => p.id));
 
-      // If current user was removed from Firestore, log them out — don't write
-      if (currentUserId && !remoteIds.has(currentUserId)) {
+      // If current user was removed from Firestore, log them out — don't write.
+      // A pending signup won't be in remote yet, so exempt them.
+      if (currentUserId && currentUserId !== pendingSignupId && !remoteIds.has(currentUserId)) {
         switchUser();
         return;
       }
@@ -250,8 +265,9 @@ async function syncPicksToGitHub() {
       }
       if (remote.finalsGame1ActualGap != null) state.finalsGame1ActualGap = remote.finalsGame1ActualGap;
 
-      // Prune local participants to only those authorised in Firestore
-      state.participants = state.participants.filter(p => remoteIds.has(p.id));
+      // Prune local participants to only those authorised in Firestore (plus the pending signup, if any)
+      const allowedIds = pendingSignupId ? new Set([...remoteIds, pendingSignupId]) : remoteIds;
+      state.participants = state.participants.filter(p => allowedIds.has(p.id));
     }
     await ref.set({
       updated:              new Date().toISOString(),
@@ -261,6 +277,8 @@ async function syncPicksToGitHub() {
       finalsGap:            state.finalsGap,
       finalsGame1ActualGap: state.finalsGame1ActualGap ?? null,
     });
+    // Signup confirmed — from this point on, the removed-user check applies to this id.
+    if (pendingSignupId && pendingSignupId === currentUserId) pendingSignupId = null;
     save();
 
   } catch (err) {
@@ -317,6 +335,9 @@ function attemptGate() {
 // LOGIN
 // ============================================================
 let currentUserId = null;
+// Set during signup (and cleared after the first successful sync) so fetch/sync
+// logic can distinguish a brand-new user (not in Firestore yet) from a removed one.
+let pendingSignupId = null;
 
 function initLogin() {
   const stored = localStorage.getItem(USER_KEY);
@@ -413,11 +434,12 @@ async function attemptLogin() {
     const id = 'p_' + Date.now();
     state.participants.push({ id, name, passwordHash: hash });
     state.picks[id] = {};
+    currentUserId   = id;
+    pendingSignupId = id;
     save();
     syncPicksToGitHub();
     msg.textContent = `Welcome, ${name}! Account created.`;
     msg.className = 'login-msg msg-welcome';
-    currentUserId = id;
   }
 
   localStorage.setItem(USER_KEY, currentUserId);
@@ -434,8 +456,9 @@ async function attemptLogin() {
 
 function switchUser() {
   const prevUserId = currentUserId;
-  currentUserId = null;
-  editingState  = { pid: null, round: null };
+  currentUserId   = null;
+  pendingSignupId = null;
+  editingState    = { pid: null, round: null };
   document.getElementById('login-name').value = '';
   document.getElementById('login-pass').value = '';
   document.getElementById('login-msg').textContent = '';
