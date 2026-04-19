@@ -1266,35 +1266,38 @@ main { padding: 24px; }
   .btn-switch-user { font-size: 11px; padding: 3px 8px; }
   main { padding: 6px 10px; }
 
-  /* Proportional card sizing for landscape */
-  .bracket-list--single .blist-conf-header { font-size: 12px; }
-  .bracket-list--single .blist-round-title { font-size: 10px; }
+  /* Cards — smaller: labels/titles; bigger: interactive/pts elements */
+  .bracket-list--single .blist-conf-header { font-size: 10px; }
+  .bracket-list--single .blist-round-title { font-size: 8px; }
   .blist-round { margin-bottom: 8px; }
   .bracket-list--single .team-row  { padding: 7px 8px; }
   .bracket-list--single .team-logo { width: 18px; height: 18px; }
-  .bracket-list--single .team-name { font-size: 12px; }
-  .bracket-list--single .seed-num  { font-size: 11px; }
-  .bracket-list--single .pot-pts   { font-size: 11px; }
+  .bracket-list--single .team-name { font-size: 10px; }
+  .bracket-list--single .seed-num  { font-size: 10px; }
+  .bracket-list--single .pot-pts   { font-size: 13px; }
   .bracket-list--single .win-mark  { font-size: 13px; }
   .bracket-list--single .fan-pct   { display: none; }
   .bracket-list--single .games-selector { justify-content: flex-start; gap: 6px; }
-  .bracket-list--single .games-label    { font-size: 10px; }
-  .bracket-list--single .games-btn      { font-size: 13px; padding: 3px 7px; }
-  .bracket-list--single .card-footer    { font-size: 10px; }
+  .bracket-list--single .games-label    { font-size: 12px; }
+  .bracket-list--single .games-btn      { font-size: 15px; padding: 4px 9px; }
+  .bracket-list--single .card-footer    { font-size: 8px; }
   .bracket-list--single .pts-badge      { font-size: 11px; }
+  .champion-tbd  { font-size: 13px; }
+  .champion-badge { font-size: 13px; }
 
-  /* Compact Rules page */
+  /* Rules — smaller titles/text, bigger bonus pts vs fav% */
   .info-tab { gap: 20px; margin: 8px auto; padding: 0 10px; }
   .info-section { overflow-x: hidden; padding-top: 16px; }
   .info-section:first-child { padding-top: 0; }
-  .info-section h2 { font-size: 13px; margin-bottom: 6px; }
-  .info-detail { font-size: 10px; line-height: 1.4; }
-  .info-table { font-size: 10px; }
-  .info-table th { padding: 4px 6px; font-size: 9px; white-space: normal; }
+  .info-section h2 { font-size: 11px; margin-bottom: 6px; }
+  .info-detail { font-size: 8px; line-height: 1.4; }
+  .info-table { font-size: 9px; }
+  .info-table th { padding: 4px 6px; font-size: 8px; white-space: normal; }
   .info-table td { padding: 5px 6px; white-space: normal; }
+  .info-table td:first-child { font-size: 8px; }
   .info-team { font-size: 10px; gap: 3px; }
   .info-team-logo { width: 14px; height: 14px; }
-  .pot-base, .pot-bonus { font-size: 9px; }
+  .pot-base, .pot-bonus { font-size: 11px; }
 }
 
 /* ── Mobile (≤ 600px) ─────────────────────────────────────── */
