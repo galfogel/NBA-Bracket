@@ -1187,7 +1187,7 @@ function handlePicksClick(e) {
     save();
     syncPicksToGitHub();
     renderBracket(); renderLeaderboard();
-    showSaveToast(`✓ ${ROUND_NAMES[r]} picks saved!`);
+    showSaveToast('✓ Picks saved!');
     return;
   }
 

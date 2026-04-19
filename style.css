@@ -1160,7 +1160,7 @@ main { padding: 24px; }
 .fab-btn:active { transform: translateY(0); }
 
 .fab-save {
-  background: var(--green);
+  background: var(--accent);
   color: #fff;
 }
 .fab-edit {
