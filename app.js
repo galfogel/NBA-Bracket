@@ -12,8 +12,8 @@ const TEAMS = {
   E7:  { name: 'Philadelphia 76ers',        abbr: 'PHI', seed: 7, conf: 'East', color: '#006BB6', logo: ESPN('phi') },
   E8:  { name: 'Orlando Magic',             abbr: 'ORL', seed: 8, conf: 'East', color: '#0077C0', logo: ESPN('orl') },
   W1:  { name: 'Oklahoma City Thunder',     abbr: 'OKC', seed: 1, conf: 'West', color: '#007AC1', logo: ESPN('okc') },
-  W2:  { name: 'San Antonio Spurs',         abbr: 'SAS', seed: 2, conf: 'West', color: '#1d1160', logo: ESPN('sa')  },
-  W3:  { name: 'Denver Nuggets',            abbr: 'DEN', seed: 3, conf: 'West', color: '#0E2240', logo: ESPN('den') },
+  W2:  { name: 'San Antonio Spurs',         abbr: 'SAS', seed: 2, conf: 'West', color: '#8D9093', logo: ESPN('sa')  },
+  W3:  { name: 'Denver Nuggets',            abbr: 'DEN', seed: 3, conf: 'West', color: '#FEC524', logo: ESPN('den') },
   W4:  { name: 'Los Angeles Lakers',        abbr: 'LAL', seed: 4, conf: 'West', color: '#552583', logo: ESPN('lal') },
   W5:  { name: 'Houston Rockets',           abbr: 'HOU', seed: 5, conf: 'West', color: '#CE1141', logo: ESPN('hou') },
   W6:  { name: 'Minnesota Timberwolves',    abbr: 'MIN', seed: 6, conf: 'West', color: '#236192', logo: ESPN('min') },
@@ -860,12 +860,12 @@ function cardResults(sid, t1, t2) {
     const t1w = rec?.t1Wins ?? 0, t2w = rec?.t2Wins ?? 0;
     const total = t1w + t2w;
     if (total === 0) {
-      footer = `<div class="card-footer footer-record">Tied 0–0</div>`;
+      footer = `<div class="card-footer footer-record">Tied 0 – 0</div>`;
     } else {
       const leader = t1w > t2w ? TEAMS[t1] : t2w > t1w ? TEAMS[t2] : null;
       const status = leader
-        ? `<span style="color:${leader.color}">${leader.abbr} leads</span> ${Math.max(t1w,t2w)}–${Math.min(t1w,t2w)}`
-        : `Tied ${t1w}–${t2w}`;
+        ? `<span style="color:${leader.color}">${leader.abbr} leads</span> ${Math.max(t1w,t2w)} – ${Math.min(t1w,t2w)}`
+        : `Tied ${t1w} – ${t2w}`;
       footer = `<div class="card-footer footer-record">${status}</div>`;
     }
   }
@@ -1464,15 +1464,6 @@ function renderInfo() {
         </table>
       </section>
 
-      <section class="info-section">
-        <h2>Pick Deadlines</h2>
-        <p class="info-detail">Picking opens when both teams are known. Picks close when the series' first game begins.</p>
-        <table class="info-table">
-          <thead><tr><th>Matchup</th><th>Game 1 Tip-off</th></tr></thead>
-          <tbody>${deadlineRows}</tbody>
-        </table>
-        <p class="info-detail">CSF, CF &amp; Finals deadlines shown once the NBA announces the schedule. All times in Israel Standard Time (IST).</p>
-      </section>
     </div>
   `;
 }

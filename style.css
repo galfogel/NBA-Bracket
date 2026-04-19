@@ -497,9 +497,7 @@ main { padding: 24px; }
 /* ---- Mobile list view (hidden on desktop, shown on mobile) ---- */
 .bracket-list { display: none; }
 
-/* Champion slot */
-.champion-tbd   { font-size: 16px; }
-.champion-badge { font-size: 16px; }
+/* Champion slot — original desktop sizes; mobile bumped below */
 
 /* Rules page — no horizontal scroll */
 .info-section  { overflow-x: visible; }
@@ -836,6 +834,7 @@ main { padding: 24px; }
 
 .leaderboard-table td { font-size: 14px; }
 
+.leaderboard-table tbody tr:nth-child(even) { background: color-mix(in srgb, var(--surface2) 60%, transparent); }
 .leaderboard-table .leader-row { background: color-mix(in srgb, var(--accent) 8%, transparent); }
 .p-name-cell { font-weight: 600; }
 .total-cell { font-weight: 700; color: var(--green); }
@@ -843,7 +842,7 @@ main { padding: 24px; }
 /* ---- Pick breakdown ---- */
 .bd-filter-bar { display: flex; flex-direction: column; align-items: flex-start; gap: 10px; margin-bottom: 20px; }
 .bd-filter-bar h3 { font-size: 16px; margin: 0; }
-.bd-filter-bar select { font-size: 13px; padding: 4px 8px; border-radius: 6px; border: 1px solid var(--border); background: var(--surface2); color: var(--text); cursor: pointer; }
+.bd-filter-bar select { font-size: 13px; padding: 4px 8px; border-radius: 6px; border: 1px solid var(--border); background: var(--surface2); color: var(--text); cursor: pointer; width: 100%; }
 .bd-user-tiles { display: flex; flex-wrap: wrap; gap: 8px; }
 .bd-user-tile { font-size: 13px; padding: 5px 12px; border-radius: 20px; border: 1px solid var(--border); background: var(--surface2); color: var(--text-muted, #888); cursor: pointer; transition: background 0.15s, color 0.15s, border-color 0.15s; }
 .bd-user-tile:hover { border-color: var(--accent, #4f8ef7); color: var(--text); }
@@ -1077,7 +1076,7 @@ main { padding: 24px; }
   display: flex;
   align-items: center;
   gap: 4px;
-  padding: 4px 8px;
+  padding: 2px 6px;
   border-top: 1px solid var(--border);
   background: var(--surface2);
 }
@@ -1093,13 +1092,13 @@ main { padding: 24px; }
   background: transparent;
   border: 1px solid var(--border);
   color: var(--text-dim);
-  padding: 2px 7px;
+  padding: 1px 5px;
   border-radius: 4px;
   font-size: 11px;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.1s;
-  line-height: 1.6;
+  line-height: 1.3;
 }
 
 .games-btn:hover:not(:disabled) {
@@ -1299,14 +1298,14 @@ main { padding: 24px; }
   }
   header h1 {
     flex: 1;
-    font-size: 14px;
+    font-size: 18px;
     line-height: 48px;
   }
   .user-display {
     margin-left: 0;
     gap: 6px;
   }
-  .user-greeting { font-size: 11px; }
+  .user-greeting { font-size: 13px; }
   nav {
     order: 3;
     width: 100%;
@@ -1317,10 +1316,12 @@ main { padding: 24px; }
   .tab-btn {
     flex: 1;
     padding: 8px 2px;
-    font-size: 11px;
+    font-size: 13px;
     text-align: center;
     border-radius: 0;
   }
+  .champion-tbd   { font-size: 16px; }
+  .champion-badge { font-size: 16px; }
   .tab-btn.active {
     border-radius: 0;
     border-bottom: 2px solid var(--accent);
@@ -1355,6 +1356,10 @@ main { padding: 24px; }
   /* ── Login ── */
   .login-box { padding: 24px 16px; }
   .login-logo { font-size: 36px; }
+
+  /* ── Rules: stack +bonus below base pts in upset table ── */
+  .info-table .pot-base  { display: block; }
+  .info-table .pot-bonus { display: block; }
 }
 
 /* ============================================================
