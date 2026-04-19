@@ -1250,7 +1250,7 @@ function renderLeaderboard() {
       <h2>Leaderboard</h2>
       <table class="leaderboard-table">
         <thead>
-          <tr><th>#</th><th>Name</th><th>R1</th><th>CSF</th><th>CF</th><th>Finals</th><th>Total</th></tr>
+          <tr><th>#</th><th>Name</th><th>R1</th><th>CSF</th><th>CF</th><th>F</th><th>TOT</th></tr>
         </thead>
         <tbody>
           ${rows.map((p, i) => {
