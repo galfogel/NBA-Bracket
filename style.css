@@ -537,7 +537,7 @@ main { padding: 24px; }
 .bracket-list--single .blist-cards       { grid-template-columns: 1fr; }
 .bracket-list--single .team-row          { padding: 14px 10px; }
 .bracket-list--single .team-logo         { width: 36px; height: 36px; }
-.bracket-list--single .team-name         { font-size: 18px; }
+.bracket-list--single .team-name         { font-size: 14px; }
 .bracket-list--single .seed-num          { font-size: 14px; }
 .bracket-list--single .pot-pts           { font-size: 14px; }
 .bracket-list--single .fan-pct           { display: inline; font-size: 13px; color: var(--text); }
