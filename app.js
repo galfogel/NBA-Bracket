@@ -548,6 +548,23 @@ function isSeriesLocked(sid) {
   return false;
 }
 
+function showSaveToast(msg) {
+  let el = document.getElementById('save-toast');
+  if (!el) {
+    el = document.createElement('div');
+    el.id = 'save-toast';
+    document.body.appendChild(el);
+  }
+  el.textContent = msg;
+  el.classList.remove('save-toast-hide');
+  el.classList.add('save-toast-show');
+  clearTimeout(el._hideTimer);
+  el._hideTimer = setTimeout(() => {
+    el.classList.remove('save-toast-show');
+    el.classList.add('save-toast-hide');
+  }, 2200);
+}
+
 function formatCountdown(lockTs, gameTs) {
   if (Date.now() >= lockTs) return '🔒 Locked';
   const diff = (gameTs ?? lockTs) - Date.now();
@@ -1170,6 +1187,7 @@ function handlePicksClick(e) {
     save();
     syncPicksToGitHub();
     renderBracket(); renderLeaderboard();
+    showSaveToast(`✓ ${ROUND_NAMES[r]} picks saved!`);
     return;
   }
 
