@@ -497,6 +497,10 @@ main { padding: 24px; }
 /* ---- Mobile list view (hidden on desktop, shown on mobile) ---- */
 .bracket-list { display: none; }
 
+/* Test user: My Picks tab always shows full-width list, not the diagram */
+#tab-bracket.is-test-user .bracket-wrap { display: none; }
+#tab-bracket.is-test-user .bracket-list { display: block; }
+
 .blist-conf {
   margin-bottom: 20px;
 }
@@ -536,7 +540,7 @@ main { padding: 24px; }
 .bracket-list--single .team-name         { font-size: 18px; }
 .bracket-list--single .seed-num          { font-size: 14px; }
 .bracket-list--single .pot-pts           { font-size: 14px; }
-.bracket-list--single .fan-pct           { font-size: 13px; color: var(--text); }
+.bracket-list--single .fan-pct           { display: inline; font-size: 13px; color: var(--text); }
 .bracket-list--single .win-mark          { font-size: 17px; }
 .bracket-list--single .games-label       { display: none; }
 .bracket-list--single .games-btn         { flex: 1; font-size: 17px; padding: 6px 10px; }

@@ -1035,6 +1035,7 @@ function renderBracket() {
   el.innerHTML = `
     ${renderRoundControls(currentUserId)}
     ${renderBracketLayout('picks', currentUserId)}`;
+  el.classList.toggle('is-test-user', isTestUser());
 }
 
 function renderRoundControls(pid) {
