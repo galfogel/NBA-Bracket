@@ -1135,26 +1135,42 @@ main { padding: 24px; }
 /* ============================================================
    ROUND CONTROLS BAR  (My Picks tab)
    ============================================================ */
-.round-controls {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  margin-bottom: 16px;
-  overflow: hidden;
-  position: sticky;
-  top: 64px;
-  z-index: 50;
+/* ---- Floating Save / Edit bar ---- */
+.floating-save-bar {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 10px;
+  z-index: 200;
 }
 
-.round-controls-title {
-  font-size: 11px;
+.fab-btn {
+  padding: 11px 32px;
+  border-radius: 28px;
+  font-size: 15px;
   font-weight: 600;
-  color: var(--text-dim);
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  padding: 6px 16px 4px;
-  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+  border: none;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.45);
+  transition: opacity 0.15s, transform 0.1s;
 }
+.fab-btn:hover { opacity: 0.88; transform: translateY(-1px); }
+.fab-btn:active { transform: translateY(0); }
+
+.fab-save {
+  background: var(--green);
+  color: #fff;
+}
+.fab-edit {
+  background: var(--surface2);
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+
+/* Ensure content isn't hidden behind the floating bar */
+#tab-bracket { padding-bottom: 80px; }
 
 .round-control-row {
   display: flex;
@@ -1278,7 +1294,6 @@ main { padding: 24px; }
   .user-greeting { font-size: 11px; }
   .btn-switch-user { font-size: 11px; padding: 3px 8px; }
   main { padding: 6px 10px; }
-  .round-controls { top: 48px; }
 
   /* Same card sizes as portrait mobile — only override layout/spacing */
   .bracket-list--single .team-row  { padding: 9px 10px; }
@@ -1369,7 +1384,6 @@ main { padding: 24px; }
   .picks-round-section { padding: 12px; }
   .round-control-row { padding: 8px 12px; }
   .bracket-list--single .games-selector { justify-content: flex-start; }
-  .round-controls { top: 98px; }
   .bracket-list--single .team-row { padding: 9px 10px; }
 
   /* ── Leaderboard ── */

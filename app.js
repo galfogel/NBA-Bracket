@@ -1047,8 +1047,35 @@ function renderBracket() {
   const el = document.getElementById('tab-bracket');
   if (!currentUserId) return;
   el.innerHTML = `
-    ${renderRoundControls(currentUserId)}
-    ${renderBracketLayout('picks', currentUserId)}`;
+    ${renderBracketLayout('picks', currentUserId)}
+    ${renderFloatingSaveBar(currentUserId)}`;
+}
+
+function renderFloatingSaveBar(pid) {
+  // Earliest open/editing round → Save button
+  const openRound = [1, 2, 3, 4].find(r => {
+    const avail = SERIES.filter(s => s.r === r && isSeriesAvailable(s.id));
+    if (!avail.length || isRoundFullyLocked(r)) return false;
+    const submitted = !!state.picksSubmitted[pid]?.[r];
+    const isEditing = editingState.pid === pid && editingState.round === r;
+    return !submitted || isEditing;
+  });
+
+  // Latest submitted-but-not-locked round → Edit button
+  const submittedRound = [4, 3, 2, 1].find(r => {
+    const avail = SERIES.filter(s => s.r === r && isSeriesAvailable(s.id));
+    if (!avail.length || isRoundFullyLocked(r)) return false;
+    const submitted = !!state.picksSubmitted[pid]?.[r];
+    const isEditing = editingState.pid === pid && editingState.round === r;
+    return submitted && !isEditing;
+  });
+
+  if (!openRound && !submittedRound) return '';
+
+  return `<div class="floating-save-bar">
+    ${submittedRound ? `<button class="fab-btn fab-edit edit-round-btn" data-round="${submittedRound}">Edit</button>` : ''}
+    ${openRound     ? `<button class="fab-btn fab-save save-round-btn" data-round="${openRound}">Save</button>` : ''}
+  </div>`;
 }
 
 function renderRoundControls(pid) {
