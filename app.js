@@ -515,7 +515,6 @@ function updateUserDisplay() {
   el.innerHTML = `<span class="user-greeting">👤 ${p.name}</span>
     <button class="btn-switch-user" id="switch-btn">Log out</button>`;
   document.getElementById('switch-btn').addEventListener('click', switchUser);
-  document.body.classList.toggle('is-test-user', isTestUser());
 }
 
 // ============================================================
@@ -767,7 +766,7 @@ function renderBracketList(mode, pid) {
     </div>`;
 
   return `
-    <div class="bracket-list${isTestUser() ? ' bracket-list--single' : ''}">
+    <div class="bracket-list bracket-list--single">
       ${conf('Eastern Conference', ['E1v8','E4v5','E2v7','E3v6'], ['EQ1','EQ2'], 'ECF')}
       ${conf('Western Conference', ['W1v8','W4v5','W2v7','W3v6'], ['WQ1','WQ2'], 'WCF')}
       <div class="blist-conf">
