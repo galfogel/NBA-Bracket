@@ -555,10 +555,6 @@ main { padding: 24px; }
 .bracket-list--single .blist-conf-header { font-size: 15px; }
 .tbd-spacer { display: inline-block; flex-shrink: 0; }
 
-/* All Picks tab always shows list, not diagram */
-#tab-picks .bracket-wrap { display: none; }
-#tab-picks .bracket-list { display: block; }
-
 .blist-champion {
   text-align: center;
   margin-top: 10px;
