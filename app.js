@@ -1085,13 +1085,13 @@ function renderRoundControls(pid) {
 
     const gapWarn = r === 4 ? `<span class="gap-warn" style="display:none"></span>` : '';
     return [`<div class="round-control-row">
-      <span class="rc-name">${ROUND_NAMES[r]}</span>
+      <span class="rc-name">${r === 1 ? 'Open Round' : ROUND_NAMES[r]}</span>
       <div class="rc-right">${badge}${action}${gapWarn}</div>
     </div>`];
   });
 
   if (!rows.length) return '';
-  return `<div class="round-controls">${rows.join('')}</div>`;
+  return `<div class="round-controls"><div class="round-controls-title">Save Picks</div>${rows.join('')}</div>`;
 }
 
 // ============================================================
