@@ -1266,6 +1266,11 @@ main { padding: 24px; }
   .btn-switch-user { font-size: 11px; padding: 3px 8px; }
   main { padding: 6px 10px; }
 
+  /* Match portrait mobile card design */
+  .bracket-list--single .team-row { padding: 9px 10px; }
+  .team-logo { width: 18px; height: 18px; }
+  .bracket-list--single .games-selector { justify-content: flex-start; }
+
   /* Compact Rules page */
   .info-tab { gap: 20px; margin: 8px auto; padding: 0 10px; }
   .info-section { overflow-x: hidden; padding-top: 16px; }
