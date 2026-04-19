@@ -879,11 +879,11 @@ main { padding: 24px; }
 .bd-teams {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
   padding: 8px 10px;
   background: var(--surface2);
   border-bottom: 1px solid var(--border);
-  gap: 4px;
+  gap: 8px;
 }
 .bd-team {
   display: flex;
