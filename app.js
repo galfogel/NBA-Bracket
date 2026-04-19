@@ -515,6 +515,7 @@ function updateUserDisplay() {
   el.innerHTML = `<span class="user-greeting">👤 ${p.name}</span>
     <button class="btn-switch-user" id="switch-btn">Log out</button>`;
   document.getElementById('switch-btn').addEventListener('click', switchUser);
+  document.body.classList.toggle('is-test-user', isTestUser());
 }
 
 // ============================================================
@@ -1035,6 +1036,7 @@ function renderBracket() {
   el.innerHTML = `
     ${renderRoundControls(currentUserId)}
     ${renderBracketLayout('picks', currentUserId)}`;
+  el.classList.toggle('is-test-user', isTestUser());
 }
 
 function renderRoundControls(pid) {

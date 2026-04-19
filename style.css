@@ -1396,3 +1396,77 @@ main { padding: 24px; }
   padding: 0 4px;
 }
 .sync-toast-close:hover { color: var(--text); }
+
+/* ============================================================
+   TEST USER — COMPREHENSIVE UI REDESIGN
+   All overrides scoped to body.is-test-user / #tab-bracket.is-test-user
+   ============================================================ */
+
+/* My Picks: always show full-width list, hide diagram */
+#tab-bracket.is-test-user .bracket-wrap { display: none; }
+#tab-bracket.is-test-user .bracket-list { display: block; }
+
+/* ── Header ── */
+body.is-test-user .tab-btn             { font-size: 15px; padding: 8px 14px; }
+body.is-test-user .user-greeting       { font-size: 14px; }
+body.is-test-user .btn-switch-user     { font-size: 13px; padding: 4px 12px; }
+
+/* ── My Picks list — section labels ── */
+body.is-test-user .blist-conf                                  { margin-bottom: 24px; }
+body.is-test-user .blist-round                                 { margin-bottom: 14px; }
+body.is-test-user .bracket-list--single .blist-conf-header     { font-size: 13px; }
+body.is-test-user .bracket-list--single .blist-round-title     { font-size: 11px; }
+body.is-test-user .bracket-list--single .blist-cards           { gap: 8px; }
+
+/* ── My Picks list — team rows ── */
+body.is-test-user .bracket-list--single .team-row    { padding: 10px 12px; }
+body.is-test-user .bracket-list--single .team-logo   { width: 26px; height: 26px; }
+body.is-test-user .bracket-list--single .team-name   { font-size: 14px; }
+body.is-test-user .bracket-list--single .seed-num    { font-size: 12px; }
+body.is-test-user .bracket-list--single .fan-pct     { font-size: 12px; }
+body.is-test-user .bracket-list--single .pot-pts     { font-size: 12px; }
+body.is-test-user .bracket-list--single .win-mark    { font-size: 15px; }
+
+/* ── My Picks list — games selector ── */
+body.is-test-user .bracket-list--single .games-selector { padding: 3px 8px; }
+body.is-test-user .bracket-list--single .games-btn      { font-size: 13px; padding: 3px 8px; }
+
+/* ── My Picks list — card footer ── */
+body.is-test-user .bracket-list--single .card-footer { font-size: 11px; }
+
+/* ── Champion slot ── */
+body.is-test-user .champion-tbd   { font-size: 14px; padding: 10px; }
+body.is-test-user .champion-badge { font-size: 14px; padding: 8px 16px; }
+
+/* ── Leaderboard ── */
+body.is-test-user .leaderboard-table th               { font-size: 11px; padding: 8px 10px; }
+body.is-test-user .leaderboard-table td               { font-size: 13px; padding: 8px 10px; }
+
+/* ── Pick Details ── */
+body.is-test-user .bd-filter-bar h3 { font-size: 17px; }
+body.is-test-user .bd-pick-row      { padding: 5px 12px; }
+
+/* ── Rules ── */
+body.is-test-user .info-tab        { gap: 40px; }
+body.is-test-user .info-section h2 { font-size: 19px; }
+body.is-test-user .info-table      { font-size: 13px; }
+body.is-test-user .info-detail     { font-size: 13px; }
+
+/* ── Mobile overrides for Test user (≤ 600px) ── */
+@media (max-width: 600px) {
+  body.is-test-user header h1      { font-size: 20px; }
+  body.is-test-user .user-greeting { font-size: 14px; }
+  body.is-test-user .tab-btn       { font-size: 14px; padding: 10px 2px; }
+
+  body.is-test-user .bracket-list--single .team-row  { padding: 13px 14px; }
+  body.is-test-user .bracket-list--single .team-logo { width: 30px; height: 30px; }
+  body.is-test-user .bracket-list--single .team-name { font-size: 16px; }
+  body.is-test-user .bracket-list--single .seed-num  { font-size: 14px; }
+  body.is-test-user .bracket-list--single .fan-pct   { font-size: 13px; }
+  body.is-test-user .bracket-list--single .pot-pts   { font-size: 13px; }
+  body.is-test-user .bracket-list--single .games-btn { font-size: 16px; padding: 7px 10px; }
+  body.is-test-user .bracket-list--single .card-footer { font-size: 13px; }
+
+  body.is-test-user .champion-tbd   { font-size: 18px; }
+  body.is-test-user .champion-badge { font-size: 16px; }
+}
