@@ -546,7 +546,6 @@ main { padding: 24px; }
 .bracket-list--single .pot-pts           { font-size: 14px; }
 .bracket-list--single .fan-pct           { display: inline; font-size: 13px; color: var(--text); }
 .bracket-list--single .win-mark          { font-size: 17px; }
-.bracket-list--single .games-label       { display: none; }
 .bracket-list--single .games-btn         { font-size: 17px; padding: 6px 10px; }
 .bracket-list--single .games-selector    { justify-content: center; gap: 8px; }
 .bracket-list--single .card-footer       { font-size: 12px; }
