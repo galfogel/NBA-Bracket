@@ -497,24 +497,20 @@ main { padding: 24px; }
 /* ---- Mobile list view (hidden on desktop, shown on mobile) ---- */
 .bracket-list { display: none; }
 
-/* Test user: My Picks tab always shows full-width list, not the diagram */
-#tab-bracket.is-test-user .bracket-wrap { display: none; }
-#tab-bracket.is-test-user .bracket-list { display: block; }
-
 /* Test user: larger header, tabs, user display (on top of global sizes) */
 body.is-test-user header h1        { font-size: 22px; }
 body.is-test-user .tab-btn         { font-size: 16px; }
 body.is-test-user .user-greeting   { font-size: 15px; }
 body.is-test-user .btn-switch-user { font-size: 14px; }
 
-/* Test user: champion slot bigger */
-body.is-test-user .champion-tbd   { font-size: 16px; }
-body.is-test-user .champion-badge { font-size: 16px; }
+/* Champion slot */
+.champion-tbd   { font-size: 16px; }
+.champion-badge { font-size: 16px; }
 
-/* Test user: Rules page — no horizontal scroll */
-body.is-test-user .info-section  { overflow-x: visible; }
-body.is-test-user .info-table th { white-space: normal; }
-body.is-test-user .info-table td { white-space: normal; }
+/* Rules page — no horizontal scroll */
+.info-section  { overflow-x: visible; }
+.info-table th { white-space: normal; }
+.info-table td { white-space: normal; }
 
 /* Test user: Pick Details — name left, pick right */
 body.is-test-user .bd-pick-name { flex: 1; min-width: 0; }
