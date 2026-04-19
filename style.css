@@ -256,7 +256,7 @@ main { padding: 24px; }
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.1em;
-  color: var(--text-dim);
+  color: var(--accent);
   pointer-events: none;
 }
 .east-label { left: 0; }
@@ -547,7 +547,8 @@ main { padding: 24px; }
 .bracket-list--single .fan-pct           { display: inline; font-size: 13px; color: var(--text); }
 .bracket-list--single .win-mark          { font-size: 17px; }
 .bracket-list--single .games-label       { display: none; }
-.bracket-list--single .games-btn         { flex: 1; font-size: 17px; padding: 6px 10px; }
+.bracket-list--single .games-btn         { font-size: 17px; padding: 6px 10px; }
+.bracket-list--single .games-selector    { justify-content: center; gap: 8px; }
 .bracket-list--single .card-footer       { font-size: 12px; }
 .bracket-list--single .pts-badge         { font-size: 15px; }
 .bracket-list--single .blist-round-title { font-size: 13px; }
@@ -838,6 +839,7 @@ main { padding: 24px; }
 .leaderboard-table .leader-row { background: color-mix(in srgb, var(--accent) 8%, transparent); }
 .p-name-cell { font-weight: 600; }
 .total-cell { font-weight: 700; color: var(--green); }
+.rnd-abbr { display: none; }
 
 /* ---- Pick breakdown ---- */
 .bd-filter-bar { display: flex; flex-direction: column; align-items: flex-start; gap: 10px; margin-bottom: 20px; }
@@ -1352,6 +1354,8 @@ main { padding: 24px; }
   .leaderboard-table th,
   .leaderboard-table td { padding: 7px 8px; font-size: 12px; }
   .breakdown-grid { grid-template-columns: 1fr; }
+  .rnd-full { display: none; }
+  .rnd-abbr { display: inline; }
 
   /* ── Login ── */
   .login-box { padding: 24px 16px; }
@@ -1401,10 +1405,6 @@ main { padding: 24px; }
    TEST USER — COMPREHENSIVE UI REDESIGN
    All overrides scoped to body.is-test-user / #tab-bracket.is-test-user
    ============================================================ */
-
-/* My Picks: always show full-width list, hide diagram */
-#tab-bracket.is-test-user .bracket-wrap { display: none; }
-#tab-bracket.is-test-user .bracket-list { display: block; }
 
 /* ── Header ── */
 body.is-test-user .tab-btn             { font-size: 15px; padding: 8px 14px; }

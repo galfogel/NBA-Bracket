@@ -849,7 +849,6 @@ function cardResults(sid, t1, t2) {
       <img class="team-logo" src="${t.logo}" alt="${t.abbr}" />
       <span class="team-name">${t.name}</span>
       ${pct !== null ? `<span class="fan-pct">${pct}%</span>` : ''}
-      ${wins !== null ? `<span class="series-wins ${isW ? 'wins-lead' : ''}">${wins}</span>` : ''}
       ${isW ? '<span class="win-mark">✓</span>' : ''}
     </div>`;
   }
@@ -1036,7 +1035,6 @@ function renderBracket() {
   el.innerHTML = `
     ${renderRoundControls(currentUserId)}
     ${renderBracketLayout('picks', currentUserId)}`;
-  el.classList.toggle('is-test-user', isTestUser());
 }
 
 function renderRoundControls(pid) {
@@ -1165,12 +1163,11 @@ function renderPicksTab() {
   el.innerHTML = `
     <div class="allpicks-header">
       <div class="allpicks-left">
-        <label>Viewing picks for:</label>
-        <select id="view-select">
+        <div class="bd-user-tiles">
           ${visibleParticipants.map(p =>
-            `<option value="${p.id}" ${p.id === viewingPid ? 'selected' : ''}>${p.name}</option>`
+            `<button class="bd-user-tile${p.id === viewingPid ? ' active' : ''}" data-pid="${p.id}">${p.name}</button>`
           ).join('')}
-        </select>
+        </div>
       </div>
       <div class="allpicks-right">
         <span class="allpicks-score">${correct} correct · ${score} pts</span>
@@ -1178,9 +1175,11 @@ function renderPicksTab() {
     </div>
     ${renderBracketLayout('view', viewingPid)}`;
 
-  el.querySelector('#view-select').addEventListener('change', e => {
-    viewingPid = e.target.value;
-    renderPicksTab();
+  el.querySelectorAll('.bd-user-tile').forEach(tile => {
+    tile.addEventListener('click', () => {
+      viewingPid = tile.dataset.pid;
+      renderPicksTab();
+    });
   });
 }
 
@@ -1252,7 +1251,13 @@ function renderLeaderboard() {
       <h2>Leaderboard</h2>
       <table class="leaderboard-table">
         <thead>
-          <tr><th>#</th><th>Name</th><th>R1</th><th>CSF</th><th>CF</th><th>F</th><th>TOT</th></tr>
+          <tr><th>#</th><th>Name</th>
+            <th><span class="rnd-full">First Round</span><span class="rnd-abbr">R1</span></th>
+            <th><span class="rnd-full">Conf. Semifinals</span><span class="rnd-abbr">CSF</span></th>
+            <th><span class="rnd-full">Conf. Finals</span><span class="rnd-abbr">CF</span></th>
+            <th><span class="rnd-full">Finals</span><span class="rnd-abbr">F</span></th>
+            <th><span class="rnd-full">Total</span><span class="rnd-abbr">TOT</span></th>
+          </tr>
         </thead>
         <tbody>
           ${rows.map((p, i) => {
