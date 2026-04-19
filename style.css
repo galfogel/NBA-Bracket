@@ -555,6 +555,10 @@ main { padding: 24px; }
 .bracket-list--single .blist-conf-header { font-size: 15px; }
 .tbd-spacer { display: inline-block; flex-shrink: 0; }
 
+/* All Picks tab always shows list, not diagram */
+#tab-picks .bracket-wrap { display: none; }
+#tab-picks .bracket-list { display: block; }
+
 .blist-champion {
   text-align: center;
   margin-top: 10px;
@@ -1348,6 +1352,7 @@ main { padding: 24px; }
   .picks-cards-grid { grid-template-columns: 1fr 1fr; gap: 6px; }
   .picks-round-section { padding: 12px; }
   .round-control-row { padding: 8px 12px; }
+  .bracket-list--single .games-selector { justify-content: flex-start; }
 
   /* ── Leaderboard ── */
   .leaderboard-wrap { overflow-x: auto; }

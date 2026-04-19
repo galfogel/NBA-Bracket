@@ -757,7 +757,7 @@ function renderBracketList(mode, pid) {
         <div class="blist-cards">${r1ids.map(id => bracketCard(id, mode, pid)).join('')}</div>
       </div>
       <div class="blist-round">
-        <div class="blist-round-title">Semifinals Conference</div>
+        <div class="blist-round-title">Conf. Semifinals</div>
         <div class="blist-cards">${r2ids.map(id => bracketCard(id, mode, pid)).join('')}</div>
       </div>
       <div class="blist-round">
@@ -779,7 +779,7 @@ function renderBracketList(mode, pid) {
 }
 
 function bracketCol(ids, round, side, mode, pid) {
-  const label = round === 1 ? 'First Round' : round === 2 ? 'Semifinals Conference' : 'Conf. Finals';
+  const label = round === 1 ? 'First Round' : round === 2 ? 'Conf. Semifinals' : 'Conf. Finals';
   return `
     <div class="bracket-col r${round} ${side}">
       <div class="round-label">${label}</div>
@@ -994,12 +994,19 @@ function cardView(sid, t1, t2, pid) {
     const isBad    = isPicked && actual && actual !== key;
     const cls      = isPicked ? (isBad ? 'is-wrong-pick' : 'is-winner') : '';
     const mark     = isOk ? '✓' : isBad ? '✗' : '';
-    const pct = getWinPct(sid, key);
+    const pct      = getWinPct(sid, key);
+    const basePts  = ROUND_POINTS[SERIES_MAP[sid].r];
+    const bonus    = getUpsetBonus(sid, key, basePts);
+    const push     = pct === null ? 'pot-pts-push' : '';
+    const ptsBadge = bonus > 0
+      ? `<span class="pot-pts ${push}"><span class="pot-base">${basePts}</span><span class="pot-bonus"> +${bonus}</span></span>`
+      : `<span class="pot-pts ${push}"><span class="pot-base">${basePts}</span></span>`;
     return `<div class="team-row no-pointer ${cls}">
       <span class="seed-num">${t.seed ?? ''}</span>
       <img class="team-logo" src="${t.logo}" alt="${t.abbr}" />
       <span class="team-name">${t.name}</span>
       ${pct !== null ? `<span class="fan-pct">${pct}%</span>` : ''}
+      ${ptsBadge}
       ${mark ? `<span class="win-mark">${mark}</span>` : ''}
     </div>`;
   }
@@ -1008,20 +1015,27 @@ function cardView(sid, t1, t2, pid) {
   const gOk    = pick.games && ag2 && pick.games === ag2;
   const gBad   = pick.games && ag2 && pick.games !== ag2;
   const ptsEarned = seriesPoints(pid, sid);
-  const footer = pick.games
-    ? `<div class="card-footer ${gOk ? 'footer-correct' : gBad ? 'footer-wrong' : ''}">
-         ${pick.games} games${gOk ? ' ✓' : gBad ? ` ✗ (actual ${ag2})` : ''}${ptsEarned ? ` · <span class="pts-badge">${ptsEarned} pts</span>` : ''}
-       </div>`
-    : ptsEarned
-      ? `<div class="card-footer footer-correct"><span class="pts-badge">${ptsEarned} pts</span></div>`
-      : '';
+
+  const gamesRow = pick.winner ? `
+    <div class="games-selector">
+      <span class="games-label">Games:</span>
+      ${[4, 5, 6, 7].map(n => {
+        const sel = pick.games === n;
+        const gcls = sel && ag2 ? (n === ag2 ? 'games-correct' : 'games-wrong') : '';
+        return `<button class="games-btn ${sel ? 'selected' : ''} ${gcls}" disabled>${n}</button>`;
+      }).join('')}
+    </div>` : '';
+
+  const footer = ptsEarned
+    ? `<div class="card-footer ${gOk ? 'footer-correct' : gBad ? 'footer-wrong' : 'footer-correct'}"><span class="pts-badge">${ptsEarned} pts</span></div>`
+    : '';
 
   const gapRow = sid === 'FINALS' && state.finalsGap[pid] != null
     ? `<div class="gap-input-row gap-readonly"><span class="gap-label">Game 1 gap:</span> <strong>${state.finalsGap[pid]} pts</strong></div>`
     : '';
 
   return `<div class="matchup-card" data-series="${sid}">
-    ${row(t1)}<div class="series-divider"></div>${row(t2)}${gapRow}${footer}
+    ${row(t1)}<div class="series-divider"></div>${row(t2)}${gamesRow}${gapRow}${footer}
   </div>`;
 }
 
@@ -1071,7 +1085,7 @@ function renderRoundControls(pid) {
 
     const gapWarn = r === 4 ? `<span class="gap-warn" style="display:none"></span>` : '';
     return [`<div class="round-control-row">
-      <span class="rc-name">${r === 2 ? 'Semifinals Conference' : ROUND_NAMES[r]}</span>
+      <span class="rc-name">${ROUND_NAMES[r]}</span>
       <div class="rc-right">${badge}${action}${gapWarn}</div>
     </div>`];
   });
@@ -1286,7 +1300,7 @@ function renderPickBreakdown(rows) {
   const filteredRows = bdUserFilter.size > 0 ? rows.filter(p => bdUserFilter.has(p.id)) : rows;
 
   const roundOptions = availRounds
-    .map(r => `<option value="${r}" ${bdRoundFilter === r ? 'selected' : ''}>${r === 2 ? 'Semifinals Conference' : ROUND_NAMES[r]}</option>`)
+    .map(r => `<option value="${r}" ${bdRoundFilter === r ? 'selected' : ''}>${ROUND_NAMES[r]}</option>`)
     .join('');
   const userTiles = rows.map(p => {
     const active = bdUserFilter.has(p.id);
@@ -1447,7 +1461,12 @@ function renderInfo() {
         <p class="info-detail">Based on fan pick % from picks.nba.com, floored to the nearest 10%. Minimum gap 5% when fav% is below 60%. Formula: <strong>2 × pts × (floor10(fav%) − 50%) / 100</strong>.</p>
         <p class="info-detail">Underdog potential pts = <span style="color:var(--text-dim)">base</span> + <span style="color:var(--green)">bonus</span>:</p>
         <table class="info-table">
-          <thead><tr><th>Fav% range</th><th>R1</th><th>CSF</th><th>CF</th><th>Finals</th></tr></thead>
+          <thead><tr><th>Fav% range</th>
+            <th><span class="rnd-full">First Round</span><span class="rnd-abbr">R1</span></th>
+            <th><span class="rnd-full">Conf. Semifinals</span><span class="rnd-abbr">CSF</span></th>
+            <th><span class="rnd-full">Conf. Finals</span><span class="rnd-abbr">CF</span></th>
+            <th><span class="rnd-full">Finals</span><span class="rnd-abbr">F</span></th>
+          </tr></thead>
           <tbody>
             <tr><td>50–59%</td><td><span class="pot-base">10</span> <span class="pot-bonus">+1</span></td><td><span class="pot-base">20</span> <span class="pot-bonus">+2</span></td><td><span class="pot-base">40</span> <span class="pot-bonus">+4</span></td><td><span class="pot-base">80</span> <span class="pot-bonus">+8</span></td></tr>
             <tr><td>60–69%</td><td><span class="pot-base">10</span> <span class="pot-bonus">+2</span></td><td><span class="pot-base">20</span> <span class="pot-bonus">+4</span></td><td><span class="pot-base">40</span> <span class="pot-bonus">+8</span></td><td><span class="pot-base">80</span> <span class="pot-bonus">+16</span></td></tr>
