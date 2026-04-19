@@ -1,5 +1,5 @@
 {
-  "updated": "2026-04-19T02:01:36Z",
+  "updated": "2026-04-19T05:22:53Z",
   "records": {
     "ATL-NYK": {
       "NYK": 1,
@@ -12,6 +12,10 @@
     "DEN-MIN": {
       "DEN": 1,
       "MIN": 0
+    },
+    "HOU-LAL": {
+      "LAL": 1,
+      "HOU": 0
     }
   },
   "gameTimes": {
