@@ -1349,6 +1349,7 @@ main { padding: 24px; }
   .picks-round-section { padding: 12px; }
   .round-control-row { padding: 8px 12px; }
   .bracket-list--single .games-selector { justify-content: flex-start; }
+  .bracket-list--single .team-row { padding: 9px 10px; }
 
   /* ── Leaderboard ── */
   .leaderboard-wrap { overflow-x: auto; }
@@ -1457,7 +1458,6 @@ body.is-test-user .info-detail     { font-size: 13px; }
   body.is-test-user .user-greeting { font-size: 14px; }
   body.is-test-user .tab-btn       { font-size: 14px; padding: 10px 2px; }
 
-  body.is-test-user .bracket-list--single .team-row  { padding: 13px 14px; }
   body.is-test-user .bracket-list--single .team-logo { width: 30px; height: 30px; }
   body.is-test-user .bracket-list--single .team-name { font-size: 16px; }
   body.is-test-user .bracket-list--single .seed-num  { font-size: 14px; }
