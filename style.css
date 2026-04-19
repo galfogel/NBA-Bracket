@@ -1083,7 +1083,7 @@ main { padding: 24px; }
 }
 
 .games-label {
-  font-size: 10px;
+  font-size: 13px;
   color: var(--text-dim);
   flex-shrink: 0;
   margin-right: 2px;
