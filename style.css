@@ -1142,7 +1142,7 @@ main { padding: 24px; }
   margin-bottom: 16px;
   overflow: hidden;
   position: sticky;
-  top: 56px;
+  top: 64px;
   z-index: 50;
 }
 
@@ -1268,7 +1268,7 @@ main { padding: 24px; }
   .user-greeting { font-size: 11px; }
   .btn-switch-user { font-size: 11px; padding: 3px 8px; }
   main { padding: 6px 10px; }
-  .round-controls { top: 40px; }
+  .round-controls { top: 48px; }
 
   /* Same card sizes as portrait mobile — only override layout/spacing */
   .bracket-list--single .team-row  { padding: 9px 10px; }
@@ -1359,7 +1359,7 @@ main { padding: 24px; }
   .picks-round-section { padding: 12px; }
   .round-control-row { padding: 8px 12px; }
   .bracket-list--single .games-selector { justify-content: flex-start; }
-  .round-controls { top: 90px; }
+  .round-controls { top: 98px; }
   .bracket-list--single .team-row { padding: 9px 10px; }
 
   /* ── Leaderboard ── */
