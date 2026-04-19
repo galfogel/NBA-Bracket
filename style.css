@@ -465,13 +465,13 @@ main { padding: 24px; }
   color: #fff;
   padding: 8px 14px;
   border-radius: var(--radius);
-  font-size: 13px;
+  font-size: 11px;
   font-weight: 700;
 }
 
 .champion-tbd {
   color: var(--text-dim);
-  font-size: 12px;
+  font-size: 10px;
   padding: 8px;
 }
 
@@ -546,6 +546,7 @@ main { padding: 24px; }
 .bracket-list--single .pot-pts           { font-size: 14px; }
 .bracket-list--single .fan-pct           { display: inline; font-size: 13px; color: var(--text); }
 .bracket-list--single .win-mark          { font-size: 17px; }
+.bracket-list--single .games-label       { font-size: 13px; }
 .bracket-list--single .games-btn         { font-size: 17px; padding: 6px 10px; }
 .bracket-list--single .games-selector    { justify-content: center; gap: 8px; }
 .bracket-list--single .card-footer       { font-size: 12px; }
@@ -1083,7 +1084,7 @@ main { padding: 24px; }
 }
 
 .games-label {
-  font-size: 13px;
+  font-size: 10px;
   color: var(--text-dim);
   flex-shrink: 0;
   margin-right: 2px;
@@ -1321,8 +1322,8 @@ main { padding: 24px; }
     text-align: center;
     border-radius: 0;
   }
-  .champion-tbd   { font-size: 16px; }
-  .champion-badge { font-size: 16px; }
+  .champion-tbd   { font-size: 13px; }
+  .champion-badge { font-size: 13px; }
   .tab-btn.active {
     border-radius: 0;
     border-bottom: 2px solid var(--accent);
@@ -1435,8 +1436,6 @@ body.is-test-user .bracket-list--single .games-btn      { font-size: 13px; paddi
 body.is-test-user .bracket-list--single .card-footer { font-size: 11px; }
 
 /* ── Champion slot ── */
-body.is-test-user .champion-tbd   { font-size: 14px; padding: 10px; }
-body.is-test-user .champion-badge { font-size: 14px; padding: 8px 16px; }
 
 /* ── Leaderboard ── */
 body.is-test-user .leaderboard-table th               { font-size: 11px; padding: 8px 10px; }
@@ -1467,6 +1466,4 @@ body.is-test-user .info-detail     { font-size: 13px; }
   body.is-test-user .bracket-list--single .games-btn { font-size: 16px; padding: 7px 10px; }
   body.is-test-user .bracket-list--single .card-footer { font-size: 13px; }
 
-  body.is-test-user .champion-tbd   { font-size: 18px; }
-  body.is-test-user .champion-badge { font-size: 16px; }
 }
