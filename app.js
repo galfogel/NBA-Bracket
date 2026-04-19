@@ -757,7 +757,7 @@ function renderBracketList(mode, pid) {
         <div class="blist-cards">${r1ids.map(id => bracketCard(id, mode, pid)).join('')}</div>
       </div>
       <div class="blist-round">
-        <div class="blist-round-title">Semifinals</div>
+        <div class="blist-round-title">${isTestUser() ? 'Semifinals Conference' : 'Semifinals'}</div>
         <div class="blist-cards">${r2ids.map(id => bracketCard(id, mode, pid)).join('')}</div>
       </div>
       <div class="blist-round">
@@ -779,7 +779,7 @@ function renderBracketList(mode, pid) {
 }
 
 function bracketCol(ids, round, side, mode, pid) {
-  const label = round === 1 ? 'First Round' : round === 2 ? 'Semifinals' : 'Conf. Finals';
+  const label = round === 1 ? 'First Round' : round === 2 ? (isTestUser() ? 'Semifinals Conference' : 'Semifinals') : 'Conf. Finals';
   return `
     <div class="bracket-col r${round} ${side}">
       <div class="round-label">${label}</div>
@@ -1073,7 +1073,7 @@ function renderRoundControls(pid) {
 
     const gapWarn = r === 4 ? `<span class="gap-warn" style="display:none"></span>` : '';
     return [`<div class="round-control-row">
-      <span class="rc-name">${ROUND_NAMES[r]}</span>
+      <span class="rc-name">${isTestUser() && r === 2 ? 'Semifinals Conference' : ROUND_NAMES[r]}</span>
       <div class="rc-right">${badge}${action}${gapWarn}</div>
     </div>`];
   });
@@ -1252,7 +1252,7 @@ function renderLeaderboard() {
       <h2>Leaderboard</h2>
       <table class="leaderboard-table">
         <thead>
-          <tr><th>#</th><th>Name</th><th>R1</th><th>SF</th><th>CF</th><th>Finals</th><th>Total</th></tr>
+          <tr><th>#</th><th>Name</th><th>R1</th><th>${isTestUser() ? 'CSF' : 'SF'}</th><th>CF</th><th>Finals</th><th>Total</th></tr>
         </thead>
         <tbody>
           ${rows.map((p, i) => {
@@ -1281,7 +1281,7 @@ function renderPickBreakdown(rows) {
   const filteredRows = bdUserFilter.size > 0 ? rows.filter(p => bdUserFilter.has(p.id)) : rows;
 
   const roundOptions = availRounds
-    .map(r => `<option value="${r}" ${bdRoundFilter === r ? 'selected' : ''}>${ROUND_NAMES[r]}</option>`)
+    .map(r => `<option value="${r}" ${bdRoundFilter === r ? 'selected' : ''}>${isTestUser() && r === 2 ? 'Semifinals Conference' : ROUND_NAMES[r]}</option>`)
     .join('');
   const userTiles = rows.map(p => {
     const active = bdUserFilter.has(p.id);
@@ -1442,7 +1442,7 @@ function renderInfo() {
         <p class="info-detail">Based on fan pick % from picks.nba.com, floored to the nearest 10%. Minimum gap 5% when fav% is below 60%. Formula: <strong>2 × pts × (floor10(fav%) − 50%) / 100</strong>.</p>
         <p class="info-detail">Underdog potential pts = <span style="color:var(--text-dim)">base</span> + <span style="color:var(--green)">bonus</span>:</p>
         <table class="info-table">
-          <thead><tr><th>Fav% range</th><th>R1</th><th>SF</th><th>CF</th><th>Finals</th></tr></thead>
+          <thead><tr><th>Fav% range</th><th>R1</th><th>${isTestUser() ? 'CSF' : 'SF'}</th><th>CF</th><th>Finals</th></tr></thead>
           <tbody>
             <tr><td>50–59%</td><td><span class="pot-base">10</span> <span class="pot-bonus">+1</span></td><td><span class="pot-base">20</span> <span class="pot-bonus">+2</span></td><td><span class="pot-base">40</span> <span class="pot-bonus">+4</span></td><td><span class="pot-base">80</span> <span class="pot-bonus">+8</span></td></tr>
             <tr><td>60–69%</td><td><span class="pot-base">10</span> <span class="pot-bonus">+2</span></td><td><span class="pot-base">20</span> <span class="pot-bonus">+4</span></td><td><span class="pot-base">40</span> <span class="pot-bonus">+8</span></td><td><span class="pot-base">80</span> <span class="pot-bonus">+16</span></td></tr>
@@ -1473,7 +1473,7 @@ function renderInfo() {
           <thead><tr><th>Matchup</th><th>Game 1 Tip-off</th></tr></thead>
           <tbody>${deadlineRows}</tbody>
         </table>
-        <p class="info-detail">SF, CF &amp; Finals deadlines shown once the NBA announces the schedule. All times in Israel Standard Time (IST).</p>
+        <p class="info-detail">${isTestUser() ? 'CSF' : 'SF'}, CF &amp; Finals deadlines shown once the NBA announces the schedule. All times in Israel Standard Time (IST).</p>
       </section>
     </div>
   `;

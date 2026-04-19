@@ -507,6 +507,15 @@ body.is-test-user .tab-btn         { font-size: 16px; }
 body.is-test-user .user-greeting   { font-size: 15px; }
 body.is-test-user .btn-switch-user { font-size: 14px; }
 
+/* Test user: champion slot bigger */
+body.is-test-user .champion-tbd   { font-size: 16px; }
+body.is-test-user .champion-badge { font-size: 16px; }
+
+/* Test user: Rules page — no horizontal scroll */
+body.is-test-user .info-section  { overflow-x: visible; }
+body.is-test-user .info-table th { white-space: normal; }
+body.is-test-user .info-table td { white-space: normal; }
+
 /* Test user: Pick Details — name left, pick right */
 body.is-test-user .bd-pick-name { flex: 1; min-width: 0; }
 body.is-test-user .bd-pick-team { flex: none; }
