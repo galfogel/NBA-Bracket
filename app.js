@@ -73,8 +73,9 @@ function seriesEmoji(sid, leaderKey) {
   const pct = getWinPct(sid, leaderKey);
   if (pct === null) return '';
   if (pct <= 25) return '😮';
-  if (pct >= 75) return '😎';
-  return '';
+  if (pct <= 50) return '🙂';
+  if (pct <= 75) return '🤔';
+  return '😎';
 }
 
 function getUpsetBonus(sid, pickedKey, roundPts) {
