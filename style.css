@@ -103,7 +103,7 @@ body {
 
 /* Sign Up hidden + tab bar hidden — re-enable by removing these two rules */
 .login-tab[data-mode="signup"] { display: none; }
-.login-tabs { display: none; }
+.login-tabs { display: none !important; }
 
 .login-tabs {
   display: flex;
