@@ -1398,9 +1398,27 @@ function renderPickBreakdown(rows) {
         </div>
       </div>`;
 
-      const resultBar = `<div class="bd-result">${actual
-        ? `<strong style="color:${TEAMS[actual].color}">${TEAMS[actual].abbr}</strong> wins${ag ? ` in ${ag}` : ''}`
-        : 'Pending'}</div>`;
+      let resultText;
+      const rec = getRecord(def.id);
+      if (actual && ag) {
+        const winEmoji = seriesEmoji(def.id, actual);
+        resultText = `<strong style="color:${TEAMS[actual].color}">${TEAMS[actual].abbr}</strong> wins in ${ag}${winEmoji ? ' ' + winEmoji : ''}`;
+      } else if (rec) {
+        const t1w = rec.t1Wins, t2w = rec.t2Wins;
+        const leaderKey = t1w > t2w ? t1k : t2w > t1w ? t2k : null;
+        const emoji = seriesEmoji(def.id, leaderKey);
+        if (t1w + t2w === 0) {
+          resultText = 'Tied 0 – 0';
+        } else if (leaderKey) {
+          const ldr = TEAMS[leaderKey];
+          resultText = `<span style="color:${ldr.color}">${ldr.abbr} leads</span> ${Math.max(t1w,t2w)} – ${Math.min(t1w,t2w)}${emoji ? ' ' + emoji : ''}`;
+        } else {
+          resultText = `Tied ${t1w} – ${t2w}`;
+        }
+      } else {
+        resultText = 'Pending';
+      }
+      const resultBar = `<div class="bd-result">${resultText}</div>`;
 
       let pickRows = '';
       if (seriesLocked || adminView) {
