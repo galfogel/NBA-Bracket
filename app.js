@@ -355,6 +355,10 @@ const PLATFORM_PASSWORD    = 'nba2026';
 const PLATFORM_SESSION_KEY = 'nba-gate-2026-v2';
 
 function initGate() {
+  // Gate temporarily disabled — always pass through
+  document.getElementById('gate-overlay').classList.add('hidden');
+  return true;
+  /* re-enable by removing the two lines above:
   if (sessionStorage.getItem(PLATFORM_SESSION_KEY) === '1') {
     document.getElementById('gate-overlay').classList.add('hidden');
     return true;
@@ -362,6 +366,7 @@ function initGate() {
   document.getElementById('gate-overlay').classList.remove('hidden');
   setTimeout(() => document.getElementById('gate-pass').focus(), 60);
   return false;
+  */
 }
 
 function attemptGate() {
