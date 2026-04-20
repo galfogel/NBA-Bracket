@@ -67,6 +67,16 @@ function getWinPct(sid, teamKey) {
   return teamKey === t1key ? pct.t1 : pct.t2;
 }
 
+function seriesEmoji(sid, leaderKey) {
+  if (!WIN_PCT[sid] || !leaderKey) return '';
+  if (sid === 'W2v7' && leaderKey === 'W2') return '😭';
+  const pct = getWinPct(sid, leaderKey);
+  if (pct === null) return '';
+  if (pct <= 25) return '😮';
+  if (pct >= 75) return '😎';
+  return '';
+}
+
 function getUpsetBonus(sid, pickedKey, roundPts) {
   const pct = WIN_PCT[sid];
   if (!pct) return 0;
@@ -872,18 +882,21 @@ function cardResults(sid, t1, t2) {
 
   let footer = '';
   if (winner && ag) {
-    footer = `<div class="card-footer footer-winner">${TEAMS[winner].abbr} wins in ${ag} games</div>`;
+    const winEmoji = seriesEmoji(sid, winner);
+    footer = `<div class="card-footer footer-winner">${TEAMS[winner].abbr} wins in ${ag} games${winEmoji ? ' ' + winEmoji : ''}</div>`;
   } else if (rec || (!winner && isSeriesAvailable(sid))) {
     const t1w = rec?.t1Wins ?? 0, t2w = rec?.t2Wins ?? 0;
     const total = t1w + t2w;
     if (total === 0) {
       footer = `<div class="card-footer footer-record">Tied 0 – 0</div>`;
     } else {
-      const leader = t1w > t2w ? TEAMS[t1] : t2w > t1w ? TEAMS[t2] : null;
+      const leaderKey = t1w > t2w ? t1 : t2w > t1w ? t2 : null;
+      const leader = leaderKey ? TEAMS[leaderKey] : null;
+      const emoji = seriesEmoji(sid, leaderKey);
       const status = leader
         ? `<span style="color:${leader.color}">${leader.abbr} leads</span> ${Math.max(t1w,t2w)} – ${Math.min(t1w,t2w)}`
         : `Tied ${t1w} – ${t2w}`;
-      footer = `<div class="card-footer footer-record">${status}</div>`;
+      footer = `<div class="card-footer footer-record">${status}${emoji ? ' ' + emoji : ''}</div>`;
     }
   }
 
