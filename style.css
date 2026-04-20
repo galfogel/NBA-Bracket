@@ -101,8 +101,8 @@ body {
 .msg-welcome { color: var(--green); }
 .msg-error   { color: var(--red);   }
 
-/* Sign Up tab temporarily hidden — re-enable by removing this rule */
-.login-tab[data-mode="signup"] { display: none; }
+/* Login tab bar hidden (Sign Up disabled, no choice needed) — re-enable by removing this rule */
+.login-tabs { display: none; }
 
 .login-tabs {
   display: flex;
