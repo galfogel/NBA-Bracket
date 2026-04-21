@@ -202,7 +202,7 @@ nav {
 
 .user-greeting {
   font-size: 15px;
-  font-weight: 600;
+  font-weight: 400;
   color: var(--text-dim);
 }
 .greeting-name { color: var(--accent); font-weight: 700; }
