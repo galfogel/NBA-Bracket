@@ -806,7 +806,7 @@ main { padding: 24px; }
    ============================================================ */
 .leaderboard-wrap { max-width: 860px; margin: 32px auto; padding: 0 16px; }
 .leaderboard-wrap h2 { font-size: 20px; margin-bottom: 8px; }
-.prize-bar { font-size: 13px; color: var(--text-dim); margin-bottom: 16px; }
+.prize-bar { font-size: 13px; color: var(--text-dim); margin-bottom: 16px; white-space: nowrap; overflow-x: auto; }
 .prize-pot { color: var(--text); font-weight: 600; }
 
 .scoring-legend {
@@ -1338,7 +1338,7 @@ main { padding: 24px; }
 
   body { overflow-x: hidden; }
 
-  /* ── Header: title+user on row 1, nav on row 2 ── */
+  /* ── Header: title row 1, greeting row 2, nav row 3 ── */
   header {
     flex-wrap: wrap;
     height: auto;
@@ -1346,13 +1346,16 @@ main { padding: 24px; }
     gap: 0;
   }
   header h1 {
-    flex: 1;
+    flex: 0 0 100%;
     font-size: 18px;
     line-height: 48px;
   }
   .user-display {
+    order: 2;
+    width: 100%;
     margin-left: 0;
     gap: 6px;
+    padding: 4px 0 8px;
   }
   .user-greeting { font-size: 13px; }
   nav {
