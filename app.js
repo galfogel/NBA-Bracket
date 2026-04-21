@@ -1393,7 +1393,7 @@ function renderLeaderboard() {
   el.innerHTML = `
     <div class="leaderboard-wrap">
       <h2>Leaderboard</h2>${msgHtml}
-      <div class="prize-bar">🥇 1,050 ₪ &nbsp;·&nbsp; 🥈 450 ₪ &nbsp;·&nbsp; 🥉 100 ₪ &nbsp;·&nbsp; <span class="prize-pot">Pot: 1,600 ₪</span></div>
+      <div class="prize-bar">🥇 1,050 ₪ &nbsp;·&nbsp; 🥈 450 ₪ &nbsp;·&nbsp; 🥉 100 ₪ &nbsp;·&nbsp; <span class="prize-pot">Prize pool: 1,600 ₪</span></div>
       <table class="leaderboard-table">
         <thead>
           <tr><th>#</th><th>Name</th>
@@ -1638,8 +1638,8 @@ function renderInfo() {
         <table class="info-table">
           <thead><tr><th>Place</th><th>Prize</th></tr></thead>
           <tbody>
-            <tr><td>🥇 1st place</td><td>(Pot − Buy-in) × 70%</td></tr>
-            <tr><td>🥈 2nd place</td><td>(Pot − Buy-in) × 30%</td></tr>
+            <tr><td>🥇 1st place</td><td>(Prize pool − Buy-in) × 70%</td></tr>
+            <tr><td>🥈 2nd place</td><td>(Prize pool − Buy-in) × 30%</td></tr>
             <tr><td>🥉 3rd place</td><td>Buy-in back</td></tr>
           </tbody>
         </table>

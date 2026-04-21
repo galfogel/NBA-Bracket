@@ -59,7 +59,7 @@ On page load: `fetchPicks()` reads Firestore → `mergeRemoteState()` folds remo
 
 `computeScore(pid)` sums base + games bonus + upset bonus across all series.
 
-**Prizes**: Buy-in is 100 ₪ per player. Rules page shows formulas (not hardcoded amounts): 1st = (Pot − Buy-in) × 70%, 2nd = (Pot − Buy-in) × 30%, 3rd = Buy-in back. Leaderboard prize bar shows actual amounts (currently 1,050 ₪ / 450 ₪ / 100 ₪, pot = 1,600 ₪).
+**Prizes**: Buy-in is 100 ₪ per player. Rules page shows formulas (not hardcoded amounts): 1st = (Prize pool − Buy-in) × 70%, 2nd = (Prize pool − Buy-in) × 30%, 3rd = Buy-in back. Leaderboard prize bar shows actual amounts (currently 1,050 ₪ / 450 ₪ / 100 ₪, prize pool = 1,600 ₪).
 
 **Series emoji** (`seriesEmoji(sid, leaderKey)`): shown on the results card next to the score when one team leads. Based on the leader's pre-series fan win % from `WIN_PCT` (R1 only): ≤25% → 😮, ≤50% → 🤔, ≤75% → 🙂, >75% → 😎. Exception: `W2v7` with SAS leading always returns 😭 (personal easter egg). If Portland (W7) leads at 2%, it falls through to 😮. R2+ series have no `WIN_PCT` so emoji is always empty.
 
