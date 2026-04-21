@@ -1527,7 +1527,7 @@ function renderPickBreakdown(rows) {
     for (const conf of confs) {
       const confSeries = conf ? series.filter(s => s.conf === conf) : series;
       if (!confSeries.length) continue;
-      const confLabel = conf === 'East' ? 'Eastern Conference' : conf === 'West' ? 'Western Conference' : '';
+      const confLabel = conf === 'East' ? 'Eastern Conference' : conf === 'West' ? 'Western Conference' : bdRoundFilter === 4 ? 'NBA Finals' : '';
       html += `<div class="breakdown-round">`;
       if (confLabel) html += `<h4 class="bd-conf-title">${confLabel}</h4>`;
       html += `<div class="breakdown-grid">`;
