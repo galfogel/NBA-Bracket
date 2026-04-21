@@ -854,6 +854,8 @@ main { padding: 24px; }
 .bd-user-tile:hover { border-color: var(--accent, #4f8ef7); color: var(--text); }
 .bd-user-tile.active { background: var(--accent, #4f8ef7); border-color: var(--accent, #4f8ef7); color: #fff; }
 
+.breakdown-confs { display: flex; gap: 24px; align-items: flex-start; }
+.breakdown-confs .breakdown-round { flex: 1; min-width: 0; }
 .breakdown-round { margin-bottom: 28px; }
 .bd-conf-title { font-size: 12px; font-weight: 700; color: var(--text-muted, #666); text-transform: uppercase; letter-spacing: 0.06em; margin: 0 0 12px; }
 .breakdown-round h4 {
@@ -1396,6 +1398,7 @@ main { padding: 24px; }
   .leaderboard-table th,
   .leaderboard-table td { padding: 7px 8px; font-size: 12px; }
   .breakdown-grid { grid-template-columns: 1fr; }
+  .breakdown-confs { flex-direction: column; }
   .rnd-full { display: none; }
   .rnd-abbr { display: inline; }
 

@@ -1450,6 +1450,7 @@ function renderPickBreakdown(rows) {
     }
 
     const confs = bdRoundFilter < 4 ? ['East', 'West'] : [null];
+    if (bdRoundFilter < 4) html += `<div class="breakdown-confs">`;
     for (const conf of confs) {
       const confSeries = conf ? series.filter(s => s.conf === conf) : series;
       if (!confSeries.length) continue;
@@ -1460,6 +1461,7 @@ function renderPickBreakdown(rows) {
       for (const def of confSeries) html += renderSeriesCard(def);
       html += '</div></div>';
     }
+    if (bdRoundFilter < 4) html += `</div>`;
   }
 
   // Finals Game 1 gap — only when Finals round is selected
