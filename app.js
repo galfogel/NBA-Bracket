@@ -560,7 +560,8 @@ function getRankMessage(pid) {
   const rank = idx + 1;
   if (rank <= 3) {
     const place = ['1st', '2nd', '3rd'][idx];
-    return `Congrats! You've taken ${place} place! 🏆`;
+    const medal = ['🥇', '🥈', '🥉'][idx];
+    return `Congrats! You've taken ${place} place! ${medal}`;
   }
   if (prevRank !== null && rank < prevRank) {
     const d = prevRank - rank;
