@@ -1386,6 +1386,7 @@ function renderLeaderboard() {
   }
 
   const rows = getLeaderboardRows();
+  const snap = JSON.parse(localStorage.getItem(SCORE_SNAPSHOT_KEY) || '{}');
   const msgHtml = leaderboardMessage ? `<div class="landing-toast">${leaderboardMessage}</div>` : '';
   leaderboardMessage = '';
 
@@ -1408,8 +1409,14 @@ function renderLeaderboard() {
             for (const def of SERIES) rs[def.r - 1] += seriesPoints(p.id, def.id);
             const medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : '';
             const isMe  = p.id === currentUserId;
+            const prevRank = snap[p.id]?.rank ?? null;
+            const rank = i + 1;
+            const arrow = prevRank === null ? ''
+              : rank < prevRank ? `<span class="rank-up">▲</span>`
+              : rank > prevRank ? `<span class="rank-down">▼</span>`
+              : `<span class="rank-same">–</span>`;
             return `<tr class="${i === 0 && p.score > 0 ? 'leader-row' : ''} ${isMe ? 'my-row' : ''}">
-              <td>${medal || (i + 1)}</td>
+              <td class="rank-cell">${medal || rank}${arrow}</td>
               <td class="p-name-cell">${p.name}${isMe ? ' <span class="you-badge">you</span>' : ''}</td>
               ${rs.map(s => `<td>${s > 0 ? s : '–'}</td>`).join('')}
               <td class="total-cell">${p.score}</td>
