@@ -1634,13 +1634,13 @@ function renderInfo() {
 
       <section class="info-section">
         <h2>Prizes</h2>
-        <p class="info-detail">Buy-in: <strong>100 ₪</strong> per player · Total pot: <strong>1,600 ₪</strong></p>
+        <p class="info-detail">Buy-in: <strong>100 ₪</strong> per player</p>
         <table class="info-table">
           <thead><tr><th>Place</th><th>Prize</th></tr></thead>
           <tbody>
-            <tr><td>🥇 1st place</td><td>1,050 ₪ (70%)</td></tr>
-            <tr><td>🥈 2nd place</td><td>450 ₪ (30%)</td></tr>
-            <tr><td>🥉 3rd place</td><td>100 ₪ (buy-in back)</td></tr>
+            <tr><td>🥇 1st place</td><td>(Pot − Buy-in) × 70%</td></tr>
+            <tr><td>🥈 2nd place</td><td>(Pot − Buy-in) × 30%</td></tr>
+            <tr><td>🥉 3rd place</td><td>Buy-in back</td></tr>
           </tbody>
         </table>
       </section>
