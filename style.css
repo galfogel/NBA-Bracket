@@ -845,9 +845,9 @@ main { padding: 24px; }
 .total-cell { font-weight: 700; color: var(--green); }
 .rank-cell  { white-space: nowrap; }
 .rank-num   { display: inline-block; width: 1.6em; text-align: center; vertical-align: middle; }
-.rank-up    { font-size: 10px; color: #22c55e; margin-right: 3px; vertical-align: middle; }
-.rank-down  { font-size: 10px; color: #ef4444; margin-right: 3px; vertical-align: middle; }
-.rank-same  { font-size: 10px; color: #eab308; margin-right: 3px; vertical-align: middle; }
+.rank-up    { font-size: 10px; color: #22c55e; margin-left: 3px; vertical-align: middle; }
+.rank-down  { font-size: 10px; color: #ef4444; margin-left: 3px; vertical-align: middle; }
+.rank-same  { font-size: 10px; color: #eab308; margin-left: 3px; vertical-align: middle; }
 .rnd-abbr { display: none; }
 
 /* ---- Pick breakdown ---- */
