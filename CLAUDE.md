@@ -59,6 +59,8 @@ On page load: `fetchPicks()` reads Firestore → `mergeRemoteState()` folds remo
 
 `computeScore(pid)` sums base + games bonus + upset bonus across all series.
 
+**Prizes**: Total pot = 1,600 ₪ (100 ₪ buy-in × 16 players). 3rd place gets their buy-in back, so the distributable pot is 1,500 ₪. 1st: 1,050 ₪ (70%), 2nd: 450 ₪ (30%), 3rd: 100 ₪.
+
 **Series emoji** (`seriesEmoji(sid, leaderKey)`): shown on the results card next to the score when one team leads. Based on the leader's pre-series fan win % from `WIN_PCT` (R1 only): ≤25% → 😮, ≤50% → 🤔, ≤75% → 🙂, >75% → 😎. Exception: `W2v7` with SAS leading always returns 😭 (personal easter egg). If Portland (W7) leads at 2%, it falls through to 😮. R2+ series have no `WIN_PCT` so emoji is always empty.
 
 ### Rendering
