@@ -1,5 +1,5 @@
 {
-  "updated": "2026-04-21T04:50:32Z",
+  "updated": "2026-04-21T05:57:48Z",
   "records": {
     "ATL-NYK": {
       "NYK": 1,
@@ -11,7 +11,7 @@
     },
     "DEN-MIN": {
       "DEN": 1,
-      "MIN": 0
+      "MIN": 1
     },
     "HOU-LAL": {
       "LAL": 1,
