@@ -601,7 +601,7 @@ function updateUserDisplay() {
   if (!el || !currentUserId) return;
   const p = state.participants.find(p => p.id === currentUserId);
   if (!p) return;
-  el.innerHTML = `<span class="user-greeting">${p.name} is in the building!</span>
+  el.innerHTML = `<span class="user-greeting"><span class="greeting-name">${p.name}</span> is in the building!</span>
     <button class="btn-switch-user" id="switch-btn">Log out</button>`;
   document.getElementById('switch-btn').addEventListener('click', switchUser);
   document.body.classList.toggle('is-test-user', isTestUser());
