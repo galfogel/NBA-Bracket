@@ -1338,7 +1338,7 @@ main { padding: 24px; }
 
   body { overflow-x: hidden; }
 
-  /* ── Header: title row 1, greeting row 2, nav row 3 ── */
+  /* ── Header: title+logout row 1, greeting row 2, nav row 3 ── */
   header {
     flex-wrap: wrap;
     height: auto;
@@ -1346,18 +1346,13 @@ main { padding: 24px; }
     gap: 0;
   }
   header h1 {
-    flex: 0 0 100%;
+    flex: 1;
     font-size: 18px;
     line-height: 48px;
   }
-  .user-display {
-    order: 2;
-    width: 100%;
-    margin-left: 0;
-    gap: 6px;
-    padding: 4px 0 8px;
-  }
-  .user-greeting { font-size: 13px; }
+  .user-display { display: contents; }
+  .user-greeting { order: 2; width: 100%; font-size: 13px; padding: 2px 0 8px; }
+  .btn-switch-user { order: 1; }
   nav {
     order: 3;
     width: 100%;
