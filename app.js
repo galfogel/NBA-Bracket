@@ -518,20 +518,59 @@ function switchUser() {
   showLoginOverlay(!!prevUserId);
 }
 
-const SCORE_SNAPSHOT_KEY = 'nba-2026-score-snap';
+const SCORE_SNAPSHOT_KEY = 'nba-2026-rank-snap';
 let showIncompleteToast = false;
+let leaderboardMessage   = '';
+
+function getLeaderboardRows() {
+  return state.participants
+    .filter(p => !isHiddenUser(p))
+    .map(p => ({ ...p, ...computeScore(p.id) }))
+    .sort((a, b) => {
+      if (b.score !== a.score) return b.score - a.score;
+      if (b.correct !== a.correct) return b.correct - a.correct;
+      const actual = state.finalsGame1ActualGap;
+      if (actual == null) return 0;
+      const hasA = state.finalsGap[a.id] != null, hasB = state.finalsGap[b.id] != null;
+      if (!hasA && !hasB) return 0;
+      if (!hasA) return 1; if (!hasB) return -1;
+      return Math.abs(state.finalsGap[a.id] - actual) - Math.abs(state.finalsGap[b.id] - actual);
+    });
+}
 
 function scoresHaveChanged() {
   try {
     const snap = JSON.parse(localStorage.getItem(SCORE_SNAPSHOT_KEY) || '{}');
-    return state.participants.some(p => computeScore(p.id).score !== (snap[p.id] ?? 0));
+    return state.participants.some(p => computeScore(p.id).score !== (snap[p.id]?.score ?? 0));
   } catch { return false; }
 }
 
 function saveScoreSnapshot() {
   const snap = {};
-  state.participants.forEach(p => { snap[p.id] = computeScore(p.id).score; });
+  getLeaderboardRows().forEach((p, i) => { snap[p.id] = { score: p.score, rank: i + 1 }; });
   localStorage.setItem(SCORE_SNAPSHOT_KEY, JSON.stringify(snap));
+}
+
+function getRankMessage(pid) {
+  const snap = JSON.parse(localStorage.getItem(SCORE_SNAPSHOT_KEY) || '{}');
+  const prevRank = snap[pid]?.rank ?? null;
+  const rows = getLeaderboardRows();
+  const idx = rows.findIndex(p => p.id === pid);
+  if (idx < 0) return '';
+  const rank = idx + 1;
+  if (rank <= 3) {
+    const place = ['1st', '2nd', '3rd'][idx];
+    return `Congrats! You've taken ${place} place! 🏆`;
+  }
+  if (prevRank !== null && rank < prevRank) {
+    const d = prevRank - rank;
+    return `You've moved ${d} place${d > 1 ? 's' : ''} up! 🚀`;
+  }
+  if (prevRank !== null && rank > prevRank) {
+    const d = rank - prevRank;
+    return `You've moved ${d} place${d > 1 ? 's' : ''} down 📉`;
+  }
+  return '';
 }
 
 function getLandingTab(pid) {
@@ -550,6 +589,7 @@ function startApp() {
   } else {
     const tab = getLandingTab(currentUserId);
     showIncompleteToast = (tab === 'bracket');
+    leaderboardMessage  = (tab === 'leaderboard') ? getRankMessage(currentUserId) : '';
     switchTab(tab);
   }
   saveScoreSnapshot();
@@ -1344,25 +1384,13 @@ function renderLeaderboard() {
     return;
   }
 
-  const rows = state.participants
-    .filter(p => !isHiddenUser(p))
-    .map(p => ({ ...p, ...computeScore(p.id) }))
-    .sort((a, b) => {
-      if (b.score !== a.score) return b.score - a.score;
-      if (b.correct !== a.correct) return b.correct - a.correct;
-      const actual = state.finalsGame1ActualGap;
-      if (actual == null) return 0;
-      const hasA = state.finalsGap[a.id] != null;
-      const hasB = state.finalsGap[b.id] != null;
-      if (!hasA && !hasB) return 0;
-      if (!hasA) return 1;
-      if (!hasB) return -1;
-      return Math.abs(state.finalsGap[a.id] - actual) - Math.abs(state.finalsGap[b.id] - actual);
-    });
+  const rows = getLeaderboardRows();
+  const msgHtml = leaderboardMessage ? `<div class="landing-toast">${leaderboardMessage}</div>` : '';
+  leaderboardMessage = '';
 
   el.innerHTML = `
     <div class="leaderboard-wrap">
-      <h2>Leaderboard</h2>
+      <h2>Leaderboard</h2>${msgHtml}
       <table class="leaderboard-table">
         <thead>
           <tr><th>#</th><th>Name</th>
