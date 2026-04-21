@@ -1439,6 +1439,17 @@ main { padding: 24px; }
   transition: opacity 0.35s ease, transform 0.35s ease;
 }
 
+.landing-toast {
+  background: color-mix(in srgb, var(--accent) 12%, var(--surface));
+  border: 1px solid var(--accent);
+  color: var(--accent);
+  padding: 12px 18px;
+  border-radius: var(--radius);
+  margin-bottom: 16px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
 .sync-toast {
   position: fixed;
   top: 12px;

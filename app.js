@@ -518,9 +518,41 @@ function switchUser() {
   showLoginOverlay(!!prevUserId);
 }
 
+const SCORE_SNAPSHOT_KEY = 'nba-2026-score-snap';
+let showIncompleteToast = false;
+
+function scoresHaveChanged() {
+  try {
+    const snap = JSON.parse(localStorage.getItem(SCORE_SNAPSHOT_KEY) || '{}');
+    return state.participants.some(p => computeScore(p.id).score !== (snap[p.id] ?? 0));
+  } catch { return false; }
+}
+
+function saveScoreSnapshot() {
+  const snap = {};
+  state.participants.forEach(p => { snap[p.id] = computeScore(p.id).score; });
+  localStorage.setItem(SCORE_SNAPSHOT_KEY, JSON.stringify(snap));
+}
+
+function getLandingTab(pid) {
+  const unlocked = SERIES.filter(s => isSeriesAvailable(s.id) && !isSeriesLocked(s.id));
+  const hasIncomplete = unlocked.some(s => { const p = getPick(pid, s.id); return !p.winner || !p.games; });
+  if (hasIncomplete) return 'bracket';
+  if (scoresHaveChanged()) return 'leaderboard';
+  return 'participants';
+}
+
 function startApp() {
   updateUserDisplay();
-  switchTab(activeTab);
+  const savedTab = sessionStorage.getItem('nba-active-tab');
+  if (savedTab && RENDERERS[savedTab]) {
+    switchTab(savedTab);
+  } else {
+    const tab = getLandingTab(currentUserId);
+    showIncompleteToast = (tab === 'bracket');
+    switchTab(tab);
+  }
+  saveScoreSnapshot();
 }
 
 function updateUserDisplay() {
@@ -1082,7 +1114,11 @@ function cardView(sid, t1, t2, pid) {
 function renderBracket() {
   const el = document.getElementById('tab-bracket');
   if (!currentUserId) return;
-  el.innerHTML = `
+  const toast = showIncompleteToast
+    ? `<div class="landing-toast">📋 You have picks to complete before the series starts!</div>`
+    : '';
+  showIncompleteToast = false;
+  el.innerHTML = `${toast}
     ${renderBracketLayout('picks', currentUserId)}
     ${renderFloatingSaveBar(currentUserId)}`;
 }
@@ -1636,9 +1672,6 @@ async function beginApp() {
   await fetchPicks();
   loginBtn.disabled = false;
   loginMsg.textContent = '';
-
-  const savedTab = sessionStorage.getItem('nba-active-tab');
-  if (savedTab && RENDERERS[savedTab]) activeTab = savedTab;
 
   initLogin();
   fetchScores();
