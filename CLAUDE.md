@@ -89,5 +89,5 @@ The bracket has two parallel HTML outputs:
 - **Cache busting**: `index.html` references `app.js?v=X` and `style.css?v=X`. The `cache_bust.yml` GitHub Action replaces `X` with the short commit SHA on every push to `main` (excluding `data/scores.json` changes). Never manually edit the `?v=` values.
 - **GitHub Actions git push**: both workflows do `git pull --rebase origin main` before pushing to handle concurrent commits between the two workflows.
 - **Leaderboard total points**: styled via `.total-cell` in `style.css` — currently green (`var(--green)`).
-- **"Log out" button**: rendered in `updateUserDisplay()` as `.btn-switch-user`; clicking calls `switchUser()` which shows the login overlay.
+- **User greeting + "Log out" button**: rendered in `updateUserDisplay()` — greeting shows `Hey [name] 👋` in `.user-greeting`, logout is `.btn-switch-user`; clicking calls `switchUser()` which shows the login overlay.
 - **Removed users re-syncing**: `syncPicksToGitHub()` checks Firestore participants on every save — if the current user is not in the remote list, `switchUser()` is called immediately (logged out, write aborted). `fetchPicks()` on page load performs the same check. Local `state.participants` is also pruned to only Firestore-authorised IDs before each write, so stale localStorage cannot restore removed users.
