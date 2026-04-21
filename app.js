@@ -1416,7 +1416,7 @@ function renderLeaderboard() {
               : rank > prevRank ? `<span class="rank-down">▼</span>`
               : `<span class="rank-same">–</span>`;
             return `<tr class="${i === 0 && p.score > 0 ? 'leader-row' : ''} ${isMe ? 'my-row' : ''}">
-              <td class="rank-cell">${arrow}${medal || rank}</td>
+              <td class="rank-cell">${arrow}<span class="rank-num">${medal || rank}</span></td>
               <td class="p-name-cell">${p.name}${isMe ? ' <span class="you-badge">you</span>' : ''}</td>
               ${rs.map(s => `<td>${s > 0 ? s : '–'}</td>`).join('')}
               <td class="total-cell">${p.score}</td>
