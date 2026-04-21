@@ -973,7 +973,7 @@ function cardResults(sid, t1, t2) {
       const emoji = seriesEmoji(sid, leaderKey);
       const status = leader
         ? `<span style="color:${leader.color}">${leader.abbr} leads</span> ${Math.max(t1w,t2w)} – ${Math.min(t1w,t2w)}`
-        : `Tied ${t1w} – ${t2w}`;
+        : `Tied ${t1w} – ${t2w} 🧐`;
       footer = `<div class="card-footer footer-record">${status}${emoji ? ' ' + emoji : ''}</div>`;
     }
   }
@@ -1477,7 +1477,7 @@ function renderPickBreakdown(rows) {
           const ldr = TEAMS[leaderKey];
           resultText = `<span style="color:${ldr.color}">${ldr.abbr} leads</span> ${Math.max(t1w,t2w)} – ${Math.min(t1w,t2w)}${emoji ? ' ' + emoji : ''}`;
         } else {
-          resultText = `Tied ${t1w} – ${t2w}`;
+          resultText = `Tied ${t1w} – ${t2w} 🧐`;
         }
       } else {
         resultText = 'Pending';
