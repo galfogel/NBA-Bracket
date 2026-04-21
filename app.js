@@ -1393,7 +1393,8 @@ function renderLeaderboard() {
   el.innerHTML = `
     <div class="leaderboard-wrap">
       <h2>Leaderboard</h2>${msgHtml}
-      <div class="prize-bar">🥇 1,050 ₪ &nbsp;·&nbsp; 🥈 450 ₪ &nbsp;·&nbsp; 🥉 100 ₪ &nbsp;·&nbsp; <span class="prize-pot">Prize pool: 1,600 ₪</span></div>
+      <div class="prize-pool-row">Prize pool: 1,600 ₪</div>
+      <div class="prize-bar">🥇 1,050 ₪ &nbsp;·&nbsp; 🥈 450 ₪ &nbsp;·&nbsp; 🥉 100 ₪</div>
       <table class="leaderboard-table">
         <thead>
           <tr><th>#</th><th>Name</th>

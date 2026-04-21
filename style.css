@@ -806,8 +806,8 @@ main { padding: 24px; }
    ============================================================ */
 .leaderboard-wrap { max-width: 860px; margin: 32px auto; padding: 0 16px; }
 .leaderboard-wrap h2 { font-size: 20px; margin-bottom: 8px; }
+.prize-pool-row { font-size: 13px; font-weight: 700; color: var(--accent); margin-bottom: 4px; }
 .prize-bar { font-size: 13px; color: var(--text-dim); margin-bottom: 16px; white-space: nowrap; overflow-x: auto; }
-.prize-pot { color: var(--text); font-weight: 600; }
 
 .scoring-legend {
   color: var(--text-dim);
