@@ -830,23 +830,23 @@ function clearResultDownstream(sid) {
 function renderBracketLayout(mode, pid) {
   return `
     <div class="bracket-wrap">
-      <div class="conf-label east-label">EASTERN CONFERENCE</div>
-      <div class="conf-label west-label">WESTERN CONFERENCE</div>
+      <div class="conf-label east-label">WESTERN CONFERENCE</div>
+      <div class="conf-label west-label">EASTERN CONFERENCE</div>
       <div class="bracket">
-        <div class="half east">
-          ${bracketCol(['E1v8','E4v5','E2v7','E3v6'], 1, 'east', mode, pid)}
-          ${bracketCol(['EQ1','EQ2'],                 2, 'east', mode, pid)}
-          ${bracketCol(['ECF'],                        3, 'east', mode, pid)}
+        <div class="half west">
+          ${bracketCol(['W1v8','W4v5','W2v7','W3v6'], 1, 'west', mode, pid)}
+          ${bracketCol(['WQ1','WQ2'],                 2, 'west', mode, pid)}
+          ${bracketCol(['WCF'],                        3, 'west', mode, pid)}
         </div>
         <div class="finals-col">
           <div class="round-label">NBA Finals</div>
           ${bracketCard('FINALS', mode, pid)}
           <div class="champion-slot">${renderChampion(mode, pid)}</div>
         </div>
-        <div class="half west">
-          ${bracketCol(['WCF'],                        3, 'west', mode, pid)}
-          ${bracketCol(['WQ1','WQ2'],                 2, 'west', mode, pid)}
-          ${bracketCol(['W1v8','W4v5','W2v7','W3v6'], 1, 'west', mode, pid)}
+        <div class="half east">
+          ${bracketCol(['ECF'],                        3, 'east', mode, pid)}
+          ${bracketCol(['EQ1','EQ2'],                 2, 'east', mode, pid)}
+          ${bracketCol(['E1v8','E4v5','E2v7','E3v6'], 1, 'east', mode, pid)}
         </div>
       </div>
     </div>
