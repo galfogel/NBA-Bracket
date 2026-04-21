@@ -1155,7 +1155,7 @@ function renderBracket() {
   const el = document.getElementById('tab-bracket');
   if (!currentUserId) return;
   const toast = showIncompleteToast
-    ? `<div class="landing-toast">📋 You have picks to complete before the series starts!</div>`
+    ? `<div class="landing-toast">You have pending picks — lock them in before tip-off! ⏰</div>`
     : '';
   showIncompleteToast = false;
   el.innerHTML = `${toast}
