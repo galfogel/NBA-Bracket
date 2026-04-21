@@ -59,7 +59,7 @@ On page load: `fetchPicks()` reads Firestore → `mergeRemoteState()` folds remo
 
 `computeScore(pid)` sums base + games bonus + upset bonus across all series.
 
-**Prizes**: Buy-in is 100 ₪ per player. Rules page shows formulas (not hardcoded amounts): 1st = (Prize pool − Buy-in) × 70%, 2nd = (Prize pool − Buy-in) × 30%, 3rd = Buy-in back. Leaderboard prize bar shows actual amounts (currently 1,050 ₪ / 450 ₪ / 100 ₪, prize pool = 1,600 ₪).
+**Prizes**: Buy-in is 100 ₪ per player. Rules page shows formulas (not hardcoded amounts): 1st = (Prize pool − Buy-in) × 70%, 2nd = (Prize pool − Buy-in) × 30%, 3rd = Buy-in back. Leaderboard shows prize pool on its own row (`.prize-pool-row`, orange `var(--accent)`) then prizes on a second row (`.prize-bar`); actual amounts currently 1,050 ₪ / 450 ₪ / 100 ₪, prize pool = 1,600 ₪.
 
 **Series emoji** (`seriesEmoji(sid, leaderKey)`): shown on the results card next to the score when one team leads. Based on the leader's pre-series fan win % from `WIN_PCT` (R1 only): ≤25% → 😮, ≤50% → 🤔, ≤75% → 🙂, >75% → 😎. Exception: `W2v7` with SAS leading always returns 😭 (personal easter egg). If Portland (W7) leads at 2%, it falls through to 😮. R2+ series have no `WIN_PCT` so emoji is always empty.
 
@@ -89,5 +89,6 @@ The bracket has two parallel HTML outputs:
 - **Cache busting**: `index.html` references `app.js?v=X` and `style.css?v=X`. The `cache_bust.yml` GitHub Action replaces `X` with the short commit SHA on every push to `main` (excluding `data/scores.json` changes). Never manually edit the `?v=` values.
 - **GitHub Actions git push**: both workflows do `git pull --rebase origin main` before pushing to handle concurrent commits between the two workflows.
 - **Leaderboard total points**: styled via `.total-cell` in `style.css` — currently green (`var(--green)`).
-- **User greeting + "Log out" button**: rendered in `updateUserDisplay()` — greeting shows `Hey [name] 👋` in `.user-greeting`, logout is `.btn-switch-user`; clicking calls `switchUser()` which shows the login overlay.
+- **User greeting + "Log out" button**: rendered in `updateUserDisplay()` — greeting shows `[name] is in the building!` in `.user-greeting`, logout is `.btn-switch-user`; clicking calls `switchUser()` which shows the login overlay.
+- **Leaderboard conference titles**: `.bd-conf-title` — "Eastern Conference" / "Western Conference" headers in the pick breakdown, styled orange (`var(--accent)`).
 - **Removed users re-syncing**: `syncPicksToGitHub()` checks Firestore participants on every save — if the current user is not in the remote list, `switchUser()` is called immediately (logged out, write aborted). `fetchPicks()` on page load performs the same check. Local `state.participants` is also pruned to only Firestore-authorised IDs before each write, so stale localStorage cannot restore removed users.
