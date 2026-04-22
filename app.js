@@ -1004,7 +1004,7 @@ function cardPicks(sid, t1, t2, pid) {
     const bonus    = getUpsetBonus(sid, key, basePts);
     const push     = pct === null ? 'pot-pts-push' : '';
     const ptsBadge = bonus > 0
-      ? `<span class="pot-pts ${push}"><span class="pot-base">${basePts}</span><span class="pot-bonus"> ${bonus}</span></span>`
+      ? `<span class="pot-pts ${push}"><span class="pot-base">${basePts}</span><span class="pot-bonus">+ +${bonus}</span></span>`
       : `<span class="pot-pts ${push}"><span class="pot-base">${basePts}</span></span>`;
     return `<div class="team-row ${cls} ${editable ? 'is-clickable' : ''}"
                  data-ps="${sid}" data-pt="${key}">
@@ -1027,7 +1027,7 @@ function cardPicks(sid, t1, t2, pid) {
                         data-ps="${sid}" data-pg="${n}"
                         ${!editable ? 'disabled' : ''}>${n}</button>`;
       }).join('')}
-      <span class="games-bonus-hint">10 pts</span>
+      <span class="pot-pts games-bonus-hint"><span class="pot-bonus">+10</span></span>
     </div>` : '';
 
   const gt = getGameTime(sid);
@@ -1109,7 +1109,7 @@ function cardView(sid, t1, t2, pid) {
     const bonus    = getUpsetBonus(sid, key, basePts);
     const push     = pct === null ? 'pot-pts-push' : '';
     const ptsBadge = bonus > 0
-      ? `<span class="pot-pts ${push}"><span class="pot-base">${basePts}</span><span class="pot-bonus"> ${bonus}</span></span>`
+      ? `<span class="pot-pts ${push}"><span class="pot-base">${basePts}</span><span class="pot-bonus">+ +${bonus}</span></span>`
       : `<span class="pot-pts ${push}"><span class="pot-base">${basePts}</span></span>`;
     return `<div class="team-row no-pointer ${cls}">
       <span class="seed-num">${t.seed ?? ''}</span>
@@ -1134,7 +1134,7 @@ function cardView(sid, t1, t2, pid) {
         const gcls = sel && ag2 ? (n === ag2 ? 'games-correct' : 'games-wrong') : '';
         return `<button class="games-btn ${sel ? 'selected' : ''} ${gcls}" disabled>${n}</button>`;
       }).join('')}
-      <span class="games-bonus-hint">10 pts</span>
+      <span class="pot-pts games-bonus-hint"><span class="pot-bonus">+10</span></span>
     </div>` : '';
 
   const footer = ptsEarned
@@ -1645,11 +1645,11 @@ function renderInfo() {
             <th><span class="rnd-full">Finals</span><span class="rnd-abbr">F</span></th>
           </tr></thead>
           <tbody>
-            <tr><td>50–59%</td><td><span class="pot-base">10</span> <span class="pot-bonus">1</span></td><td><span class="pot-base">20</span> <span class="pot-bonus">2</span></td><td><span class="pot-base">40</span> <span class="pot-bonus">4</span></td><td><span class="pot-base">80</span> <span class="pot-bonus">8</span></td></tr>
-            <tr><td>60–69%</td><td><span class="pot-base">10</span> <span class="pot-bonus">2</span></td><td><span class="pot-base">20</span> <span class="pot-bonus">4</span></td><td><span class="pot-base">40</span> <span class="pot-bonus">8</span></td><td><span class="pot-base">80</span> <span class="pot-bonus">16</span></td></tr>
-            <tr><td>70–79%</td><td><span class="pot-base">10</span> <span class="pot-bonus">4</span></td><td><span class="pot-base">20</span> <span class="pot-bonus">8</span></td><td><span class="pot-base">40</span> <span class="pot-bonus">16</span></td><td><span class="pot-base">80</span> <span class="pot-bonus">32</span></td></tr>
-            <tr><td>80–89%</td><td><span class="pot-base">10</span> <span class="pot-bonus">6</span></td><td><span class="pot-base">20</span> <span class="pot-bonus">12</span></td><td><span class="pot-base">40</span> <span class="pot-bonus">24</span></td><td><span class="pot-base">80</span> <span class="pot-bonus">48</span></td></tr>
-            <tr><td>90–99%</td><td><span class="pot-base">10</span> <span class="pot-bonus">8</span></td><td><span class="pot-base">20</span> <span class="pot-bonus">16</span></td><td><span class="pot-base">40</span> <span class="pot-bonus">32</span></td><td><span class="pot-base">80</span> <span class="pot-bonus">64</span></td></tr>
+            <tr><td>50–59%</td><td><span class="pot-base">10</span> <span class="pot-bonus">+1</span></td><td><span class="pot-base">20</span> <span class="pot-bonus">+2</span></td><td><span class="pot-base">40</span> <span class="pot-bonus">+4</span></td><td><span class="pot-base">80</span> <span class="pot-bonus">+8</span></td></tr>
+            <tr><td>60–69%</td><td><span class="pot-base">10</span> <span class="pot-bonus">+2</span></td><td><span class="pot-base">20</span> <span class="pot-bonus">+4</span></td><td><span class="pot-base">40</span> <span class="pot-bonus">+8</span></td><td><span class="pot-base">80</span> <span class="pot-bonus">+16</span></td></tr>
+            <tr><td>70–79%</td><td><span class="pot-base">10</span> <span class="pot-bonus">+4</span></td><td><span class="pot-base">20</span> <span class="pot-bonus">+8</span></td><td><span class="pot-base">40</span> <span class="pot-bonus">+16</span></td><td><span class="pot-base">80</span> <span class="pot-bonus">+32</span></td></tr>
+            <tr><td>80–89%</td><td><span class="pot-base">10</span> <span class="pot-bonus">+6</span></td><td><span class="pot-base">20</span> <span class="pot-bonus">+12</span></td><td><span class="pot-base">40</span> <span class="pot-bonus">+24</span></td><td><span class="pot-base">80</span> <span class="pot-bonus">+48</span></td></tr>
+            <tr><td>90–100%</td><td><span class="pot-base">10</span> <span class="pot-bonus">+8</span></td><td><span class="pot-base">20</span> <span class="pot-bonus">+16</span></td><td><span class="pot-base">40</span> <span class="pot-bonus">+32</span></td><td><span class="pot-base">80</span> <span class="pot-bonus">+64</span></td></tr>
           </tbody>
         </table>
       </section>

@@ -875,7 +875,7 @@ main { padding: 24px; }
 .bd-legend-dot.yellow { background: #eab308; }
 .bd-legend-dot.red    { background: #ef4444; }
 
-.games-bonus-hint { font-size: 11px; color: var(--text-dim); margin-left: 4px; white-space: nowrap; }
+.games-bonus-hint { margin-left: 4px; }
 
 .breakdown-round { margin-bottom: 28px; }
 .breakdown-round .bd-conf-title { font-size: 12px; font-weight: 700; color: var(--accent) !important; text-transform: uppercase; letter-spacing: 0.06em; margin: 0 0 12px; }
