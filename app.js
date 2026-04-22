@@ -1004,7 +1004,7 @@ function cardPicks(sid, t1, t2, pid) {
     const bonus    = getUpsetBonus(sid, key, basePts);
     const push     = pct === null ? 'pot-pts-push' : '';
     const ptsBadge = bonus > 0
-      ? `<span class="pot-pts ${push}"><span class="pot-base">${basePts}</span><span class="pot-bonus"> +${bonus}</span></span>`
+      ? `<span class="pot-pts ${push}"><span class="pot-base">${basePts}</span><span class="pot-bonus"> ${bonus}</span></span>`
       : `<span class="pot-pts ${push}"><span class="pot-base">${basePts}</span></span>`;
     return `<div class="team-row ${cls} ${editable ? 'is-clickable' : ''}"
                  data-ps="${sid}" data-pt="${key}">
@@ -1027,7 +1027,7 @@ function cardPicks(sid, t1, t2, pid) {
                         data-ps="${sid}" data-pg="${n}"
                         ${!editable ? 'disabled' : ''}>${n}</button>`;
       }).join('')}
-      <span class="games-bonus-hint">+10 pts</span>
+      <span class="games-bonus-hint">10 pts</span>
     </div>` : '';
 
   const gt = getGameTime(sid);
@@ -1109,7 +1109,7 @@ function cardView(sid, t1, t2, pid) {
     const bonus    = getUpsetBonus(sid, key, basePts);
     const push     = pct === null ? 'pot-pts-push' : '';
     const ptsBadge = bonus > 0
-      ? `<span class="pot-pts ${push}"><span class="pot-base">${basePts}</span><span class="pot-bonus"> +${bonus}</span></span>`
+      ? `<span class="pot-pts ${push}"><span class="pot-base">${basePts}</span><span class="pot-bonus"> ${bonus}</span></span>`
       : `<span class="pot-pts ${push}"><span class="pot-base">${basePts}</span></span>`;
     return `<div class="team-row no-pointer ${cls}">
       <span class="seed-num">${t.seed ?? ''}</span>
@@ -1134,7 +1134,7 @@ function cardView(sid, t1, t2, pid) {
         const gcls = sel && ag2 ? (n === ag2 ? 'games-correct' : 'games-wrong') : '';
         return `<button class="games-btn ${sel ? 'selected' : ''} ${gcls}" disabled>${n}</button>`;
       }).join('')}
-      <span class="games-bonus-hint">+10 pts</span>
+      <span class="games-bonus-hint">10 pts</span>
     </div>` : '';
 
   const footer = ptsEarned
@@ -1457,6 +1457,11 @@ function renderPickBreakdown(rows) {
     <h3>Pick Details</h3>
     <select id="bd-round-filter" onchange="handleBdRoundFilter(this)">${roundOptions}</select>
     <div class="bd-user-tiles">${userTiles}${clearBtn}</div>
+    <div class="bd-legend">
+      <span class="bd-legend-item"><span class="bd-legend-dot green"></span> Winner &amp; Games</span>
+      <span class="bd-legend-item"><span class="bd-legend-dot yellow"></span> Winner Only</span>
+      <span class="bd-legend-item"><span class="bd-legend-dot red"></span> Eliminated</span>
+    </div>
   </div>`;
 
   const series = SERIES.filter(s => s.r === bdRoundFilter && isSeriesAvailable(s.id));
@@ -1514,8 +1519,9 @@ function renderPickBreakdown(rows) {
           const teamCls = ok ? 'bd-team-ok' : bad ? 'bd-team-bad' : '';
           const gamesCls = gok ? 'bd-games-ok' : gbad ? 'bd-games-bad' : '';
           const ptsEarned = seriesPoints(p.id, def.id);
-          const gamesPlayed = rec ? rec.t1Wins + rec.t2Wins : 0;
-          const gamesImpossible = !actual && pick.games && gamesPlayed >= pick.games;
+          const pickedIsT1 = pick.winner === t1k;
+          const opponentWins = !actual && pick.winner ? (pickedIsT1 ? (rec ? rec.t2Wins : 0) : (rec ? rec.t1Wins : 0)) : 0;
+          const gamesImpossible = !actual && pick.games && pick.games < opponentWins + 4;
           let rowBg = '';
           if (pick.winner) {
             if (bad) rowBg = ' bd-row-red';
@@ -1579,12 +1585,6 @@ function renderPickBreakdown(rows) {
     }
   }
 
-  html += `<div class="bd-legend">
-    <span class="bd-legend-item"><span class="bd-legend-dot green"></span> Winner + games</span>
-    <span class="bd-legend-item"><span class="bd-legend-dot yellow"></span> Winner only</span>
-    <span class="bd-legend-item"><span class="bd-legend-dot red"></span> No points</span>
-  </div>`;
-
   return html + '</div>';
 }
 
@@ -1626,8 +1626,8 @@ function renderInfo() {
           <thead><tr><th>Round</th><th>Points</th></tr></thead>
           <tbody>
             ${pointsRows}
-            <tr><td>Correct series length</td><td>+${GAMES_BONUS} pts</td></tr>
-            <tr class="upset-row"><td>Upset bonus <span class="info-note">(picking the underdog correctly)</span></td><td>see table below</td></tr>
+            <tr><td>Correct number of games</td><td>+${GAMES_BONUS} pts</td></tr>
+            <tr class="upset-row"><td><span style="color:var(--green)">Upset Bonus</span> <span class="info-note">(picking the underdog correctly)</span></td><td><span style="color:var(--green)">see table below</span></td></tr>
           </tbody>
         </table>
         <p class="info-detail"><strong>Tiebreaker:</strong> If scores are equal, the player whose predicted Game 1 NBA Finals score margin is closest to the actual margin wins the higher place. Equal distance = shared place.</p>
@@ -1645,11 +1645,11 @@ function renderInfo() {
             <th><span class="rnd-full">Finals</span><span class="rnd-abbr">F</span></th>
           </tr></thead>
           <tbody>
-            <tr><td>50–59%</td><td><span class="pot-base">10</span> <span class="pot-bonus">+1</span></td><td><span class="pot-base">20</span> <span class="pot-bonus">+2</span></td><td><span class="pot-base">40</span> <span class="pot-bonus">+4</span></td><td><span class="pot-base">80</span> <span class="pot-bonus">+8</span></td></tr>
-            <tr><td>60–69%</td><td><span class="pot-base">10</span> <span class="pot-bonus">+2</span></td><td><span class="pot-base">20</span> <span class="pot-bonus">+4</span></td><td><span class="pot-base">40</span> <span class="pot-bonus">+8</span></td><td><span class="pot-base">80</span> <span class="pot-bonus">+16</span></td></tr>
-            <tr><td>70–79%</td><td><span class="pot-base">10</span> <span class="pot-bonus">+4</span></td><td><span class="pot-base">20</span> <span class="pot-bonus">+8</span></td><td><span class="pot-base">40</span> <span class="pot-bonus">+16</span></td><td><span class="pot-base">80</span> <span class="pot-bonus">+32</span></td></tr>
-            <tr><td>80–89%</td><td><span class="pot-base">10</span> <span class="pot-bonus">+6</span></td><td><span class="pot-base">20</span> <span class="pot-bonus">+12</span></td><td><span class="pot-base">40</span> <span class="pot-bonus">+24</span></td><td><span class="pot-base">80</span> <span class="pot-bonus">+48</span></td></tr>
-            <tr><td>90–99%</td><td><span class="pot-base">10</span> <span class="pot-bonus">+8</span></td><td><span class="pot-base">20</span> <span class="pot-bonus">+16</span></td><td><span class="pot-base">40</span> <span class="pot-bonus">+32</span></td><td><span class="pot-base">80</span> <span class="pot-bonus">+64</span></td></tr>
+            <tr><td>50–59%</td><td><span class="pot-base">10</span> <span class="pot-bonus">1</span></td><td><span class="pot-base">20</span> <span class="pot-bonus">2</span></td><td><span class="pot-base">40</span> <span class="pot-bonus">4</span></td><td><span class="pot-base">80</span> <span class="pot-bonus">8</span></td></tr>
+            <tr><td>60–69%</td><td><span class="pot-base">10</span> <span class="pot-bonus">2</span></td><td><span class="pot-base">20</span> <span class="pot-bonus">4</span></td><td><span class="pot-base">40</span> <span class="pot-bonus">8</span></td><td><span class="pot-base">80</span> <span class="pot-bonus">16</span></td></tr>
+            <tr><td>70–79%</td><td><span class="pot-base">10</span> <span class="pot-bonus">4</span></td><td><span class="pot-base">20</span> <span class="pot-bonus">8</span></td><td><span class="pot-base">40</span> <span class="pot-bonus">16</span></td><td><span class="pot-base">80</span> <span class="pot-bonus">32</span></td></tr>
+            <tr><td>80–89%</td><td><span class="pot-base">10</span> <span class="pot-bonus">6</span></td><td><span class="pot-base">20</span> <span class="pot-bonus">12</span></td><td><span class="pot-base">40</span> <span class="pot-bonus">24</span></td><td><span class="pot-base">80</span> <span class="pot-bonus">48</span></td></tr>
+            <tr><td>90–99%</td><td><span class="pot-base">10</span> <span class="pot-bonus">8</span></td><td><span class="pot-base">20</span> <span class="pot-bonus">16</span></td><td><span class="pot-base">40</span> <span class="pot-bonus">32</span></td><td><span class="pot-base">80</span> <span class="pot-bonus">64</span></td></tr>
           </tbody>
         </table>
       </section>
