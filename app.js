@@ -1004,7 +1004,7 @@ function cardPicks(sid, t1, t2, pid) {
     const bonus    = getUpsetBonus(sid, key, basePts);
     const push     = pct === null ? 'pot-pts-push' : '';
     const ptsBadge = bonus > 0
-      ? `<span class="pot-pts ${push}"><span class="pot-base">${basePts}</span><span class="pot-bonus">+ +${bonus}</span></span>`
+      ? `<span class="pot-pts ${push}"><span class="pot-base">${basePts}</span><span class="pot-bonus"> +${bonus}</span></span>`
       : `<span class="pot-pts ${push}"><span class="pot-base">${basePts}</span></span>`;
     return `<div class="team-row ${cls} ${editable ? 'is-clickable' : ''}"
                  data-ps="${sid}" data-pt="${key}">
@@ -1027,7 +1027,7 @@ function cardPicks(sid, t1, t2, pid) {
                         data-ps="${sid}" data-pg="${n}"
                         ${!editable ? 'disabled' : ''}>${n}</button>`;
       }).join('')}
-      <span class="pot-pts games-bonus-hint"><span class="pot-bonus">+10</span></span>
+      <span class="pot-pts games-bonus-hint"><span class="pot-base">+10</span></span>
     </div>` : '';
 
   const gt = getGameTime(sid);
@@ -1109,7 +1109,7 @@ function cardView(sid, t1, t2, pid) {
     const bonus    = getUpsetBonus(sid, key, basePts);
     const push     = pct === null ? 'pot-pts-push' : '';
     const ptsBadge = bonus > 0
-      ? `<span class="pot-pts ${push}"><span class="pot-base">${basePts}</span><span class="pot-bonus">+ +${bonus}</span></span>`
+      ? `<span class="pot-pts ${push}"><span class="pot-base">${basePts}</span><span class="pot-bonus"> +${bonus}</span></span>`
       : `<span class="pot-pts ${push}"><span class="pot-base">${basePts}</span></span>`;
     return `<div class="team-row no-pointer ${cls}">
       <span class="seed-num">${t.seed ?? ''}</span>
@@ -1134,7 +1134,7 @@ function cardView(sid, t1, t2, pid) {
         const gcls = sel && ag2 ? (n === ag2 ? 'games-correct' : 'games-wrong') : '';
         return `<button class="games-btn ${sel ? 'selected' : ''} ${gcls}" disabled>${n}</button>`;
       }).join('')}
-      <span class="pot-pts games-bonus-hint"><span class="pot-bonus">+10</span></span>
+      <span class="pot-pts games-bonus-hint"><span class="pot-base">+10</span></span>
     </div>` : '';
 
   const footer = ptsEarned
