@@ -1020,14 +1020,16 @@ function cardPicks(sid, t1, t2, pid) {
   const gamesRow = pick.winner ? `
     <div class="games-selector">
       <span class="games-label">Games:</span>
-      ${[4, 5, 6, 7].map(n => {
-        const sel = pick.games === n;
-        const gcls = sel && ag ? (n === ag ? 'games-correct' : 'games-wrong') : '';
-        return `<button class="games-btn ${sel ? 'selected' : ''} ${gcls}"
-                        data-ps="${sid}" data-pg="${n}"
-                        ${!editable ? 'disabled' : ''}>${n}</button>`;
-      }).join('')}
-      <span class="pot-pts games-bonus-hint"><span class="pot-base">+10</span></span>
+      <span class="games-bonus-hint">+10</span>
+      <div class="games-btns">
+        ${[4, 5, 6, 7].map(n => {
+          const sel = pick.games === n;
+          const gcls = sel && ag ? (n === ag ? 'games-correct' : 'games-wrong') : '';
+          return `<button class="games-btn ${sel ? 'selected' : ''} ${gcls}"
+                          data-ps="${sid}" data-pg="${n}"
+                          ${!editable ? 'disabled' : ''}>${n}</button>`;
+        }).join('')}
+      </div>
     </div>` : '';
 
   const gt = getGameTime(sid);
@@ -1129,12 +1131,14 @@ function cardView(sid, t1, t2, pid) {
   const gamesRow = pick.winner ? `
     <div class="games-selector">
       <span class="games-label">Games:</span>
-      ${[4, 5, 6, 7].map(n => {
-        const sel = pick.games === n;
-        const gcls = sel && ag2 ? (n === ag2 ? 'games-correct' : 'games-wrong') : '';
-        return `<button class="games-btn ${sel ? 'selected' : ''} ${gcls}" disabled>${n}</button>`;
-      }).join('')}
-      <span class="pot-pts games-bonus-hint"><span class="pot-base">+10</span></span>
+      <span class="games-bonus-hint">+10</span>
+      <div class="games-btns">
+        ${[4, 5, 6, 7].map(n => {
+          const sel = pick.games === n;
+          const gcls = sel && ag2 ? (n === ag2 ? 'games-correct' : 'games-wrong') : '';
+          return `<button class="games-btn ${sel ? 'selected' : ''} ${gcls}" disabled>${n}</button>`;
+        }).join('')}
+      </div>
     </div>` : '';
 
   const footer = ptsEarned
@@ -1458,6 +1462,7 @@ function renderPickBreakdown(rows) {
     <select id="bd-round-filter" onchange="handleBdRoundFilter(this)">${roundOptions}</select>
     <div class="bd-user-tiles">${userTiles}${clearBtn}</div>
     <div class="bd-legend">
+      <span class="bd-legend-title">Pick Status:</span>
       <span class="bd-legend-item"><span class="bd-legend-dot green"></span> Winner &amp; Games</span>
       <span class="bd-legend-item"><span class="bd-legend-dot yellow"></span> Winner Only</span>
       <span class="bd-legend-item"><span class="bd-legend-dot red"></span> Eliminated</span>
@@ -1718,7 +1723,7 @@ async function beginApp() {
   document.addEventListener('touchend', e => {
     const dx = e.changedTouches[0].clientX - touchStartX;
     const dy = e.changedTouches[0].clientY - touchStartY;
-    if (Math.abs(dx) < 60 || Math.abs(dx) < Math.abs(dy) * 1.5) return;
+    if (Math.abs(dx) < 80 || Math.abs(dx) < Math.abs(dy) * 2.5) return;
     const idx = TAB_ORDER.indexOf(activeTab);
     if (dx < 0 && idx < TAB_ORDER.length - 1) switchTab(TAB_ORDER[idx + 1]);
     if (dx > 0 && idx > 0) switchTab(TAB_ORDER[idx - 1]);
