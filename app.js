@@ -974,7 +974,7 @@ function cardResults(sid, t1, t2) {
       const emoji = seriesEmoji(sid, leaderKey);
       const status = leader
         ? `<span style="color:${leader.color}">${leader.abbr} leads</span> ${Math.max(t1w,t2w)} – ${Math.min(t1w,t2w)}`
-        : `Tied ${t1w} – ${t2w} 🧐`;
+        : `Tied ${t1w} – ${t2w}`;
       footer = `<div class="card-footer footer-record">${status}${emoji ? ' ' + emoji : ''}</div>`;
     }
   }
@@ -1027,6 +1027,7 @@ function cardPicks(sid, t1, t2, pid) {
                         data-ps="${sid}" data-pg="${n}"
                         ${!editable ? 'disabled' : ''}>${n}</button>`;
       }).join('')}
+      <span class="games-bonus-hint">+10 pts</span>
     </div>` : '';
 
   const gt = getGameTime(sid);
@@ -1133,6 +1134,7 @@ function cardView(sid, t1, t2, pid) {
         const gcls = sel && ag2 ? (n === ag2 ? 'games-correct' : 'games-wrong') : '';
         return `<button class="games-btn ${sel ? 'selected' : ''} ${gcls}" disabled>${n}</button>`;
       }).join('')}
+      <span class="games-bonus-hint">+10 pts</span>
     </div>` : '';
 
   const footer = ptsEarned
@@ -1376,6 +1378,10 @@ function toggleBdUser(id) {
   else bdUserFilter.add(id);
   renderLeaderboard();
 }
+function clearBdUser() {
+  bdUserFilter.clear();
+  renderLeaderboard();
+}
 
 function renderLeaderboard() {
   const el = document.getElementById('tab-leaderboard');
@@ -1393,7 +1399,6 @@ function renderLeaderboard() {
   el.innerHTML = `
     <div class="leaderboard-wrap">
       <h2>Leaderboard</h2>${msgHtml}
-      <div class="prize-pool-row">Prize pool: 1,600 ₪</div>
       <div class="prize-bar">🥇 1,050 ₪ &nbsp;·&nbsp; 🥈 450 ₪ &nbsp;·&nbsp; 🥉 100 ₪</div>
       <table class="leaderboard-table">
         <thead>
@@ -1444,12 +1449,14 @@ function renderPickBreakdown(rows) {
     const active = bdUserFilter.has(p.id);
     return `<button class="bd-user-tile${active ? ' active' : ''}" onclick="toggleBdUser('${p.id}')">${p.name}</button>`;
   }).join('');
+  const clearBtn = bdUserFilter.size > 0
+    ? `<button class="bd-clear-filter" onclick="clearBdUser()">✕ Clear</button>` : '';
 
   let html = `<div class="pick-breakdown">
   <div class="bd-filter-bar">
     <h3>Pick Details</h3>
     <select id="bd-round-filter" onchange="handleBdRoundFilter(this)">${roundOptions}</select>
-    <div class="bd-user-tiles">${userTiles}</div>
+    <div class="bd-user-tiles">${userTiles}${clearBtn}</div>
   </div>`;
 
   const series = SERIES.filter(s => s.r === bdRoundFilter && isSeriesAvailable(s.id));
@@ -1507,7 +1514,15 @@ function renderPickBreakdown(rows) {
           const teamCls = ok ? 'bd-team-ok' : bad ? 'bd-team-bad' : '';
           const gamesCls = gok ? 'bd-games-ok' : gbad ? 'bd-games-bad' : '';
           const ptsEarned = seriesPoints(p.id, def.id);
-          return `<div class="bd-pick-row${isMe ? ' my-row' : ''}">
+          const gamesPlayed = rec ? rec.t1Wins + rec.t2Wins : 0;
+          const gamesImpossible = !actual && pick.games && gamesPlayed >= pick.games;
+          let rowBg = '';
+          if (pick.winner) {
+            if (bad) rowBg = ' bd-row-red';
+            else if (gamesImpossible || (ok && gbad)) rowBg = ' bd-row-yellow';
+            else rowBg = ' bd-row-green';
+          }
+          return `<div class="bd-pick-row${isMe ? ' my-row' : ''}${rowBg}">
             <span class="bd-pick-name">${p.name}</span>
             <span class="bd-pick-team ${teamCls}">
               ${pt ? `<img src="${pt.logo}" alt="${pt.abbr}" /><span class="bd-pick-abbr" style="color:${pt.color}">${pt.abbr}</span>` : '<span class="bd-pick-abbr">?</span>'}
@@ -1563,6 +1578,12 @@ function renderPickBreakdown(rows) {
       html += '</div></div></div></div>';
     }
   }
+
+  html += `<div class="bd-legend">
+    <span class="bd-legend-item"><span class="bd-legend-dot green"></span> Winner + games</span>
+    <span class="bd-legend-item"><span class="bd-legend-dot yellow"></span> Winner only</span>
+    <span class="bd-legend-item"><span class="bd-legend-dot red"></span> No points</span>
+  </div>`;
 
   return html + '</div>';
 }
@@ -1665,6 +1686,7 @@ const RENDERERS = {
 let activeTab = 'bracket';
 
 function switchTab(tab) {
+  window.scrollTo(0, 0);
   activeTab = tab;
   sessionStorage.setItem('nba-active-tab', tab);
   document.querySelectorAll('.tab-btn').forEach(b =>
@@ -1685,6 +1707,22 @@ function switchTab(tab) {
 async function beginApp() {
   document.querySelectorAll('.tab-btn').forEach(btn =>
     btn.addEventListener('click', () => switchTab(btn.dataset.tab)));
+
+  // Swipe navigation
+  const TAB_ORDER = ['bracket', 'picks', 'participants', 'leaderboard', 'info'];
+  let touchStartX = 0, touchStartY = 0;
+  document.addEventListener('touchstart', e => {
+    touchStartX = e.touches[0].clientX;
+    touchStartY = e.touches[0].clientY;
+  }, { passive: true });
+  document.addEventListener('touchend', e => {
+    const dx = e.changedTouches[0].clientX - touchStartX;
+    const dy = e.changedTouches[0].clientY - touchStartY;
+    if (Math.abs(dx) < 60 || Math.abs(dx) < Math.abs(dy) * 1.5) return;
+    const idx = TAB_ORDER.indexOf(activeTab);
+    if (dx < 0 && idx < TAB_ORDER.length - 1) switchTab(TAB_ORDER[idx + 1]);
+    if (dx > 0 && idx > 0) switchTab(TAB_ORDER[idx - 1]);
+  }, { passive: true });
 
   document.getElementById('login-btn').addEventListener('click', attemptLogin);
   document.querySelectorAll('.login-tab').forEach(btn =>
