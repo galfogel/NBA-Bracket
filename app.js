@@ -1020,7 +1020,6 @@ function cardPicks(sid, t1, t2, pid) {
   const gamesRow = pick.winner ? `
     <div class="games-selector">
       <span class="games-label">Games:</span>
-      <span class="games-bonus-hint">+10</span>
       <div class="games-btns">
         ${[4, 5, 6, 7].map(n => {
           const sel = pick.games === n;
@@ -1030,6 +1029,7 @@ function cardPicks(sid, t1, t2, pid) {
                           ${!editable ? 'disabled' : ''}>${n}</button>`;
         }).join('')}
       </div>
+      <span class="games-bonus-hint">+10</span>
     </div>` : '';
 
   const gt = getGameTime(sid);
@@ -1131,7 +1131,6 @@ function cardView(sid, t1, t2, pid) {
   const gamesRow = pick.winner ? `
     <div class="games-selector">
       <span class="games-label">Games:</span>
-      <span class="games-bonus-hint">+10</span>
       <div class="games-btns">
         ${[4, 5, 6, 7].map(n => {
           const sel = pick.games === n;
@@ -1139,6 +1138,7 @@ function cardView(sid, t1, t2, pid) {
           return `<button class="games-btn ${sel ? 'selected' : ''} ${gcls}" disabled>${n}</button>`;
         }).join('')}
       </div>
+      <span class="games-bonus-hint">+10</span>
     </div>` : '';
 
   const footer = ptsEarned
