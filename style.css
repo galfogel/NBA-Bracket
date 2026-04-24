@@ -549,6 +549,8 @@ main { padding: 24px; max-width: 1400px; margin: 0 auto; box-sizing: border-box;
 .bracket-list--single .team-name         { font-size: 14px; }
 .bracket-list--single .seed-num          { font-size: 14px; }
 .bracket-list--single .pot-pts           { font-size: 14px; }
+.bracket-list--single .pot-base          { font-size: 14px; }
+.bracket-list--single .pot-bonus         { font-size: 14px; }
 .bracket-list--single .games-bonus-hint  { font-size: 14px; }
 .bracket-list--single .fan-pct           { display: inline; font-size: 14px; color: var(--text); }
 .bracket-list--single .win-mark          { font-size: 17px; }
@@ -1349,7 +1351,9 @@ main { padding: 24px; max-width: 1400px; margin: 0 auto; box-sizing: border-box;
   .info-table td { padding: 5px 6px; white-space: normal; }
   .info-team { font-size: 10px; gap: 3px; }
   .info-team-logo { width: 14px; height: 14px; }
-  .pot-base, .pot-bonus, .games-bonus-hint, .bracket-list--single .fan-pct { font-size: 9px; }
+  .pot-base, .pot-bonus, .games-bonus-hint,
+  .bracket-list--single .pot-base, .bracket-list--single .pot-bonus,
+  .bracket-list--single .fan-pct { font-size: 9px; }
 }
 
 /* ── Mobile (≤ 600px) ─────────────────────────────────────── */
@@ -1540,6 +1544,8 @@ body.is-test-user .bracket-list--single .team-name   { font-size: 14px; }
 body.is-test-user .bracket-list--single .seed-num    { font-size: 12px; }
 body.is-test-user .bracket-list--single .fan-pct     { font-size: 12px; }
 body.is-test-user .bracket-list--single .pot-pts          { font-size: 12px; }
+body.is-test-user .bracket-list--single .pot-base         { font-size: 12px; }
+body.is-test-user .bracket-list--single .pot-bonus        { font-size: 12px; }
 body.is-test-user .bracket-list--single .games-bonus-hint { font-size: 12px; }
 body.is-test-user .bracket-list--single .win-mark    { font-size: 15px; }
 
@@ -1577,6 +1583,8 @@ body.is-test-user .info-detail     { font-size: 13px; }
   body.is-test-user .bracket-list--single .seed-num  { font-size: 14px; }
   body.is-test-user .bracket-list--single .fan-pct   { font-size: 13px; }
   body.is-test-user .bracket-list--single .pot-pts          { font-size: 13px; }
+  body.is-test-user .bracket-list--single .pot-base         { font-size: 13px; }
+  body.is-test-user .bracket-list--single .pot-bonus        { font-size: 13px; }
   body.is-test-user .bracket-list--single .games-bonus-hint { font-size: 13px; }
   body.is-test-user .bracket-list--single .games-btn { font-size: 16px; padding: 7px 10px; }
   body.is-test-user .bracket-list--single .card-footer { font-size: 13px; }
