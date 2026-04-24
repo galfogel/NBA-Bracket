@@ -1675,9 +1675,9 @@ function renderInfo() {
         <table class="info-table">
           <thead><tr><th>Place</th><th>Prize</th></tr></thead>
           <tbody>
-            <tr><td>🥇 1st place</td><td>(Prize pool − Buy-in) × 70%</td></tr>
-            <tr><td>🥈 2nd place</td><td>(Prize pool − Buy-in) × 30%</td></tr>
-            <tr><td>🥉 3rd place</td><td>Buy-in back</td></tr>
+            <tr><td class="prize-place">🥇 1st place</td><td>(Prize pool − Buy-in) × 70%</td></tr>
+            <tr><td class="prize-place">🥈 2nd place</td><td>(Prize pool − Buy-in) × 30%</td></tr>
+            <tr><td class="prize-place">🥉 3rd place</td><td>Buy-in back</td></tr>
           </tbody>
         </table>
       </section>

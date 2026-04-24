@@ -512,6 +512,7 @@ main { padding: 24px; box-sizing: border-box; width: 100%; }
 .info-section  { overflow-x: visible; }
 .info-table th { white-space: normal; }
 .info-table td { white-space: normal; }
+.prize-place   { white-space: nowrap; }
 
 
 .blist-conf {
