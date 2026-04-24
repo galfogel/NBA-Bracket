@@ -278,7 +278,7 @@ main { padding: 24px; box-sizing: border-box; width: 100%; }
 /* ---- Conference half ---- */
 .half {
   display: flex;
-  flex: 1;
+  flex: 3;
   min-width: 0;
   height: 100%;               /* inherit bracket height so columns can stretch */
 }
@@ -329,8 +329,8 @@ main { padding: 24px; box-sizing: border-box; width: 100%; }
   display: grid;
   grid-template-rows: 1fr auto 1fr;
   justify-items: center;
-  width: calc(var(--card-w) + 32px);
-  flex-shrink: 0;
+  flex: 1;
+  min-width: 0;
   padding: 0 8px;
 }
 
@@ -491,7 +491,7 @@ main { padding: 24px; box-sizing: border-box; width: 100%; }
 }
 
 .round-labels {
-  flex: 1;
+  flex: 3;
   display: flex;
   justify-content: space-around;
   font-size: 10px;
@@ -499,7 +499,7 @@ main { padding: 24px; box-sizing: border-box; width: 100%; }
 }
 
 .round-labels-spacer {
-  width: calc(var(--card-w) + 32px);
+  flex: 1;
   flex-shrink: 0;
 }
 
