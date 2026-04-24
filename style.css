@@ -15,8 +15,8 @@
   --green: #22c55e;
   --red: #ef4444;
   --radius: 8px;
-  /* 7 cols × card-w + 80px spacing + 48px main padding = 100vw → card-w = (100vw - 128px) / 7 */
-  --card-w: min(calc((100vw - 128px) / 7), 200px);
+  /* 7 cols × card-w + 80px spacing + 48px main padding = viewport (capped at 1400px) */
+  --card-w: min(calc((min(100vw, 1400px) - 128px) / 7), 200px);
   --bracket-h: 580px;
 }
 
@@ -222,7 +222,7 @@ nav {
 /* ============================================================
    TAB CONTENT
    ============================================================ */
-main { padding: 24px; }
+main { padding: 24px; max-width: 1400px; margin: 0 auto; box-sizing: border-box; width: 100%; }
 
 .tab-content { display: none; }
 .tab-content.active { display: block; }
@@ -1308,6 +1308,9 @@ main { padding: 24px; }
   main { padding: 16px; }
   .fan-pct { display: none; }
   .pot-pts { margin-left: auto; }
+  /* Compact header tabs to prevent overflow at tablet widths */
+  .tab-btn { padding: 6px 10px; font-size: 14px; }
+  header { gap: 16px; padding: 0 16px; }
 }
 
 /* ── Landscape phone (short viewport) ────────────────────── */
@@ -1397,7 +1400,7 @@ main { padding: 24px; }
   }
 
   /* ── Main content ── */
-  main { padding: 8px; }
+  main { padding: 8px 12px; }
 
   /* ── Bracket: hide diagram, show list ── */
   .bracket-wrap { display: none; }
