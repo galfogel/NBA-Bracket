@@ -43,7 +43,7 @@ const SERIES = [
 ];
 
 const SERIES_MAP   = Object.fromEntries(SERIES.map(s => [s.id, s]));
-const ROUND_NAMES  = ['', 'First Round', 'Conference Semifinals', 'Conference Finals', 'NBA Finals'];
+const ROUND_NAMES  = ['', 'First Round', 'Conf. Semifinals', 'Conf. Finals', 'NBA Finals'];
 const ROUND_POINTS = [0, 10, 20, 40, 80];
 const GAMES_BONUS  = 10; // bonus point for predicting correct game count
 
@@ -863,11 +863,11 @@ function renderBracketList(mode, pid) {
         <div class="blist-cards">${r1ids.map(id => bracketCard(id, mode, pid)).join('')}</div>
       </div>
       <div class="blist-round">
-        <div class="blist-round-title">Conference Semifinals</div>
+        <div class="blist-round-title">Conf. Semifinals</div>
         <div class="blist-cards">${r2ids.map(id => bracketCard(id, mode, pid)).join('')}</div>
       </div>
       <div class="blist-round">
-        <div class="blist-round-title">Conference Finals</div>
+        <div class="blist-round-title">Conf. Finals</div>
         <div class="blist-cards">${bracketCard(r3id, mode, pid)}</div>
       </div>
     </div>`;
@@ -885,7 +885,7 @@ function renderBracketList(mode, pid) {
 }
 
 function bracketCol(ids, round, side, mode, pid) {
-  const label = round === 1 ? 'First Round' : round === 2 ? 'Conference Semifinals' : 'Conference Finals';
+  const label = round === 1 ? 'First Round' : round === 2 ? 'Conf. Semifinals' : 'Conf. Finals';
   return `
     <div class="bracket-col r${round} ${side}">
       <div class="round-label">${label}</div>
@@ -1407,8 +1407,8 @@ function renderLeaderboard() {
         <thead>
           <tr><th>#</th><th>Name</th>
             <th><span class="rnd-full">First Round</span><span class="rnd-abbr">R1</span></th>
-            <th><span class="rnd-full">Conference Semifinals</span><span class="rnd-abbr">CSF</span></th>
-            <th><span class="rnd-full">Conference Finals</span><span class="rnd-abbr">CF</span></th>
+            <th><span class="rnd-full">Conf. Semifinals</span><span class="rnd-abbr">CSF</span></th>
+            <th><span class="rnd-full">Conf. Finals</span><span class="rnd-abbr">CF</span></th>
             <th><span class="rnd-full">Finals</span><span class="rnd-abbr">F</span></th>
             <th><span class="rnd-full">Total</span><span class="rnd-abbr">TOT</span></th>
           </tr>
@@ -1644,8 +1644,8 @@ function renderInfo() {
         <table class="info-table">
           <thead><tr><th>Fav% range</th>
             <th><span class="rnd-full">First Round</span><span class="rnd-abbr">R1</span></th>
-            <th><span class="rnd-full">Conference Semifinals</span><span class="rnd-abbr">CSF</span></th>
-            <th><span class="rnd-full">Conference Finals</span><span class="rnd-abbr">CF</span></th>
+            <th><span class="rnd-full">Conf. Semifinals</span><span class="rnd-abbr">CSF</span></th>
+            <th><span class="rnd-full">Conf. Finals</span><span class="rnd-abbr">CF</span></th>
             <th><span class="rnd-full">Finals</span><span class="rnd-abbr">F</span></th>
           </tr></thead>
           <tbody>
