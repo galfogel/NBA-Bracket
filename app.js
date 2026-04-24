@@ -1315,7 +1315,12 @@ function renderPicksTab() {
     return;
   }
 
-  const visibleParticipants = getLeaderboardRows();
+  const leaderboardRows = getLeaderboardRows();
+  const visibleParticipants = [...leaderboardRows].sort((a, b) => {
+    if (a.id === currentUserId) return -1;
+    if (b.id === currentUserId) return 1;
+    return 0;
+  });
   if (!viewingPid || !visibleParticipants.find(p => p.id === viewingPid)) {
     viewingPid = currentUserId || visibleParticipants[0]?.id;
   }
