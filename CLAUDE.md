@@ -47,8 +47,8 @@ On page load: `fetchPicks()` reads Firestore → `mergeRemoteState()` folds remo
 - A series becomes pickable as soon as both feeder series have results (`isSeriesAvailable()`).
 
 ### Round name conventions
-- **Diagram / mobile list / Rules long names**: First Round, Semifinals, Conf. Finals, NBA Finals (`ROUND_NAMES` constant)
-- **Table column abbreviations** (leaderboard, upset bonus table): R1, SF, CF, Finals
+- **Diagram / mobile list / Rules long names**: First Round, Conf. Semifinals, Conf. Finals, NBA Finals (`ROUND_NAMES` constant)
+- **Table column abbreviations** (leaderboard, upset bonus table): R1, CSF, CF, Finals
 
 ### Scoring
 `ROUND_POINTS = [0, 10, 20, 40, 80]` per round + `GAMES_BONUS = 10` for correct series length.
@@ -59,7 +59,7 @@ On page load: `fetchPicks()` reads Firestore → `mergeRemoteState()` folds remo
 
 `computeScore(pid)` sums base + games bonus + upset bonus across all series.
 
-**Prizes**: Buy-in is 100 ₪ per player. Rules page shows formulas (not hardcoded amounts): 1st = (Prize pool − Buy-in) × 70%, 2nd = (Prize pool − Buy-in) × 30%, 3rd = Buy-in back. Leaderboard shows prize pool on its own row (`.prize-pool-row`, orange `var(--accent)`) then prizes on a second row (`.prize-bar`); actual amounts currently 1,050 ₪ / 450 ₪ / 100 ₪, prize pool = 1,600 ₪.
+**Prizes**: Buy-in is 100 ₪ per player. Rules page shows formulas (not hardcoded amounts): 1st = (Prize pool − Buy-in) × 70%, 2nd = (Prize pool − Buy-in) × 30%, 3rd = Buy-in back. Leaderboard shows prizes on `.prize-bar`; actual amounts 1,050 ₪ / 450 ₪ / 100 ₪, prize pool = 1,600 ₪.
 
 **Series emoji** (`seriesEmoji(sid, leaderKey)`): shown on the results card next to the score when one team leads. Based on the leader's pre-series fan win % from `WIN_PCT` (R1 only): ≤25% → 😮, ≤50% → 🤔, ≤75% → 🙂, >75% → 😎. Exception: `W2v7` with SAS leading always returns 😭 (personal easter egg). If Portland (W7) leads at 2%, it falls through to 😮. R2+ series have no `WIN_PCT` so emoji is always empty.
 
@@ -72,8 +72,8 @@ Three card render modes, all via `bracketCard(sid, mode, pid)`:
 - `'view'` → `cardView()` — read-only, another user's picks (hidden until series locks, except admin/own)
 
 The bracket has two parallel HTML outputs:
-- `.bracket-wrap` — 7-column horizontal diagram (hidden on mobile).
-- `.bracket-list` — list by conference/round (shown on mobile).
+- `.bracket-wrap` — 7-column horizontal diagram (hidden on mobile and landscape phones).
+- `.bracket-list` — list by conference/round (shown on mobile and landscape phones).
 
 **Pick visibility**: other users' picks hidden until series locks — unless viewer is admin (Fogel) or viewing own picks. Gap prediction shown on Finals card in All Picks only when the viewed user has submitted one.
 
@@ -83,7 +83,10 @@ The bracket has two parallel HTML outputs:
 ### Key non-obvious details
 - **Downstream clearing**: `clearResultDownstream()` recursively invalidates later-round results when a result is edited.
 - **Mobile bracket height**: uses `height: var(--bracket-h)` (580px desktop / 480px mobile) — explicit height required so `flex: 1` and CSS Grid `1fr` rows resolve inside the column layout. Do not add `overflow` to `.bracket` — it clips the y-axis in Chrome/Safari.
-- **Bracket width formula**: `--card-w: min(calc((100vw - 128px) / 7), 200px)` — 7 columns × card-w + 80px spacing + 48px padding = 100vw, exact fit.
+- **Responsive breakpoints**: one `@media (max-width: 600px), (orientation: landscape) and (max-height: 500px)` block covers both portrait and landscape phones — landscape phones get identical styles to portrait mobile. A separate `@media (max-width: 900px)` block handles tablet layout (compact header tabs).
+- **Potential points font sizes**: `fan-pct`, `pot-pts`, `pot-base`, `pot-bonus`, and `games-bonus-hint` are all 9px base (diagram). In `.bracket-list--single` (list view) they are explicitly set to 14px. All five must be kept in sync at every breakpoint — never rely on inheritance alone for `pot-base`/`pot-bonus`.
+- **Bracket width formula**: `--card-w: min(calc((100vw - 128px) / 7), 260px)` — fills full viewport width, capped at 260px per card. `main` has no max-width so the diagram always fills the screen. The Finals column and each bracket column are equal width via `flex: 3` on each `.half` and `flex: 1` on `.finals-col`. Do NOT use fixed widths on `.finals-col` or `.round-labels-spacer` — they must use `flex: 1` to match bracket column widths.
+- **Team names in diagram**: `.team-name` uses `white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0` so names stay on one line and never push `.pot-pts` off-card.
 - **ESPN logo abbreviation exception**: SAS → `'sa'`.
 - **Firebase API key**: intentionally public (project identifier only). Security enforced by Firestore Rules.
 - **Cache busting**: `index.html` references `app.js?v=X` and `style.css?v=X`. The `cache_bust.yml` GitHub Action replaces `X` with the short commit SHA on every push to `main` (excluding `data/scores.json` changes). Never manually edit the `?v=` values.
