@@ -253,7 +253,7 @@ main { padding: 24px; }
 /* ============================================================
    BRACKET LAYOUT
    ============================================================ */
-.bracket-wrap { position: relative; display: none; }
+.bracket-wrap { position: relative; }
 
 .conf-label {
   position: absolute;
@@ -499,8 +499,8 @@ main { padding: 24px; }
   flex-shrink: 0;
 }
 
-/* ---- List view: default on all screen sizes ---- */
-.bracket-list { display: block; }
+/* ---- List view: hidden on desktop, shown on mobile/landscape ---- */
+.bracket-list { display: none; }
 
 /* Champion slot — original desktop sizes; mobile bumped below */
 
@@ -1313,7 +1313,8 @@ main { padding: 24px; }
 /* ── Landscape phone (short viewport) ────────────────────── */
 @media (orientation: landscape) and (max-height: 500px) {
   /* Switch to list view — bracket diagram is too tall for landscape phones */
-
+  .bracket-wrap { display: none; }
+  .bracket-list { display: block; }
 
   /* Single-row header: title · user on left, tabs spanning below collapsed into one row */
   header { height: 40px; padding: 0 10px; flex-wrap: nowrap; align-items: center; gap: 6px; }
@@ -1399,7 +1400,8 @@ main { padding: 24px; }
   main { padding: 8px; }
 
   /* ── Bracket: hide diagram, show list ── */
-
+  .bracket-wrap { display: none; }
+  .bracket-list { display: block; }
   .conf-label { font-size: 9px; letter-spacing: 0.06em; }
 
   /* ── Compact team row on mobile ── */
