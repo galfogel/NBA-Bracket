@@ -530,11 +530,12 @@ function getLeaderboardRows() {
       if (b.score !== a.score) return b.score - a.score;
       if (b.correct !== a.correct) return b.correct - a.correct;
       const actual = state.finalsGame1ActualGap;
-      if (actual == null) return 0;
+      if (actual == null) return a.name.localeCompare(b.name);
       const hasA = state.finalsGap[a.id] != null, hasB = state.finalsGap[b.id] != null;
-      if (!hasA && !hasB) return 0;
+      if (!hasA && !hasB) return a.name.localeCompare(b.name);
       if (!hasA) return 1; if (!hasB) return -1;
-      return Math.abs(state.finalsGap[a.id] - actual) - Math.abs(state.finalsGap[b.id] - actual);
+      const gapDiff = Math.abs(state.finalsGap[a.id] - actual) - Math.abs(state.finalsGap[b.id] - actual);
+      return gapDiff !== 0 ? gapDiff : a.name.localeCompare(b.name);
     });
 }
 
@@ -1448,7 +1449,12 @@ function renderPickBreakdown(rows) {
   const roundOptions = availRounds
     .map(r => `<option value="${r}" ${bdRoundFilter === r ? 'selected' : ''}>${ROUND_NAMES[r]}</option>`)
     .join('');
-  const userTiles = rows.map(p => {
+  const sortedTiles = [...rows].sort((a, b) => {
+    if (a.id === currentUserId) return -1;
+    if (b.id === currentUserId) return 1;
+    return a.name.localeCompare(b.name);
+  });
+  const userTiles = sortedTiles.map(p => {
     const active = bdUserFilter.has(p.id);
     return `<button class="bd-user-tile${active ? ' active' : ''}" onclick="toggleBdUser('${p.id}')">${p.name}</button>`;
   }).join('');
@@ -1461,7 +1467,7 @@ function renderPickBreakdown(rows) {
     <select id="bd-round-filter" onchange="handleBdRoundFilter(this)">${roundOptions}</select>
     <div class="bd-user-tiles">${userTiles}${clearBtn}</div>
     <div class="bd-legend">
-      <span class="bd-legend-title">Pick Status:</span>
+      <span class="bd-legend-title">Pick Potential:</span>
       <span class="bd-legend-item"><span class="bd-legend-dot green"></span> Winner &amp; Games</span>
       <span class="bd-legend-item"><span class="bd-legend-dot yellow"></span> Winner Only</span>
       <span class="bd-legend-item"><span class="bd-legend-dot red"></span> Eliminated</span>
