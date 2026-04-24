@@ -499,7 +499,7 @@ main { padding: 24px; }
   flex-shrink: 0;
 }
 
-/* ---- List view: hidden on desktop, shown on mobile/landscape ---- */
+/* ---- Mobile list view (hidden on desktop, shown on mobile) ---- */
 .bracket-list { display: none; }
 
 /* Champion slot — original desktop sizes; mobile bumped below */
@@ -1313,8 +1313,8 @@ main { padding: 24px; }
 /* ── Landscape phone (short viewport) ────────────────────── */
 @media (orientation: landscape) and (max-height: 500px) {
   /* Switch to list view — bracket diagram is too tall for landscape phones */
-  .bracket-wrap { display: none; }
-  .bracket-list { display: block; }
+  .bracket-wrap { display: none !important; }
+  .bracket-list { display: block !important; }
 
   /* Single-row header: title · user on left, tabs spanning below collapsed into one row */
   header { height: 40px; padding: 0 10px; flex-wrap: nowrap; align-items: center; gap: 6px; }
