@@ -57,7 +57,7 @@ On page load: `fetchPicks()` reads Firestore → `mergeRemoteState()` folds remo
 
 **Tiebreaker**: `state.finalsGap[pid]` — each user predicts Game 1 Finals score margin (required before saving Finals picks). `state.finalsGame1ActualGap` is auto-populated from `scoresData.finalsGame1Gap` (detected by `fetch_scores.py`). Leaderboard sorts ties by closest gap prediction.
 
-`computeScore(pid)` sums base + games bonus + upset bonus across all series.
+`computeScore(pid)` sums base + games bonus + upset bonus across all series. Returns `{ score, correct, possible }` where **`correct`** = number of series where `seriesPoints > 0` (i.e. scored anything, not strictly "right winner"). Shown as "X correct · Y pts" in the All Picks header.
 
 **Prizes**: Buy-in is 100 ₪ per player. Rules page shows formulas (not hardcoded amounts): 1st = (Prize pool − Buy-in) × 70%, 2nd = (Prize pool − Buy-in) × 30%, 3rd = Buy-in back. Leaderboard shows prizes on `.prize-bar`; actual amounts 1,050 ₪ / 450 ₪ / 100 ₪, prize pool = 1,600 ₪.
 
