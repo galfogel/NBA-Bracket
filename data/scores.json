@@ -1,5 +1,5 @@
 {
-  "updated": "2026-04-24T02:01:15Z",
+  "updated": "2026-04-24T05:29:04Z",
   "records": {
     "ATL-NYK": {
       "NYK": 1,
@@ -7,11 +7,11 @@
     },
     "CLE-TOR": {
       "CLE": 2,
-      "TOR": 0
+      "TOR": 1
     },
     "DEN-MIN": {
       "DEN": 1,
-      "MIN": 1
+      "MIN": 2
     },
     "HOU-LAL": {
       "LAL": 2,
