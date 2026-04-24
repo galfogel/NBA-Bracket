@@ -878,7 +878,7 @@ main { padding: 24px; max-width: 1400px; margin: 0 auto; box-sizing: border-box;
 .bd-legend-dot.yellow { background: #eab308; }
 .bd-legend-dot.red    { background: #ef4444; }
 
-.games-bonus-hint { margin-left: auto; padding-right: 2px; color: var(--text-dim); font-size: 10px; font-weight: 700; }
+.games-bonus-hint { margin-left: auto; padding-right: 2px; color: var(--text-dim); font-size: 10px; font-weight: 700; line-height: 1; }
 .games-btns { display: flex; gap: 4px; }
 
 .breakdown-round { margin-bottom: 40px; }
