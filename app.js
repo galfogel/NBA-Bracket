@@ -1000,6 +1000,7 @@ function cardPicks(sid, t1, t2, pid) {
     const isBad    = isPicked && actual && actual !== key;
     const cls      = isPicked ? (isBad ? 'is-wrong-pick' : 'is-winner') : '';
     const mark     = isPicked ? (isOk ? '✓' : isBad ? '✗' : '') : '';
+    const markCls  = isBad ? 'win-mark win-mark--wrong' : 'win-mark';
     const pct      = getWinPct(sid, key);
     const basePts  = ROUND_POINTS[SERIES_MAP[sid].r];
     const bonus    = getUpsetBonus(sid, key, basePts);
@@ -1014,7 +1015,7 @@ function cardPicks(sid, t1, t2, pid) {
       <span class="team-name">${t.name}</span>
       ${pct !== null ? `<span class="fan-pct">${pct}%</span>` : ''}
       ${ptsBadge}
-      ${mark ? `<span class="win-mark">${mark}</span>` : ''}
+      ${mark ? `<span class="${markCls}">${mark}</span>` : ''}
     </div>`;
   }
 
@@ -1107,6 +1108,7 @@ function cardView(sid, t1, t2, pid) {
     const isBad    = isPicked && actual && actual !== key;
     const cls      = isPicked ? (isBad ? 'is-wrong-pick' : 'is-winner') : '';
     const mark     = isOk ? '✓' : isBad ? '✗' : '';
+    const markCls  = isBad ? 'win-mark win-mark--wrong' : 'win-mark';
     const pct      = getWinPct(sid, key);
     const basePts  = ROUND_POINTS[SERIES_MAP[sid].r];
     const bonus    = getUpsetBonus(sid, key, basePts);
@@ -1120,7 +1122,7 @@ function cardView(sid, t1, t2, pid) {
       <span class="team-name">${t.name}</span>
       ${pct !== null ? `<span class="fan-pct">${pct}%</span>` : ''}
       ${ptsBadge}
-      ${mark ? `<span class="win-mark">${mark}</span>` : ''}
+      ${mark ? `<span class="${markCls}">${mark}</span>` : ''}
     </div>`;
   }
 
@@ -1132,6 +1134,7 @@ function cardView(sid, t1, t2, pid) {
   const gamesRow = pick.winner ? `
     <div class="games-selector">
       <span class="games-label">Games:</span>
+      <span class="games-bonus-hint">+10</span>
       <div class="games-btns">
         ${[4, 5, 6, 7].map(n => {
           const sel = pick.games === n;
@@ -1139,11 +1142,13 @@ function cardView(sid, t1, t2, pid) {
           return `<button class="games-btn ${sel ? 'selected' : ''} ${gcls}" disabled>${n}</button>`;
         }).join('')}
       </div>
-      <span class="games-bonus-hint">+10</span>
     </div>` : '';
 
+  const pickedWrong = actual && pick.winner && pick.winner !== actual;
   const footer = ptsEarned
     ? `<div class="card-footer ${gOk ? 'footer-correct' : gBad ? 'footer-wrong' : 'footer-correct'}"><span class="pts-badge">${ptsEarned} pts</span></div>`
+    : pickedWrong
+    ? `<div class="card-footer footer-wrong">✗ 0 pts</div>`
     : '';
 
   const gapRow = sid === 'FINALS' && state.finalsGap[pid] != null
