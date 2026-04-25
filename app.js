@@ -1021,7 +1021,7 @@ function cardPicks(sid, t1, t2, pid) {
 
   const gamesRow = pick.winner ? `
     <div class="games-selector">
-      <span class="games-label">Games:</span>
+      <span class="games-label">Number of Games:</span>
       <div class="games-btns">
         ${[4, 5, 6, 7].map(n => {
           const sel = pick.games === n;
@@ -1133,7 +1133,7 @@ function cardView(sid, t1, t2, pid) {
 
   const gamesRow = pick.winner ? `
     <div class="games-selector">
-      <span class="games-label">Games:</span>
+      <span class="games-label">Number of Games:</span>
       <span class="games-bonus-hint">+10</span>
       <div class="games-btns">
         ${[4, 5, 6, 7].map(n => {
@@ -1646,7 +1646,7 @@ function renderInfo() {
           <thead><tr><th>Round</th><th>Points</th></tr></thead>
           <tbody>
             ${pointsRows}
-            <tr><td>Correct number of games</td><td>+${GAMES_BONUS} pts</td></tr>
+            <tr><td>Correct Number of Games</td><td>+${GAMES_BONUS} pts</td></tr>
             <tr class="upset-row"><td><span style="color:var(--green)">Upset Bonus</span> <span class="info-note">(picking the underdog correctly)</span></td><td><span style="color:var(--green)">see table below</span></td></tr>
           </tbody>
         </table>
