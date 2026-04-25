@@ -69,7 +69,8 @@ function getWinPct(sid, teamKey) {
 
 function seriesEmoji(sid, leaderKey) {
   if (!WIN_PCT[sid] || !leaderKey) return '';
-  if (sid === 'W2v7' && leaderKey === 'W2') return '😭';
+  const [ta, tb] = resolveTeams(sid);
+  if ((ta === 'W7' || tb === 'W7') && leaderKey !== 'W7') return '😭';
   const pct = getWinPct(sid, leaderKey);
   if (pct === null) return '';
   if (pct <= 25) return '😮';
@@ -415,7 +416,13 @@ function setLoginMode(mode) {
   document.querySelectorAll('.login-tab').forEach(t =>
     t.classList.toggle('active', t.dataset.mode === mode));
   document.getElementById('login-btn').textContent = mode === 'signin' ? 'Sign In' : 'Sign Up';
-  document.getElementById('login-msg').textContent = '';
+  const msg = document.getElementById('login-msg');
+  if (mode === 'signin') {
+    msg.textContent = 'Sign-in is currently closed. New here? Use Sign Up.';
+    msg.className = 'login-msg msg-error';
+  } else {
+    msg.textContent = '';
+  }
 }
 
 function showLoginOverlay(canGoBack = false) {
@@ -478,6 +485,9 @@ async function attemptLogin() {
   const existing = state.participants.find(p => p.name.toLowerCase() === name.toLowerCase());
 
   if (loginMode === 'signin') {
+    msg.textContent = 'Sign-in is currently closed. New here? Use Sign Up.';
+    msg.className = 'login-msg msg-error';
+    return;
     if (!existing) {
       msg.textContent = 'Username not found. Sign up to create an account.';
       msg.className = 'login-msg msg-error';
