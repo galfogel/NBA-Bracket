@@ -354,43 +354,6 @@ function setPick(pid, sid, winner, games) {
 }
 
 // ============================================================
-// PLATFORM GATE
-// ============================================================
-const PLATFORM_PASSWORD_HASH = '815c8d2a9881231f9402afa2470c53aff89e17434c33ccffa0beeddc5d89c34d';
-const PLATFORM_SESSION_KEY   = 'nba-gate-2026-v2';
-
-function initGate() {
-  // Gate temporarily disabled — always pass through
-  document.getElementById('gate-overlay').classList.add('hidden');
-  return true;
-  /* re-enable by removing the two lines above:
-  if (sessionStorage.getItem(PLATFORM_SESSION_KEY) === '1') {
-    document.getElementById('gate-overlay').classList.add('hidden');
-    return true;
-  }
-  document.getElementById('gate-overlay').classList.remove('hidden');
-  setTimeout(() => document.getElementById('gate-pass').focus(), 60);
-  return false;
-  */
-}
-
-async function attemptGate() {
-  const input = document.getElementById('gate-pass');
-  const msg   = document.getElementById('gate-msg');
-  const inputHash = await hashPassword(input.value);
-  if (inputHash === PLATFORM_PASSWORD_HASH) {
-    sessionStorage.setItem(PLATFORM_SESSION_KEY, '1');
-    document.getElementById('gate-overlay').classList.add('hidden');
-    beginApp();
-  } else {
-    msg.textContent = 'Incorrect access code.';
-    msg.className = 'login-msg msg-error';
-    input.value = '';
-    input.focus();
-  }
-}
-
-// ============================================================
 // LOGIN
 // ============================================================
 let currentUserId = null;
@@ -479,7 +442,7 @@ async function attemptLogin() {
   const existing = state.participants.find(p => p.name.toLowerCase() === name.toLowerCase());
 
   if (loginMode === 'signup') {
-    msg.textContent = 'Registration is closed — the playoffs have already started.';
+    msg.textContent = 'Registration is closed. The playoffs have already started.';
     msg.className = 'login-msg msg-error';
     return;
   }
@@ -1801,9 +1764,6 @@ async function beginApp() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  document.getElementById('gate-btn').addEventListener('click', attemptGate);
-  document.getElementById('gate-pass').addEventListener('keydown', e => { if (e.key === 'Enter') attemptGate(); });
   document.querySelector('#sync-error .sync-toast-close').addEventListener('click', clearSyncError);
-
-  if (initGate()) beginApp();
+  beginApp();
 });

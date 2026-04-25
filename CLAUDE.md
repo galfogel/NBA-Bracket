@@ -18,17 +18,15 @@ python scripts/fetch_scores.py
 
 **Remove a user from DB** — fetch the `brackets/nba-2026` document, filter `participants`, `picks`, `picksSubmitted`, `finalsGap` by the user's `id`, then PATCH back with `updateMask.fieldPaths` for each field. Always verify with a second GET after the PATCH. Use the participant's `id` field (e.g. `p_1776521786553`), not their name.
 
-**Force all users to re-enter the access code** — bump `PLATFORM_SESSION_KEY` in `app.js` (e.g. `'nba-gate-2026'` → `'nba-gate-2026-v2'`). Since the gate is stored in `sessionStorage` under that key, changing it invalidates all existing sessions.
-
 ## Architecture
 
 ### Stack
 Pure vanilla JS + CSS static site hosted on GitHub Pages. No framework, no build tool, no bundler. Firebase Firestore is the only external runtime dependency, loaded via CDN compat scripts in `index.html`.
 
 ### Access control
-A platform-wide gate (`PLATFORM_PASSWORD = 'nba2026'`) must be passed via `initGate()` before the login overlay appears. Gate state is stored in `sessionStorage`. The user "Fogel" is the commissioner/admin — identified by name match in `isAdmin` checks throughout the code.
+No platform gate. The user "Fogel" is the commissioner/admin — identified by name match in `isAdmin` checks throughout the code.
 
-The login overlay has two tabs — **Sign In** (existing user) and **Sign Up** (new user) — controlled by `loginMode` and `setLoginMode()`. Sign In rejects unknown usernames; Sign Up rejects already-taken names. Switching accounts shows a **← Back** button (`canGoBack = true` in `showLoginOverlay()`) that restores the previous session without logging out.
+The login overlay has two tabs — **Sign In** (existing user) and **Sign Up** (new user) — controlled by `loginMode` and `setLoginMode()`. Sign In rejects unknown usernames. **Sign Up is currently blocked** — submitting the form shows "Registration is closed. The playoffs have already started." Switching accounts shows a **← Back** button (`canGoBack = true` in `showLoginOverlay()`) that restores the previous session without logging out.
 
 ### State: two layers
 - **`localStorage`** (`nba-bracket-2026-v2`): full app state. Never leaves the device.
@@ -61,7 +59,7 @@ On page load: `fetchPicks()` reads Firestore → `mergeRemoteState()` folds remo
 
 **Prizes**: Buy-in is 100 ₪ per player. Rules page shows formulas (not hardcoded amounts): 1st = (Prize pool − Buy-in) × 70%, 2nd = (Prize pool − Buy-in) × 30%, 3rd = Buy-in back. Leaderboard shows prizes on `.prize-bar`; actual amounts 1,050 ₪ / 450 ₪ / 100 ₪, prize pool = 1,600 ₪.
 
-**Series emoji** (`seriesEmoji(sid, leaderKey)`): shown on the results card next to the score when one team leads. Based on the leader's pre-series fan win % from `WIN_PCT` (R1 only): ≤25% → 😮, ≤50% → 🤔, ≤75% → 🙂, >75% → 😎. Exception: `W2v7` with SAS leading always returns 😭 (personal easter egg). If Portland (W7) leads at 2%, it falls through to 😮. R2+ series have no `WIN_PCT` so emoji is always empty.
+**Series emoji** (`seriesEmoji(sid, leaderKey)`): shown on the results card next to the score when one team leads. Based on the leader's pre-series fan win % from `WIN_PCT` (R1 only): ≤25% → 😮, ≤50% → 🤔, ≤75% → 🙂, >75% → 😎. Exception: any team leading against Portland (W7) always returns 😭 (personal easter egg — Portland is at 2%). R2+ series have no `WIN_PCT` so emoji is always empty.
 
 ### Rendering
 Five tabs: **My Picks**, **All Picks**, **Results**, **Leaderboard**, **Rules**. Each renderer registered in `RENDERERS`; corresponding `#tab-{name}` div in `index.html`. Active tab persisted in `sessionStorage`; restored on page refresh, reset to My Picks on login.
@@ -85,7 +83,7 @@ The bracket has two parallel HTML outputs:
 - **Mobile bracket height**: uses `height: var(--bracket-h)` (580px desktop / 480px mobile) — explicit height required so `flex: 1` and CSS Grid `1fr` rows resolve inside the column layout. Do not add `overflow` to `.bracket` — it clips the y-axis in Chrome/Safari.
 - **Responsive breakpoints**: one `@media (max-width: 600px), (orientation: landscape) and (max-height: 500px)` block covers both portrait and landscape phones — landscape phones get identical styles to portrait mobile. A separate `@media (max-width: 900px)` block handles tablet layout (compact header tabs).
 - **Potential points font sizes**: `fan-pct`, `pot-pts`, `pot-base`, `pot-bonus`, and `games-bonus-hint` are all 10px base (diagram), dropping to 9px in the landscape phone breakpoint. In `.bracket-list--single` (list view) they are explicitly set to 14px. All five must be kept in sync at every breakpoint — never rely on inheritance alone for `pot-base`/`pot-bonus`/`games-bonus-hint`.
-- **Games row layout**: `.games-selector` uses flexbox; `+10` hint (`.games-bonus-hint`, grey) sits between the "Games:" label and `.games-btns` wrapper. `.games-btns` has `margin-left: auto` to push the buttons right. `.pot-pts` has `gap: 3px` between base and bonus spans.
+- **Games row layout**: `.games-selector` uses flexbox with order: label → buttons (`.games-btns`) → `+10` hint (`.games-bonus-hint`, grey, `margin-left: auto` to push right edge). `.pot-pts` has `gap: 3px` between base and bonus spans.
 - **Prize place column**: `.info-table td.prize-place` — needs the full selector (not just `.prize-place`) to beat `.info-table td { white-space: normal }` specificity on the Rules page.
 - **Rules page spacing**: `.info-tab` uses `gap: 32px` between sections; `.info-section` has `padding-top: 16px` plus a border-top divider (~48px total visual gap). Matches the rhythm of other pages.
 - **Swipe navigation**: touchend handler threshold is 80px horizontal min, 2.5× horizontal-to-vertical ratio — prevents false triggers while scrolling.
