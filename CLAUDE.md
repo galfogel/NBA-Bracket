@@ -48,7 +48,7 @@ On page load: `fetchPicks()` reads Firestore → `mergeRemoteState()` folds remo
 
 ### Round name conventions
 - **Diagram / mobile list / Rules long names**: First Round, Conf. Semifinals, Conf. Finals, NBA Finals (`ROUND_NAMES` constant)
-- **Table column abbreviations** (leaderboard, upset bonus table): R1, CSF, CF, Finals
+- **Table column abbreviations** (leaderboard, upset bonus table): FR, CSF, CF, Finals
 
 ### Scoring
 `ROUND_POINTS = [0, 10, 20, 40, 80]` per round + `GAMES_BONUS = 10` for correct series length.
@@ -84,7 +84,11 @@ The bracket has two parallel HTML outputs:
 - **Downstream clearing**: `clearResultDownstream()` recursively invalidates later-round results when a result is edited.
 - **Mobile bracket height**: uses `height: var(--bracket-h)` (580px desktop / 480px mobile) — explicit height required so `flex: 1` and CSS Grid `1fr` rows resolve inside the column layout. Do not add `overflow` to `.bracket` — it clips the y-axis in Chrome/Safari.
 - **Responsive breakpoints**: one `@media (max-width: 600px), (orientation: landscape) and (max-height: 500px)` block covers both portrait and landscape phones — landscape phones get identical styles to portrait mobile. A separate `@media (max-width: 900px)` block handles tablet layout (compact header tabs).
-- **Potential points font sizes**: `fan-pct`, `pot-pts`, `pot-base`, `pot-bonus`, and `games-bonus-hint` are all 9px base (diagram). In `.bracket-list--single` (list view) they are explicitly set to 14px. All five must be kept in sync at every breakpoint — never rely on inheritance alone for `pot-base`/`pot-bonus`.
+- **Potential points font sizes**: `fan-pct`, `pot-pts`, `pot-base`, `pot-bonus`, and `games-bonus-hint` are all 10px base (diagram), dropping to 9px in the landscape phone breakpoint. In `.bracket-list--single` (list view) they are explicitly set to 14px. All five must be kept in sync at every breakpoint — never rely on inheritance alone for `pot-base`/`pot-bonus`/`games-bonus-hint`.
+- **Games row layout**: `.games-selector` uses flexbox; `+10` hint (`.games-bonus-hint`, grey) sits between the "Games:" label and `.games-btns` wrapper. `.games-btns` has `margin-left: auto` to push the buttons right. `.pot-pts` has `gap: 3px` between base and bonus spans.
+- **Prize place column**: `.info-table td.prize-place` — needs the full selector (not just `.prize-place`) to beat `.info-table td { white-space: normal }` specificity on the Rules page.
+- **Rules page spacing**: `.info-tab` uses `gap: 32px` between sections; `.info-section` has `padding-top: 16px` plus a border-top divider (~48px total visual gap). Matches the rhythm of other pages.
+- **Swipe navigation**: touchend handler threshold is 80px horizontal min, 2.5× horizontal-to-vertical ratio — prevents false triggers while scrolling.
 - **Bracket width formula**: `--card-w: min(calc((100vw - 128px) / 7), 260px)` — fills full viewport width, capped at 260px per card. `main` has no max-width so the diagram always fills the screen. The Finals column and each bracket column are equal width via `flex: 3` on each `.half` and `flex: 1` on `.finals-col`. Do NOT use fixed widths on `.finals-col` or `.round-labels-spacer` — they must use `flex: 1` to match bracket column widths.
 - **Team names in diagram**: `.team-name` uses `white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0` so names stay on one line and never push `.pot-pts` off-card.
 - **ESPN logo abbreviation exception**: SAS → `'sa'`.
