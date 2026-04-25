@@ -130,7 +130,11 @@ function loadState() {
 }
 
 function save() {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  const sanitised = {
+    ...state,
+    participants: state.participants.map(({ passwordHash: _, ...rest }) => rest),
+  };
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(sanitised));
 }
 
 // ── Shared picks database (Firebase Firestore) ────────────────
@@ -351,8 +355,8 @@ function setPick(pid, sid, winner, games) {
 // ============================================================
 // PLATFORM GATE
 // ============================================================
-const PLATFORM_PASSWORD    = 'nba2026';
-const PLATFORM_SESSION_KEY = 'nba-gate-2026-v2';
+const PLATFORM_PASSWORD_HASH = '815c8d2a9881231f9402afa2470c53aff89e17434c33ccffa0beeddc5d89c34d';
+const PLATFORM_SESSION_KEY   = 'nba-gate-2026-v2';
 
 function initGate() {
   // Gate temporarily disabled — always pass through
@@ -369,10 +373,11 @@ function initGate() {
   */
 }
 
-function attemptGate() {
+async function attemptGate() {
   const input = document.getElementById('gate-pass');
   const msg   = document.getElementById('gate-msg');
-  if (input.value === PLATFORM_PASSWORD) {
+  const inputHash = await hashPassword(input.value);
+  if (inputHash === PLATFORM_PASSWORD_HASH) {
     sessionStorage.setItem(PLATFORM_SESSION_KEY, '1');
     document.getElementById('gate-overlay').classList.add('hidden');
     beginApp();
@@ -438,10 +443,20 @@ function showLoginOverlay(canGoBack = false) {
   setTimeout(() => document.getElementById('login-name').focus(), 60);
 }
 
+let loginFailCount = 0;
+let loginLockUntil = 0;
+
 async function attemptLogin() {
   const nameInput = document.getElementById('login-name');
   const passInput = document.getElementById('login-pass');
   const msg       = document.getElementById('login-msg');
+
+  if (Date.now() < loginLockUntil) {
+    const secs = Math.ceil((loginLockUntil - Date.now()) / 1000);
+    msg.textContent = `Too many attempts. Try again in ${secs}s.`;
+    msg.className = 'login-msg msg-error';
+    return;
+  }
 
   try {
   const name = nameInput.value.trim();
@@ -469,11 +484,14 @@ async function attemptLogin() {
       return;
     }
     if (existing.passwordHash !== hash) {
+      loginFailCount++;
+      if (loginFailCount >= 5) { loginLockUntil = Date.now() + 30_000; loginFailCount = 0; }
       msg.textContent = 'Incorrect password.';
       msg.className = 'login-msg msg-error';
       passInput.focus();
       return;
     }
+    loginFailCount = 0; loginLockUntil = 0;
     msg.textContent = `Welcome back, ${existing.name}!`;
     msg.className = 'login-msg msg-welcome';
     currentUserId = existing.id;
