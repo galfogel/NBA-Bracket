@@ -1412,7 +1412,7 @@ function renderLeaderboard() {
       <table class="leaderboard-table">
         <thead>
           <tr><th>#</th><th>Name</th>
-            <th><span class="rnd-full">First Round</span><span class="rnd-abbr">R1</span></th>
+            <th><span class="rnd-full">First Round</span><span class="rnd-abbr">FR</span></th>
             <th><span class="rnd-full">Conf. Semifinals</span><span class="rnd-abbr">CSF</span></th>
             <th><span class="rnd-full">Conf. Finals</span><span class="rnd-abbr">CF</span></th>
             <th><span class="rnd-full">Finals</span><span class="rnd-abbr">F</span></th>
@@ -1654,7 +1654,7 @@ function renderInfo() {
         <p class="info-detail">Underdog potential pts = <span style="color:var(--text-dim)">base</span> + <span style="color:var(--green)">bonus</span>:</p>
         <table class="info-table">
           <thead><tr><th>Fav% range</th>
-            <th><span class="rnd-full">First Round</span><span class="rnd-abbr">R1</span></th>
+            <th><span class="rnd-full">First Round</span><span class="rnd-abbr">FR</span></th>
             <th><span class="rnd-full">Conf. Semifinals</span><span class="rnd-abbr">CSF</span></th>
             <th><span class="rnd-full">Conf. Finals</span><span class="rnd-abbr">CF</span></th>
             <th><span class="rnd-full">Finals</span><span class="rnd-abbr">F</span></th>
