@@ -416,13 +416,7 @@ function setLoginMode(mode) {
   document.querySelectorAll('.login-tab').forEach(t =>
     t.classList.toggle('active', t.dataset.mode === mode));
   document.getElementById('login-btn').textContent = mode === 'signin' ? 'Sign In' : 'Sign Up';
-  const msg = document.getElementById('login-msg');
-  if (mode === 'signin') {
-    msg.textContent = 'Sign-in is currently closed. New here? Use Sign Up.';
-    msg.className = 'login-msg msg-error';
-  } else {
-    msg.textContent = '';
-  }
+  document.getElementById('login-msg').textContent = '';
 }
 
 function showLoginOverlay(canGoBack = false) {
@@ -484,10 +478,13 @@ async function attemptLogin() {
   const hash     = await hashPassword(pass);
   const existing = state.participants.find(p => p.name.toLowerCase() === name.toLowerCase());
 
-  if (loginMode === 'signin') {
-    msg.textContent = 'Sign-in is currently closed. New here? Use Sign Up.';
+  if (loginMode === 'signup') {
+    msg.textContent = 'Registration is closed — the playoffs have already started.';
     msg.className = 'login-msg msg-error';
     return;
+  }
+
+  if (loginMode === 'signin') {
     if (!existing) {
       msg.textContent = 'Username not found. Sign up to create an account.';
       msg.className = 'login-msg msg-error';
