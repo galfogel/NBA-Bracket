@@ -230,9 +230,9 @@ main { padding: 24px; box-sizing: border-box; width: 100%; }
 /* ============================================================
    RULES / INFO TAB
    ============================================================ */
-.info-tab { max-width: 900px; width: 100%; margin: 32px auto; padding: 0 32px; display: flex; flex-direction: column; gap: 56px; box-sizing: border-box; }
+.info-tab { max-width: 900px; width: 100%; margin: 32px auto; padding: 0 32px; display: flex; flex-direction: column; gap: 32px; box-sizing: border-box; }
 .info-section h2 { font-size: 18px; font-weight: 700; margin: 0 0 14px; color: var(--text-main); }
-.info-section { overflow-x: auto; padding-top: 24px; border-top: 1px solid var(--border); }
+.info-section { overflow-x: auto; padding-top: 16px; border-top: 1px solid var(--border); }
 .info-section:first-child { border-top: none; padding-top: 0; }
 .info-table { width: 100%; border-collapse: collapse; font-size: 14px; }
 .info-table th { text-align: left; padding: 8px 12px; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: .04em; color: var(--text-dim); border-bottom: 1px solid var(--border); white-space: nowrap; }
@@ -1532,7 +1532,6 @@ body.is-test-user .bd-filter-bar h3 { font-size: 17px; }
 body.is-test-user .bd-pick-row      { padding: 5px 12px; }
 
 /* ── Rules ── */
-body.is-test-user .info-tab        { gap: 40px; }
 body.is-test-user .info-section h2 { font-size: 19px; }
 body.is-test-user .info-table      { font-size: 13px; }
 body.is-test-user .info-detail     { font-size: 13px; }
