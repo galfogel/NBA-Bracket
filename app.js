@@ -1040,6 +1040,7 @@ function cardPicks(sid, t1, t2, pid) {
   const gamesRow = pick.winner ? `
     <div class="games-selector">
       <span class="games-label">Number of Games:</span>
+      <span class="games-bonus-hint">+10</span>
       <div class="games-btns">
         ${[4, 5, 6, 7].map(n => {
           const sel = pick.games === n;
@@ -1049,7 +1050,6 @@ function cardPicks(sid, t1, t2, pid) {
                           ${!editable ? 'disabled' : ''}>${n}</button>`;
         }).join('')}
       </div>
-      <span class="games-bonus-hint">+10</span>
     </div>` : '';
 
   const gt = getGameTime(sid);
