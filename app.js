@@ -1482,13 +1482,13 @@ function renderPickBreakdown(rows) {
     <select id="bd-round-filter" onchange="handleBdRoundFilter(this)">${roundOptions}</select>
     <div class="bd-user-tiles">${userTiles}${clearBtn}</div>
     <div class="bd-legend">
-      <span class="bd-legend-title">Pick Potential:</span>
+      <span class="bd-legend-title">Potential Status:</span>
       <span class="bd-legend-item"><span class="bd-legend-dot green"></span> Winner &amp; Games</span>
       <span class="bd-legend-item"><span class="bd-legend-dot yellow"></span> Winner Only</span>
       <span class="bd-legend-item"><span class="bd-legend-dot red"></span> Eliminated</span>
     </div>
     <div class="bd-legend">
-      <span class="bd-legend-title">Pick Status:</span>
+      <span class="bd-legend-title">Final Status:</span>
       <span class="bd-legend-item"><span class="bd-pts-earned">✓✓</span> Winner &amp; Games</span>
       <span class="bd-legend-item"><span class="bd-pts-earned">✓</span> Winner Only</span>
       <span class="bd-legend-item"><span class="bd-pts-earned bd-pts-wrong">✗</span> Wrong Pick</span>
@@ -1568,7 +1568,8 @@ function renderPickBreakdown(rows) {
           } else if (ptsEarned) {
             ptsDisplay = `<span class="bd-pts-earned">${ptsEarned} pts</span>`;
           }
-          return `<div class="bd-pick-row${isMe ? ' my-row' : ''}${rowBg}">
+          const tooltip = actual && ptsEarned ? ` title="${ptsEarned} pts"` : '';
+          return `<div class="bd-pick-row${isMe ? ' my-row' : ''}${rowBg}"${tooltip}>
             <span class="bd-pick-name p-name-link" onclick="goToAllPicksUser('${p.id}','${def.id}')">${p.name}</span>
             <span class="bd-pick-team ${teamCls}">
               ${pt ? `<span class="bd-pick-abbr" style="color:${pt.color}">${pt.abbr}</span>` : '<span class="bd-pick-abbr">?</span>'}
