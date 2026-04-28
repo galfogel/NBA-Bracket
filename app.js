@@ -1387,8 +1387,7 @@ function clearBdUser() {
   renderLeaderboard();
 }
 function goToAllPicksUser(pid) {
-  bdUserFilter.clear();
-  bdUserFilter.add(pid);
+  viewingPid = pid;
   switchTab('picks');
 }
 
