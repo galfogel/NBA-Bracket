@@ -190,6 +190,76 @@ def detect_finals_game1_gap(games):
     return None
 
 
+BOX_SCORE_URL = "https://cdn.nba.com/static/json/liveData/boxscore/boxscore_{gameId}.json"
+
+def fetch_box_scores(raw_games, existing_box_scores):
+    """
+    Fetch box score for each finished game and return
+    { gameId: { homeTeam: [...players], awayTeam: [...players] } }.
+    Reuses cached data for games already fetched.
+    """
+    box_scores = dict(existing_box_scores)
+    game_ids = [g.get("gameId") for g in raw_games if g.get("gameId")]
+
+    for gid in game_ids:
+        if gid in box_scores:
+            continue  # already cached
+        try:
+            url = BOX_SCORE_URL.format(gameId=gid)
+            r = requests.get(url, headers=HEADERS, timeout=10)
+            r.raise_for_status()
+            game = r.json().get("game", {})
+
+            def extract_players(team):
+                out = []
+                for p in team.get("players", []):
+                    s = p.get("statistics") or {}
+                    mins_raw = s.get("minutesCalculated", "PT00M00.00S")
+                    # Convert PT12M34.00S → "12:34"
+                    try:
+                        mins_raw = mins_raw.replace("PT","")
+                        m, rest = mins_raw.split("M")
+                        s_val = rest.split(".")[0]
+                        mins = f"{int(m):02d}:{int(s_val):02d}"
+                    except Exception:
+                        mins = "00:00"
+                    if mins == "00:00":
+                        continue
+                    out.append({
+                        "name":    p.get("name", ""),
+                        "jersey":  p.get("jerseyNum", ""),
+                        "min":     mins,
+                        "pts":     s.get("points", 0),
+                        "reb":     s.get("reboundsTotal", 0),
+                        "ast":     s.get("assists", 0),
+                        "stl":     s.get("steals", 0),
+                        "blk":     s.get("blocks", 0),
+                    })
+                return sorted(out, key=lambda x: -x["pts"])
+
+            box_scores[gid] = {
+                "home": {
+                    "tricode": game.get("homeTeam", {}).get("teamTricode", ""),
+                    "city":    game.get("homeTeam", {}).get("teamCity", ""),
+                    "name":    game.get("homeTeam", {}).get("teamName", ""),
+                    "score":   game.get("homeTeam", {}).get("score", 0),
+                    "players": extract_players(game.get("homeTeam", {})),
+                },
+                "away": {
+                    "tricode": game.get("awayTeam", {}).get("teamTricode", ""),
+                    "city":    game.get("awayTeam", {}).get("teamCity", ""),
+                    "name":    game.get("awayTeam", {}).get("teamName", ""),
+                    "score":   game.get("awayTeam", {}).get("score", 0),
+                    "players": extract_players(game.get("awayTeam", {})),
+                },
+            }
+            print(f"  Box score fetched: {gid}")
+        except Exception as exc:
+            print(f"  Box score failed for {gid}: {exc}", file=sys.stderr)
+
+    return box_scores
+
+
 def main():
     out_path = os.path.normpath(
         os.path.join(os.path.dirname(__file__), "..", "data", "scores.json")
@@ -199,17 +269,20 @@ def main():
     # Preserve manually-set fields (gameTimes) and cached game scores on error.
     existing_game_times  = {}
     existing_game_scores = {}
+    existing_box_scores  = {}
     if os.path.exists(out_path):
         try:
             with open(out_path) as f:
                 existing = json.load(f)
             existing_game_times  = existing.get("gameTimes", {})
             existing_game_scores = existing.get("games", {})
+            existing_box_scores  = existing.get("boxScores", {})
         except Exception:
             pass
 
     records          = {}
     game_scores      = {}
+    box_scores       = {}
     finals_game1_gap = None
     error            = None
 
@@ -217,8 +290,9 @@ def main():
         games, raw_games = fetch_playoff_games()
         records      = compute_records(games)
         game_scores  = compute_game_scores(raw_games)
+        box_scores   = fetch_box_scores(raw_games, existing_box_scores)
         finals_game1_gap = detect_finals_game1_gap(games)
-        print(f"Fetched {len(games)} game rows → {len(records)} series")
+        print(f"Fetched {len(games)} game rows → {len(records)} series, {len(box_scores)} box scores")
         for k, v in sorted(records.items()):
             print(f"  {k}: {v}")
         print(f"Finals Game 1 gap: {finals_game1_gap}")
@@ -229,7 +303,8 @@ def main():
     output = {
         "updated":         datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
         "records":         records,
-        "games":           game_scores if not error else existing_game_scores,
+        "games":           game_scores  if not error else existing_game_scores,
+        "boxScores":       box_scores   if not error else existing_box_scores,
         "gameTimes":       existing_game_times,
         "finalsGame1Gap":  finals_game1_gap,
         "error":           error,

@@ -1423,12 +1423,10 @@ let seriesDetailSid = null;
 let gameDetailData  = null;
 let bdShowPoints = false;
 function openGameDetail(gameId, seriesLabel, gameLabel) {
-  gameDetailData = { gameId, seriesLabel, gameLabel, loading: true, error: null, boxScore: null };
+  const boxScore = scoresData?.boxScores?.[gameId] || null;
+  gameDetailData = { gameId, seriesLabel, gameLabel, loading: false, error: boxScore ? null : 'Stats not available yet.', boxScore };
   renderResults();
-  fetch(`https://cdn.nba.com/static/json/liveData/boxscore/boxscore_${gameId}.json`)
-    .then(r => r.json())
-    .then(d => { gameDetailData.boxScore = d.game; gameDetailData.loading = false; renderResults(); })
-    .catch(() => { gameDetailData.error = 'Could not load game stats.'; gameDetailData.loading = false; renderResults(); });
+  window.scrollTo(0, 0);
 }
 function closeGameDetail() {
   gameDetailData = null;
@@ -1443,26 +1441,24 @@ function renderGameDetail() {
   if (loading) return `<div class="series-detail">${header}<p class="sd-no-data">Loading stats…</p></div>`;
   if (error)   return `<div class="series-detail">${header}<p class="sd-no-data">${error}</p></div>`;
 
-  function teamTable(teamData) {
-    const t = teamData.teamTricode;
-    const players = (teamData.players || [])
-      .filter(p => p.statistics?.minutesCalculated !== 'PT00M00.00S')
-      .sort((a, b) => (b.statistics?.points ?? 0) - (a.statistics?.points ?? 0));
-    const rows = players.map(p => {
-      const s = p.statistics || {};
-      const min = (s.minutesCalculated || '').replace('PT','').replace(/\..*$/,'').replace('M',':').replace('S','');
-      return `<tr>
-        <td class="gd-name">${p.name}</td>
-        <td>${min}</td>
-        <td class="gd-pts">${s.points ?? 0}</td>
-        <td>${s.reboundsTotal ?? 0}</td>
-        <td>${s.assists ?? 0}</td>
-        <td>${s.steals ?? 0}</td>
-        <td>${s.blocks ?? 0}</td>
-      </tr>`;
-    }).join('');
+  function teamTable(team) {
+    const abbr = team.tricode || '';
+    const logo = ESPN(abbr === 'SAS' ? 'sa' : abbr.toLowerCase());
+    const rows = (team.players || []).map(p => `<tr>
+      <td class="gd-name">${p.name}</td>
+      <td>${p.min}</td>
+      <td class="gd-pts">${p.pts}</td>
+      <td>${p.reb}</td>
+      <td>${p.ast}</td>
+      <td>${p.stl}</td>
+      <td>${p.blk}</td>
+    </tr>`).join('');
     return `<div class="gd-team-block">
-      <div class="gd-team-header"><img src="${ESPN(t === 'SAS' ? 'sa' : t.toLowerCase())}" class="sd-logo gd-logo" /><span class="gd-team-name">${teamData.teamCity} ${teamData.teamName}</span><span class="gd-score">${teamData.score}</span></div>
+      <div class="gd-team-header">
+        <img src="${logo}" class="sd-logo gd-logo" />
+        <span class="gd-team-name">${team.city} ${team.name}</span>
+        <span class="gd-score">${team.score}</span>
+      </div>
       <table class="gd-table">
         <thead><tr><th>Player</th><th>MIN</th><th>PTS</th><th>REB</th><th>AST</th><th>STL</th><th>BLK</th></tr></thead>
         <tbody>${rows}</tbody>
@@ -1472,8 +1468,8 @@ function renderGameDetail() {
 
   return `<div class="series-detail">
     ${header}
-    ${teamTable(boxScore.homeTeam)}
-    ${teamTable(boxScore.awayTeam)}
+    ${teamTable(boxScore.home)}
+    ${teamTable(boxScore.away)}
   </div>`;
 }
 function openSeriesDetail(sid) {

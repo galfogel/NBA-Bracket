@@ -1,5 +1,5 @@
 {
-  "updated": "2026-04-28T21:51:31Z",
+  "updated": "2026-04-28T21:55:57Z",
   "records": {
     "ATL-NYK": {
       "NYK": 2,
@@ -348,6 +348,536 @@
         "date": "2026-04-26"
       }
     ]
+  },
+  "boxScores": {
+    "0042500121": {
+      "home": {
+        "tricode": "NYK",
+        "city": "New York",
+        "name": "Knicks",
+        "score": 113,
+        "players": []
+      },
+      "away": {
+        "tricode": "ATL",
+        "city": "Atlanta",
+        "name": "Hawks",
+        "score": 102,
+        "players": []
+      }
+    },
+    "0042500131": {
+      "home": {
+        "tricode": "CLE",
+        "city": "Cleveland",
+        "name": "Cavaliers",
+        "score": 126,
+        "players": []
+      },
+      "away": {
+        "tricode": "TOR",
+        "city": "Toronto",
+        "name": "Raptors",
+        "score": 113,
+        "players": []
+      }
+    },
+    "0042500161": {
+      "home": {
+        "tricode": "DEN",
+        "city": "Denver",
+        "name": "Nuggets",
+        "score": 116,
+        "players": []
+      },
+      "away": {
+        "tricode": "MIN",
+        "city": "Minnesota",
+        "name": "Timberwolves",
+        "score": 105,
+        "players": []
+      }
+    },
+    "0042500171": {
+      "home": {
+        "tricode": "LAL",
+        "city": "Los Angeles",
+        "name": "Lakers",
+        "score": 107,
+        "players": []
+      },
+      "away": {
+        "tricode": "HOU",
+        "city": "Houston",
+        "name": "Rockets",
+        "score": 98,
+        "players": []
+      }
+    },
+    "0042500101": {
+      "home": {
+        "tricode": "DET",
+        "city": "Detroit",
+        "name": "Pistons",
+        "score": 101,
+        "players": []
+      },
+      "away": {
+        "tricode": "ORL",
+        "city": "Orlando",
+        "name": "Magic",
+        "score": 112,
+        "players": []
+      }
+    },
+    "0042500111": {
+      "home": {
+        "tricode": "BOS",
+        "city": "Boston",
+        "name": "Celtics",
+        "score": 123,
+        "players": []
+      },
+      "away": {
+        "tricode": "PHI",
+        "city": "Philadelphia",
+        "name": "76ers",
+        "score": 91,
+        "players": []
+      }
+    },
+    "0042500141": {
+      "home": {
+        "tricode": "OKC",
+        "city": "Oklahoma City",
+        "name": "Thunder",
+        "score": 119,
+        "players": []
+      },
+      "away": {
+        "tricode": "PHX",
+        "city": "Phoenix",
+        "name": "Suns",
+        "score": 84,
+        "players": []
+      }
+    },
+    "0042500151": {
+      "home": {
+        "tricode": "SAS",
+        "city": "San Antonio",
+        "name": "Spurs",
+        "score": 111,
+        "players": []
+      },
+      "away": {
+        "tricode": "POR",
+        "city": "Portland",
+        "name": "Trail Blazers",
+        "score": 98,
+        "players": []
+      }
+    },
+    "0042500122": {
+      "home": {
+        "tricode": "NYK",
+        "city": "New York",
+        "name": "Knicks",
+        "score": 106,
+        "players": []
+      },
+      "away": {
+        "tricode": "ATL",
+        "city": "Atlanta",
+        "name": "Hawks",
+        "score": 107,
+        "players": []
+      }
+    },
+    "0042500132": {
+      "home": {
+        "tricode": "CLE",
+        "city": "Cleveland",
+        "name": "Cavaliers",
+        "score": 115,
+        "players": []
+      },
+      "away": {
+        "tricode": "TOR",
+        "city": "Toronto",
+        "name": "Raptors",
+        "score": 105,
+        "players": []
+      }
+    },
+    "0042500162": {
+      "home": {
+        "tricode": "DEN",
+        "city": "Denver",
+        "name": "Nuggets",
+        "score": 114,
+        "players": []
+      },
+      "away": {
+        "tricode": "MIN",
+        "city": "Minnesota",
+        "name": "Timberwolves",
+        "score": 119,
+        "players": []
+      }
+    },
+    "0042500112": {
+      "home": {
+        "tricode": "BOS",
+        "city": "Boston",
+        "name": "Celtics",
+        "score": 97,
+        "players": []
+      },
+      "away": {
+        "tricode": "PHI",
+        "city": "Philadelphia",
+        "name": "76ers",
+        "score": 111,
+        "players": []
+      }
+    },
+    "0042500152": {
+      "home": {
+        "tricode": "SAS",
+        "city": "San Antonio",
+        "name": "Spurs",
+        "score": 103,
+        "players": []
+      },
+      "away": {
+        "tricode": "POR",
+        "city": "Portland",
+        "name": "Trail Blazers",
+        "score": 106,
+        "players": []
+      }
+    },
+    "0042500172": {
+      "home": {
+        "tricode": "LAL",
+        "city": "Los Angeles",
+        "name": "Lakers",
+        "score": 101,
+        "players": []
+      },
+      "away": {
+        "tricode": "HOU",
+        "city": "Houston",
+        "name": "Rockets",
+        "score": 94,
+        "players": []
+      }
+    },
+    "0042500102": {
+      "home": {
+        "tricode": "DET",
+        "city": "Detroit",
+        "name": "Pistons",
+        "score": 98,
+        "players": []
+      },
+      "away": {
+        "tricode": "ORL",
+        "city": "Orlando",
+        "name": "Magic",
+        "score": 83,
+        "players": []
+      }
+    },
+    "0042500142": {
+      "home": {
+        "tricode": "OKC",
+        "city": "Oklahoma City",
+        "name": "Thunder",
+        "score": 120,
+        "players": []
+      },
+      "away": {
+        "tricode": "PHX",
+        "city": "Phoenix",
+        "name": "Suns",
+        "score": 107,
+        "players": []
+      }
+    },
+    "0042500123": {
+      "home": {
+        "tricode": "ATL",
+        "city": "Atlanta",
+        "name": "Hawks",
+        "score": 109,
+        "players": []
+      },
+      "away": {
+        "tricode": "NYK",
+        "city": "New York",
+        "name": "Knicks",
+        "score": 108,
+        "players": []
+      }
+    },
+    "0042500133": {
+      "home": {
+        "tricode": "TOR",
+        "city": "Toronto",
+        "name": "Raptors",
+        "score": 126,
+        "players": []
+      },
+      "away": {
+        "tricode": "CLE",
+        "city": "Cleveland",
+        "name": "Cavaliers",
+        "score": 104,
+        "players": []
+      }
+    },
+    "0042500163": {
+      "home": {
+        "tricode": "MIN",
+        "city": "Minnesota",
+        "name": "Timberwolves",
+        "score": 113,
+        "players": []
+      },
+      "away": {
+        "tricode": "DEN",
+        "city": "Denver",
+        "name": "Nuggets",
+        "score": 96,
+        "players": []
+      }
+    },
+    "0042500113": {
+      "home": {
+        "tricode": "PHI",
+        "city": "Philadelphia",
+        "name": "76ers",
+        "score": 100,
+        "players": []
+      },
+      "away": {
+        "tricode": "BOS",
+        "city": "Boston",
+        "name": "Celtics",
+        "score": 108,
+        "players": []
+      }
+    },
+    "0042500153": {
+      "home": {
+        "tricode": "POR",
+        "city": "Portland",
+        "name": "Trail Blazers",
+        "score": 108,
+        "players": []
+      },
+      "away": {
+        "tricode": "SAS",
+        "city": "San Antonio",
+        "name": "Spurs",
+        "score": 120,
+        "players": []
+      }
+    },
+    "0042500173": {
+      "home": {
+        "tricode": "HOU",
+        "city": "Houston",
+        "name": "Rockets",
+        "score": 108,
+        "players": []
+      },
+      "away": {
+        "tricode": "LAL",
+        "city": "Los Angeles",
+        "name": "Lakers",
+        "score": 112,
+        "players": []
+      }
+    },
+    "0042500103": {
+      "home": {
+        "tricode": "ORL",
+        "city": "Orlando",
+        "name": "Magic",
+        "score": 113,
+        "players": []
+      },
+      "away": {
+        "tricode": "DET",
+        "city": "Detroit",
+        "name": "Pistons",
+        "score": 105,
+        "players": []
+      }
+    },
+    "0042500124": {
+      "home": {
+        "tricode": "ATL",
+        "city": "Atlanta",
+        "name": "Hawks",
+        "score": 98,
+        "players": []
+      },
+      "away": {
+        "tricode": "NYK",
+        "city": "New York",
+        "name": "Knicks",
+        "score": 114,
+        "players": []
+      }
+    },
+    "0042500143": {
+      "home": {
+        "tricode": "PHX",
+        "city": "Phoenix",
+        "name": "Suns",
+        "score": 109,
+        "players": []
+      },
+      "away": {
+        "tricode": "OKC",
+        "city": "Oklahoma City",
+        "name": "Thunder",
+        "score": 121,
+        "players": []
+      }
+    },
+    "0042500164": {
+      "home": {
+        "tricode": "MIN",
+        "city": "Minnesota",
+        "name": "Timberwolves",
+        "score": 112,
+        "players": []
+      },
+      "away": {
+        "tricode": "DEN",
+        "city": "Denver",
+        "name": "Nuggets",
+        "score": 96,
+        "players": []
+      }
+    },
+    "0042500114": {
+      "home": {
+        "tricode": "PHI",
+        "city": "Philadelphia",
+        "name": "76ers",
+        "score": 96,
+        "players": []
+      },
+      "away": {
+        "tricode": "BOS",
+        "city": "Boston",
+        "name": "Celtics",
+        "score": 128,
+        "players": []
+      }
+    },
+    "0042500134": {
+      "home": {
+        "tricode": "TOR",
+        "city": "Toronto",
+        "name": "Raptors",
+        "score": 93,
+        "players": []
+      },
+      "away": {
+        "tricode": "CLE",
+        "city": "Cleveland",
+        "name": "Cavaliers",
+        "score": 89,
+        "players": []
+      }
+    },
+    "0042500154": {
+      "home": {
+        "tricode": "POR",
+        "city": "Portland",
+        "name": "Trail Blazers",
+        "score": 93,
+        "players": []
+      },
+      "away": {
+        "tricode": "SAS",
+        "city": "San Antonio",
+        "name": "Spurs",
+        "score": 114,
+        "players": []
+      }
+    },
+    "0042500174": {
+      "home": {
+        "tricode": "HOU",
+        "city": "Houston",
+        "name": "Rockets",
+        "score": 115,
+        "players": []
+      },
+      "away": {
+        "tricode": "LAL",
+        "city": "Los Angeles",
+        "name": "Lakers",
+        "score": 96,
+        "players": []
+      }
+    },
+    "0042500104": {
+      "home": {
+        "tricode": "ORL",
+        "city": "Orlando",
+        "name": "Magic",
+        "score": 94,
+        "players": []
+      },
+      "away": {
+        "tricode": "DET",
+        "city": "Detroit",
+        "name": "Pistons",
+        "score": 88,
+        "players": []
+      }
+    },
+    "0042500144": {
+      "home": {
+        "tricode": "PHX",
+        "city": "Phoenix",
+        "name": "Suns",
+        "score": 122,
+        "players": []
+      },
+      "away": {
+        "tricode": "OKC",
+        "city": "Oklahoma City",
+        "name": "Thunder",
+        "score": 131,
+        "players": []
+      }
+    },
+    "0042500165": {
+      "home": {
+        "tricode": "DEN",
+        "city": "Denver",
+        "name": "Nuggets",
+        "score": 125,
+        "players": []
+      },
+      "away": {
+        "tricode": "MIN",
+        "city": "Minnesota",
+        "name": "Timberwolves",
+        "score": 113,
+        "players": []
+      }
+    }
   },
   "gameTimes": {
     "E4v5": "2026-04-18T19:00:00Z",
