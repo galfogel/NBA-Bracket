@@ -943,9 +943,9 @@ main { padding: 24px; box-sizing: border-box; width: 100%; }
 /* Per-user pick rows */
 .bd-picks { padding: 4px 0; }
 .bd-pick-row {
-  display: grid;
-  grid-template-columns: 1fr auto auto;
+  display: flex;
   align-items: center;
+  flex-wrap: nowrap;
   gap: 6px;
   padding: 5px 10px;
   min-height: 28px;
@@ -953,9 +953,11 @@ main { padding: 24px; box-sizing: border-box; width: 100%; }
   border-bottom: 1px solid var(--border);
 }
 .bd-pick-row:last-child { border-bottom: none; }
-.bd-pick-name { font-weight: 600; min-width: 0; color: var(--text-dim); font-size: 11px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.bd-pick-name { font-weight: 600; min-width: 0; flex: 1; color: var(--text-dim); font-size: 11px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .bd-pick-team {
   display: flex;
+  white-space: nowrap;
+  flex-shrink: 0;
   align-items: center;
   gap: 4px;
 }
@@ -969,7 +971,7 @@ main { padding: 24px; box-sizing: border-box; width: 100%; }
 .bd-pick-mark.bad { color: #ef4444; }
 .bd-pick-team.bd-team-ok  { border-radius: 4px; padding: 1px 4px; }
 .bd-pick-team.bd-team-bad { border-radius: 4px; padding: 1px 4px; opacity: 0.85; }
-.bd-pts-earned { font-size: 11px; font-weight: 700; color: #22c55e; white-space: nowrap; }
+.bd-pts-earned { margin-left: auto; font-size: 11px; font-weight: 700; color: #22c55e; white-space: nowrap; flex-shrink: 0; }
 .bd-pts-wrong  { color: #ef4444; }
 .pts-badge { font-weight: 700; color: #22c55e; }
 .bd-hidden { padding: 8px 10px; font-size: 11px; color: var(--text-dim); font-style: italic; }
