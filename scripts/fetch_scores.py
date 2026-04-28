@@ -32,11 +32,10 @@ HEADERS = {
 
 
 def fetch_playoff_games():
-    """Return team-game rows for finished 2025-26 NBA Playoff games.
+    """Return (flattened_rows, raw_game_objects) for finished 2025-26 NBA Playoff games.
 
-    Output shape matches the old stats.nba.com adapter so downstream
-    functions (compute_records, detect_finals_game1_gap) don't need to change:
-      {GAME_ID, GAME_DATE, TEAM_ABBREVIATION, WL, PTS}
+    flattened_rows shape: {GAME_ID, GAME_DATE, TEAM_ABBREVIATION, WL, PTS}
+    raw_game_objects: one dict per finished playoff game from the schedule JSON.
     """
     last_exc = None
     for attempt in range(3):
@@ -52,6 +51,7 @@ def fetch_playoff_games():
         raise last_exc
 
     rows = []
+    raw_games = []
     for gd in data.get("leagueSchedule", {}).get("gameDates", []):
         for g in gd.get("games", []):
             # Playoff filter: only playoff games have seriesGameNumber set.
@@ -74,7 +74,33 @@ def fetch_playoff_games():
                          "TEAM_ABBREVIATION": h_abbr, "WL": h_wl, "PTS": h_pts})
             rows.append({"GAME_ID": gid, "GAME_DATE": date,
                          "TEAM_ABBREVIATION": a_abbr, "WL": a_wl, "PTS": a_pts})
-    return rows
+            raw_games.append(g)
+    return rows, raw_games
+
+
+def compute_game_scores(raw_games):
+    """
+    Returns { "ABR1-ABR2": [ { "n", "home", "homePts", "away", "awayPts", "date" }, ... ] }
+    sorted by game number. Key is sorted team abbreviations joined by '-'.
+    """
+    series = defaultdict(list)
+    for g in raw_games:
+        home = g.get("homeTeam") or {}
+        away = g.get("awayTeam") or {}
+        h = home.get("teamTricode")
+        a = away.get("teamTricode")
+        if not h or not a:
+            continue
+        key = "-".join(sorted([h, a]))
+        series[key].append({
+            "n":       g.get("seriesGameNumber"),
+            "home":    h,
+            "homePts": home.get("score") or 0,
+            "away":    a,
+            "awayPts": away.get("score") or 0,
+            "date":    (g.get("gameDateUTC") or "")[:10],
+        })
+    return {k: sorted(v, key=lambda x: x["n"] or 0) for k, v in series.items()}
 
 
 def compute_records(games):
@@ -169,23 +195,27 @@ def main():
     )
     os.makedirs(os.path.dirname(out_path), exist_ok=True)
 
-    # Preserve manually-set fields (gameTimes) — only records/scores are auto-updated.
-    existing_game_times = {}
+    # Preserve manually-set fields (gameTimes) and cached game scores on error.
+    existing_game_times  = {}
+    existing_game_scores = {}
     if os.path.exists(out_path):
         try:
             with open(out_path) as f:
                 existing = json.load(f)
-            existing_game_times = existing.get("gameTimes", {})
+            existing_game_times  = existing.get("gameTimes", {})
+            existing_game_scores = existing.get("games", {})
         except Exception:
             pass
 
     records          = {}
+    game_scores      = {}
     finals_game1_gap = None
     error            = None
 
     try:
-        games   = fetch_playoff_games()
-        records = compute_records(games)
+        games, raw_games = fetch_playoff_games()
+        records      = compute_records(games)
+        game_scores  = compute_game_scores(raw_games)
         finals_game1_gap = detect_finals_game1_gap(games)
         print(f"Fetched {len(games)} game rows → {len(records)} series")
         for k, v in sorted(records.items()):
@@ -198,6 +228,7 @@ def main():
     output = {
         "updated":         datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
         "records":         records,
+        "games":           game_scores if not error else existing_game_scores,
         "gameTimes":       existing_game_times,
         "finalsGame1Gap":  finals_game1_gap,
         "error":           error,

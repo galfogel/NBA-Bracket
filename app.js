@@ -710,6 +710,14 @@ function isRoundFullyLocked(round) {
 }
 
 // Series record from NBA API
+function getGameScores(sid) {
+  if (!scoresData?.games) return null;
+  const [t1, t2] = resolveTeams(sid);
+  if (!t1 || !t2) return null;
+  const key = [TEAMS[t1].abbr, TEAMS[t2].abbr].sort().join('-');
+  return scoresData.games[key] || null;
+}
+
 function getRecord(sid) {
   if (!scoresData?.records) return null;
   const [t1, t2] = resolveTeams(sid);
@@ -968,7 +976,7 @@ function cardResults(sid, t1, t2) {
     }
   }
 
-  return `<div class="matchup-card" data-series="${sid}">
+  return `<div class="matchup-card matchup-card--clickable" data-series="${sid}" onclick="openSeriesDetail('${sid}')">
     ${row(t1)}<div class="series-divider"></div>${row(t2)}${footer}
   </div>`;
 }
@@ -1362,6 +1370,8 @@ function renderPicksTab() {
 function renderResults() {
   const el = document.getElementById('tab-participants');
 
+  if (seriesDetailSid) { el.innerHTML = renderSeriesDetail(seriesDetailSid); return; }
+
   const gapDisplay = state.finalsGame1ActualGap != null
     ? `<div class="game1-gap-ctrl">
         <span class="gap-label">Finals Game 1 actual gap:</span>
@@ -1408,7 +1418,63 @@ function clearBdUser() {
 }
 let highlightedSid = null;
 let highlightedResultSid = null;
+let seriesDetailSid = null;
 let bdShowPoints = false;
+function openSeriesDetail(sid) {
+  seriesDetailSid = sid;
+  renderResults();
+  window.scrollTo(0, 0);
+}
+function closeSeriesDetail() {
+  seriesDetailSid = null;
+  renderResults();
+  window.scrollTo(0, 0);
+}
+function renderSeriesDetail(sid) {
+  const [t1k, t2k] = resolveTeams(sid);
+  const t1 = TEAMS[t1k], t2 = TEAMS[t2k];
+  const winner = state.results[sid];
+  const rec = getRecord(sid);
+  const gamesData = getGameScores(sid);
+
+  const seriesStatus = winner
+    ? `<span style="color:${TEAMS[winner].color}">${TEAMS[winner].name}</span> wins ${rec ? `${Math.max(rec.t1Wins, rec.t2Wins)}–${Math.min(rec.t1Wins, rec.t2Wins)}` : ''}`
+    : rec ? `${t1.abbr} ${rec.t1Wins} – ${rec.t2Wins} ${t2.abbr}` : 'Series upcoming';
+
+  const teamByAbbr = key => Object.values(TEAMS).find(t => t.abbr === key) || { name: key, color: '#fff', logo: '' };
+
+  const gameRows = gamesData ? gamesData.map(g => {
+    const hTeam = teamByAbbr(g.home);
+    const aTeam = teamByAbbr(g.away);
+    const homeWon = g.homePts > g.awayPts;
+    return `<div class="sd-game-row">
+      <div class="sd-game-meta"><span class="sd-game-label">${g.n}</span><span class="sd-date">${g.date}</span></div>
+      <div class="sd-score-line">
+        <span class="sd-team ${homeWon ? 'sd-winner' : 'sd-loser'}">
+          <img src="${hTeam.logo}" /><span style="color:${hTeam.color}">${g.home}</span>
+        </span>
+        <span class="sd-pts ${homeWon ? 'sd-winner' : 'sd-loser'}">${g.homePts}</span>
+        <span class="sd-dash">–</span>
+        <span class="sd-pts ${!homeWon ? 'sd-winner' : 'sd-loser'}">${g.awayPts}</span>
+        <span class="sd-team sd-team-away ${!homeWon ? 'sd-winner' : 'sd-loser'}">
+          <span style="color:${aTeam.color}">${g.away}</span><img src="${aTeam.logo}" />
+        </span>
+      </div>
+    </div>`;
+  }).join('') : `<p class="sd-no-data">Game scores not yet available.</p>`;
+
+  return `<div class="series-detail">
+    <button class="sd-back-btn" onclick="closeSeriesDetail()">← Back to Results</button>
+    <div class="sd-header">
+      <div class="sd-teams">
+        <img class="sd-logo" src="${t1.logo}" /><span class="sd-vs">vs</span><img class="sd-logo" src="${t2.logo}" />
+      </div>
+      <div class="sd-series-name">${t1.name} vs ${t2.name}</div>
+      <div class="sd-status">${seriesStatus}</div>
+    </div>
+    <div class="sd-games">${gameRows}</div>
+  </div>`;
+}
 function handleSeriesCardClick(e, sid) {
   if (e.target.closest('.is-clickable, button, input, select, label')) return;
   highlightedResultSid = sid;
@@ -1755,7 +1821,7 @@ let activeTab = 'bracket';
 function switchTab(tab) {
   window.scrollTo(0, 0);
   if (tab !== 'picks') highlightedSid = null;
-  if (tab !== 'participants') highlightedResultSid = null;
+  if (tab !== 'participants') { highlightedResultSid = null; seriesDetailSid = null; }
   activeTab = tab;
   sessionStorage.setItem('nba-active-tab', tab);
   document.querySelectorAll('.tab-btn').forEach(b =>

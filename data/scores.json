@@ -1,5 +1,5 @@
 {
-  "updated": "2026-04-28T21:02:04Z",
+  "updated": "2026-04-28T21:44:01Z",
   "records": {
     "ATL-NYK": {
       "NYK": 2,
@@ -33,6 +33,288 @@
       "SAS": 3,
       "POR": 1
     }
+  },
+  "games": {
+    "ATL-NYK": [
+      {
+        "n": "Game 1",
+        "home": "NYK",
+        "homePts": 113,
+        "away": "ATL",
+        "awayPts": 102,
+        "date": "2026-04-18"
+      },
+      {
+        "n": "Game 2",
+        "home": "NYK",
+        "homePts": 106,
+        "away": "ATL",
+        "awayPts": 107,
+        "date": "2026-04-20"
+      },
+      {
+        "n": "Game 3",
+        "home": "ATL",
+        "homePts": 109,
+        "away": "NYK",
+        "awayPts": 108,
+        "date": "2026-04-23"
+      },
+      {
+        "n": "Game 4",
+        "home": "ATL",
+        "homePts": 98,
+        "away": "NYK",
+        "awayPts": 114,
+        "date": "2026-04-25"
+      }
+    ],
+    "CLE-TOR": [
+      {
+        "n": "Game 1",
+        "home": "CLE",
+        "homePts": 126,
+        "away": "TOR",
+        "awayPts": 113,
+        "date": "2026-04-18"
+      },
+      {
+        "n": "Game 2",
+        "home": "CLE",
+        "homePts": 115,
+        "away": "TOR",
+        "awayPts": 105,
+        "date": "2026-04-20"
+      },
+      {
+        "n": "Game 3",
+        "home": "TOR",
+        "homePts": 126,
+        "away": "CLE",
+        "awayPts": 104,
+        "date": "2026-04-23"
+      },
+      {
+        "n": "Game 4",
+        "home": "TOR",
+        "homePts": 93,
+        "away": "CLE",
+        "awayPts": 89,
+        "date": "2026-04-26"
+      }
+    ],
+    "DEN-MIN": [
+      {
+        "n": "Game 1",
+        "home": "DEN",
+        "homePts": 116,
+        "away": "MIN",
+        "awayPts": 105,
+        "date": "2026-04-18"
+      },
+      {
+        "n": "Game 2",
+        "home": "DEN",
+        "homePts": 114,
+        "away": "MIN",
+        "awayPts": 119,
+        "date": "2026-04-20"
+      },
+      {
+        "n": "Game 3",
+        "home": "MIN",
+        "homePts": 113,
+        "away": "DEN",
+        "awayPts": 96,
+        "date": "2026-04-23"
+      },
+      {
+        "n": "Game 4",
+        "home": "MIN",
+        "homePts": 112,
+        "away": "DEN",
+        "awayPts": 96,
+        "date": "2026-04-25"
+      },
+      {
+        "n": "Game 5",
+        "home": "DEN",
+        "homePts": 125,
+        "away": "MIN",
+        "awayPts": 113,
+        "date": "2026-04-27"
+      }
+    ],
+    "HOU-LAL": [
+      {
+        "n": "Game 1",
+        "home": "LAL",
+        "homePts": 107,
+        "away": "HOU",
+        "awayPts": 98,
+        "date": "2026-04-18"
+      },
+      {
+        "n": "Game 2",
+        "home": "LAL",
+        "homePts": 101,
+        "away": "HOU",
+        "awayPts": 94,
+        "date": "2026-04-21"
+      },
+      {
+        "n": "Game 3",
+        "home": "HOU",
+        "homePts": 108,
+        "away": "LAL",
+        "awayPts": 112,
+        "date": "2026-04-24"
+      },
+      {
+        "n": "Game 4",
+        "home": "HOU",
+        "homePts": 115,
+        "away": "LAL",
+        "awayPts": 96,
+        "date": "2026-04-26"
+      }
+    ],
+    "DET-ORL": [
+      {
+        "n": "Game 1",
+        "home": "DET",
+        "homePts": 101,
+        "away": "ORL",
+        "awayPts": 112,
+        "date": "2026-04-19"
+      },
+      {
+        "n": "Game 2",
+        "home": "DET",
+        "homePts": 98,
+        "away": "ORL",
+        "awayPts": 83,
+        "date": "2026-04-22"
+      },
+      {
+        "n": "Game 3",
+        "home": "ORL",
+        "homePts": 113,
+        "away": "DET",
+        "awayPts": 105,
+        "date": "2026-04-25"
+      },
+      {
+        "n": "Game 4",
+        "home": "ORL",
+        "homePts": 94,
+        "away": "DET",
+        "awayPts": 88,
+        "date": "2026-04-27"
+      }
+    ],
+    "BOS-PHI": [
+      {
+        "n": "Game 1",
+        "home": "BOS",
+        "homePts": 123,
+        "away": "PHI",
+        "awayPts": 91,
+        "date": "2026-04-19"
+      },
+      {
+        "n": "Game 2",
+        "home": "BOS",
+        "homePts": 97,
+        "away": "PHI",
+        "awayPts": 111,
+        "date": "2026-04-21"
+      },
+      {
+        "n": "Game 3",
+        "home": "PHI",
+        "homePts": 100,
+        "away": "BOS",
+        "awayPts": 108,
+        "date": "2026-04-24"
+      },
+      {
+        "n": "Game 4",
+        "home": "PHI",
+        "homePts": 96,
+        "away": "BOS",
+        "awayPts": 128,
+        "date": "2026-04-26"
+      }
+    ],
+    "OKC-PHX": [
+      {
+        "n": "Game 1",
+        "home": "OKC",
+        "homePts": 119,
+        "away": "PHX",
+        "awayPts": 84,
+        "date": "2026-04-19"
+      },
+      {
+        "n": "Game 2",
+        "home": "OKC",
+        "homePts": 120,
+        "away": "PHX",
+        "awayPts": 107,
+        "date": "2026-04-22"
+      },
+      {
+        "n": "Game 3",
+        "home": "PHX",
+        "homePts": 109,
+        "away": "OKC",
+        "awayPts": 121,
+        "date": "2026-04-25"
+      },
+      {
+        "n": "Game 4",
+        "home": "PHX",
+        "homePts": 122,
+        "away": "OKC",
+        "awayPts": 131,
+        "date": "2026-04-27"
+      }
+    ],
+    "POR-SAS": [
+      {
+        "n": "Game 1",
+        "home": "SAS",
+        "homePts": 111,
+        "away": "POR",
+        "awayPts": 98,
+        "date": "2026-04-19"
+      },
+      {
+        "n": "Game 2",
+        "home": "SAS",
+        "homePts": 103,
+        "away": "POR",
+        "awayPts": 106,
+        "date": "2026-04-21"
+      },
+      {
+        "n": "Game 3",
+        "home": "POR",
+        "homePts": 108,
+        "away": "SAS",
+        "awayPts": 120,
+        "date": "2026-04-24"
+      },
+      {
+        "n": "Game 4",
+        "home": "POR",
+        "homePts": 93,
+        "away": "SAS",
+        "awayPts": 114,
+        "date": "2026-04-26"
+      }
+    ]
   },
   "gameTimes": {
     "E4v5": "2026-04-18T19:00:00Z",
