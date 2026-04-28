@@ -1544,10 +1544,9 @@ function renderPickBreakdown(rows) {
           let ptsDisplay = '';
           if (actual) {
             if (ok) {
-              const mark = gok ? ' ✓✓' : ' ✓';
-              ptsDisplay = `<span class="bd-pts-earned">${ptsEarned} pts${mark}</span>`;
+              ptsDisplay = `<span class="bd-pts-earned">${gok ? '✓✓' : '✓'}</span>`;
             } else if (bad) {
-              ptsDisplay = `<span class="bd-pts-earned bd-pts-wrong">0 pts ✗</span>`;
+              ptsDisplay = `<span class="bd-pts-earned bd-pts-wrong">✗</span>`;
             }
           } else if (ptsEarned) {
             ptsDisplay = `<span class="bd-pts-earned">${ptsEarned} pts</span>`;
