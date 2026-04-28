@@ -851,6 +851,8 @@ main { padding: 24px; box-sizing: border-box; width: 100%; }
 .leaderboard-table tbody tr:nth-child(even) { background: color-mix(in srgb, var(--surface2) 60%, transparent); }
 .leaderboard-table .leader-row { background: color-mix(in srgb, var(--accent) 8%, transparent); }
 .p-name-cell { font-weight: 600; }
+.p-name-link { cursor: pointer; }
+.p-name-link:hover { color: var(--accent); }
 .total-cell { font-weight: 700; color: var(--green); }
 .rank-cell  { white-space: nowrap; }
 .rank-num   { display: inline-block; width: 1.6em; text-align: center; vertical-align: middle; }

@@ -1386,6 +1386,11 @@ function clearBdUser() {
   bdUserFilter.clear();
   renderLeaderboard();
 }
+function goToAllPicksUser(pid) {
+  bdUserFilter.clear();
+  bdUserFilter.add(pid);
+  switchTab('picks');
+}
 
 function renderLeaderboard() {
   const el = document.getElementById('tab-leaderboard');
@@ -1432,7 +1437,7 @@ function renderLeaderboard() {
               : `<span class="rank-same">–</span>`;
             return `<tr class="${i === 0 && p.score > 0 ? 'leader-row' : ''} ${isMe ? 'my-row' : ''}">
               <td class="rank-cell"><span class="rank-num">${medal || rank}</span>${arrow}</td>
-              <td class="p-name-cell">${p.name}${isMe ? ' <span class="you-badge">you</span>' : ''}</td>
+              <td class="p-name-cell"><span class="p-name-link" onclick="goToAllPicksUser('${p.id}')">${p.name}</span>${isMe ? ' <span class="you-badge">you</span>' : ''}</td>
               ${rs.map(s => `<td>${s > 0 ? s : '–'}</td>`).join('')}
               <td class="total-cell">${p.score}</td>
             </tr>`;
@@ -1558,7 +1563,7 @@ function renderPickBreakdown(rows) {
             ptsDisplay = `<span class="bd-pts-earned">${ptsEarned} pts</span>`;
           }
           return `<div class="bd-pick-row${isMe ? ' my-row' : ''}${rowBg}">
-            <span class="bd-pick-name">${p.name}</span>
+            <span class="bd-pick-name p-name-link" onclick="goToAllPicksUser('${p.id}')">${p.name}</span>
             <span class="bd-pick-team ${teamCls}">
               ${pt ? `<span class="bd-pick-abbr" style="color:${pt.color}">${pt.abbr}</span>` : '<span class="bd-pick-abbr">?</span>'}
               ${pick.games ? `<span class="bd-pick-games">${pick.games}</span>` : ''}
