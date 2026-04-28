@@ -1476,6 +1476,12 @@ function renderPickBreakdown(rows) {
       <span class="bd-legend-item"><span class="bd-legend-dot yellow"></span> Winner Only</span>
       <span class="bd-legend-item"><span class="bd-legend-dot red"></span> Eliminated</span>
     </div>
+    <div class="bd-legend">
+      <span class="bd-legend-title">Pick Status:</span>
+      <span class="bd-legend-item"><span class="bd-pts-earned">✓✓</span> Winner &amp; Games</span>
+      <span class="bd-legend-item"><span class="bd-pts-earned">✓</span> Winner Only</span>
+      <span class="bd-legend-item"><span class="bd-pts-earned bd-pts-wrong">✗</span> Wrong Pick</span>
+    </div>
   </div>`;
 
   const series = SERIES.filter(s => s.r === bdRoundFilter && isSeriesAvailable(s.id));
