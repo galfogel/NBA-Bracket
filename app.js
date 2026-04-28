@@ -535,7 +535,7 @@ function scoresHaveChanged() {
 }
 
 function saveScoreSnapshot() {
-  const snap = {};
+  const snap = { __resultsCount: Object.keys(state.results).length };
   getLeaderboardRows().forEach((p, i) => { snap[p.id] = { score: p.score, rank: i + 1 }; });
   localStorage.setItem(SCORE_SNAPSHOT_KEY, JSON.stringify(snap));
 }
@@ -1007,6 +1007,7 @@ function cardPicks(sid, t1, t2, pid) {
     </div>`;
   }
 
+  const gamesMark = ag && pick.games && pick.games === ag ? '<span class="win-mark">✓</span>' : '';
   const gamesRow = pick.winner ? `
     <div class="games-selector">
       <span class="games-label">Number of Games:</span>
@@ -1014,13 +1015,12 @@ function cardPicks(sid, t1, t2, pid) {
         ${[4, 5, 6, 7].map(n => {
           const sel = pick.games === n;
           const gcls = sel && ag ? (n === ag ? 'games-correct' : 'games-wrong') : '';
-          const gMark = gcls === 'games-correct' ? ' ✓' : '';
           return `<button class="games-btn ${sel ? 'selected' : ''} ${gcls}"
                           data-ps="${sid}" data-pg="${n}"
-                          ${!editable ? 'disabled' : ''}>${n}${gMark}</button>`;
+                          ${!editable ? 'disabled' : ''}>${n}</button>`;
         }).join('')}
       </div>
-      <span class="games-bonus-hint">+10</span>
+      <span class="games-bonus-hint">+10</span>${gamesMark}
     </div>` : '';
 
   const gt = getGameTime(sid);
@@ -1120,6 +1120,7 @@ function cardView(sid, t1, t2, pid) {
   const gBad   = pick.games && ag2 && pick.games !== ag2;
   const ptsEarned = seriesPoints(pid, sid);
 
+  const gamesMark2 = ag2 && pick.games && pick.games === ag2 ? '<span class="win-mark">✓</span>' : '';
   const gamesRow = pick.winner ? `
     <div class="games-selector">
       <span class="games-label">Number of Games:</span>
@@ -1127,11 +1128,10 @@ function cardView(sid, t1, t2, pid) {
         ${[4, 5, 6, 7].map(n => {
           const sel = pick.games === n;
           const gcls = sel && ag2 ? (n === ag2 ? 'games-correct' : 'games-wrong') : '';
-          const gMark = gcls === 'games-correct' ? ' ✓' : '';
-          return `<button class="games-btn ${sel ? 'selected' : ''} ${gcls}" disabled>${n}${gMark}</button>`;
+          return `<button class="games-btn ${sel ? 'selected' : ''} ${gcls}" disabled>${n}</button>`;
         }).join('')}
       </div>
-      <span class="games-bonus-hint">+10</span>
+      <span class="games-bonus-hint">+10</span>${gamesMark2}
     </div>` : '';
 
   const pickedWrong = actual && pick.winner && pick.winner !== actual;
@@ -1422,9 +1422,9 @@ function renderLeaderboard() {
             const isMe  = p.id === currentUserId;
             const prevRank = snap[p.id]?.rank ?? null;
             const rank = i + 1;
-            const anyComplete = Object.keys(state.results).length > 0;
-            const snapHasScores = Object.values(snap).some(s => (s.score ?? 0) > 0);
-            const arrow = !anyComplete || !snapHasScores
+            const currentResultsCount = Object.keys(state.results).length;
+            const snapResultsCount = snap.__resultsCount ?? 0;
+            const arrow = currentResultsCount <= snapResultsCount
               ? `<span class="rank-same">–</span>`
               : prevRank === null ? `<span class="rank-same">–</span>`
               : rank < prevRank ? `<span class="rank-up">▲</span>`
@@ -1537,10 +1537,20 @@ function renderPickBreakdown(rows) {
           const opponentWins = !actual && pick.winner ? (pickedIsT1 ? (rec ? rec.t2Wins : 0) : (rec ? rec.t1Wins : 0)) : 0;
           const gamesImpossible = !actual && pick.games && pick.games < opponentWins + 4;
           let rowBg = '';
-          if (pick.winner) {
-            if (bad) rowBg = ' bd-row-red';
-            else if (gamesImpossible || (ok && gbad)) rowBg = ' bd-row-yellow';
+          if (pick.winner && !actual) {
+            if (gamesImpossible) rowBg = ' bd-row-yellow';
             else rowBg = ' bd-row-green';
+          }
+          let ptsDisplay = '';
+          if (actual) {
+            if (ok) {
+              const mark = gok ? ' ✓✓' : ' ✓';
+              ptsDisplay = `<span class="bd-pts-earned">${ptsEarned} pts${mark}</span>`;
+            } else if (bad) {
+              ptsDisplay = `<span class="bd-pts-earned bd-pts-wrong">0 pts ✗</span>`;
+            }
+          } else if (ptsEarned) {
+            ptsDisplay = `<span class="bd-pts-earned">${ptsEarned} pts</span>`;
           }
           return `<div class="bd-pick-row${isMe ? ' my-row' : ''}${rowBg}">
             <span class="bd-pick-name">${p.name}</span>
@@ -1548,7 +1558,7 @@ function renderPickBreakdown(rows) {
               ${pt ? `<img src="${pt.logo}" alt="${pt.abbr}" /><span class="bd-pick-abbr" style="color:${pt.color}">${pt.abbr}</span>` : '<span class="bd-pick-abbr">?</span>'}
               ${pick.games ? `<span class="bd-pick-games">${pick.games}</span>` : ''}
             </span>
-            ${ptsEarned ? `<span class="bd-pts-earned">${ptsEarned} pts</span>` : ''}
+            ${ptsDisplay}
           </div>`;
         }).join('');
       } else {
