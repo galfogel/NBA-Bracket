@@ -1058,7 +1058,7 @@ function cardPicks(sid, t1, t2, pid) {
     return '';
   })() : '';
 
-  return `<div class="matchup-card ${locked && !pick.winner ? 'card-inactive' : ''}"
+  return `<div class="matchup-card matchup-card--clickable ${locked && !pick.winner ? 'card-inactive' : ''}"
                data-series="${sid}" onclick="handleSeriesCardClick(event,'${sid}')">
     ${row(t1)}<div class="series-divider"></div>${row(t2)}${gamesRow}${gapRow}${footer}
   </div>`;
@@ -1153,7 +1153,7 @@ function cardView(sid, t1, t2, pid) {
     ? `<div class="gap-input-row gap-readonly"><span class="gap-label">Game 1 gap:</span> <strong>${state.finalsGap[pid]} pts</strong></div>`
     : '';
 
-  return `<div class="matchup-card" data-series="${sid}" onclick="handleSeriesCardClick(event,'${sid}')">
+  return `<div class="matchup-card matchup-card--clickable" data-series="${sid}" onclick="handleSeriesCardClick(event,'${sid}')">
     ${row(t1)}<div class="series-divider"></div>${row(t2)}${gamesRow}${gapRow}${footer}
   </div>`;
 }
