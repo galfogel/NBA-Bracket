@@ -1347,6 +1347,9 @@ function renderPicksTab() {
   if (highlightedSid) {
     el.querySelectorAll(`[data-series="${highlightedSid}"]`).forEach(card =>
       card.classList.add('series-highlight'));
+    const first = el.querySelector(`.bracket-list [data-series="${highlightedSid}"]`)
+      || el.querySelector(`[data-series="${highlightedSid}"]`);
+    if (first) first.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 }
 
@@ -1392,6 +1395,11 @@ function clearBdUser() {
   renderLeaderboard();
 }
 let highlightedSid = null;
+let bdShowPoints = false;
+function toggleBdPoints() {
+  bdShowPoints = !bdShowPoints;
+  renderLeaderboard();
+}
 function goToAllPicksUser(pid, sid = null) {
   viewingPid = pid;
   highlightedSid = sid;
@@ -1492,6 +1500,7 @@ function renderPickBreakdown(rows) {
       <span class="bd-legend-item"><span class="bd-pts-earned">✓✓</span> Winner &amp; Games</span>
       <span class="bd-legend-item"><span class="bd-pts-earned">✓</span> Winner Only</span>
       <span class="bd-legend-item"><span class="bd-pts-earned bd-pts-wrong">✗</span> Wrong Pick</span>
+      <button class="bd-toggle-pts" onclick="toggleBdPoints()">${bdShowPoints ? 'Show Status' : 'Show Points'}</button>
     </div>
   </div>`;
 
@@ -1560,16 +1569,16 @@ function renderPickBreakdown(rows) {
           }
           let ptsDisplay = '';
           if (actual) {
-            if (ok) {
-              ptsDisplay = `<span class="bd-pts-earned">${gok ? '✓✓' : '✓'}</span>`;
-            } else if (bad) {
-              ptsDisplay = `<span class="bd-pts-earned bd-pts-wrong">✗</span>`;
+            if (bdShowPoints) {
+              if (ok || bad) ptsDisplay = `<span class="bd-pts-earned${bad ? ' bd-pts-wrong' : ''}">${ptsEarned} pts</span>`;
+            } else {
+              if (ok) ptsDisplay = `<span class="bd-pts-earned">${gok ? '✓✓' : '✓'}</span>`;
+              else if (bad) ptsDisplay = `<span class="bd-pts-earned bd-pts-wrong">✗</span>`;
             }
           } else if (ptsEarned) {
             ptsDisplay = `<span class="bd-pts-earned">${ptsEarned} pts</span>`;
           }
-          const dataPts = actual && ptsEarned ? ` data-pts="${ptsEarned} pts"` : '';
-          return `<div class="bd-pick-row${isMe ? ' my-row' : ''}${rowBg}"${dataPts}>
+          return `<div class="bd-pick-row${isMe ? ' my-row' : ''}${rowBg}">
             <span class="bd-pick-name p-name-link" onclick="goToAllPicksUser('${p.id}','${def.id}')">${p.name}</span>
             <span class="bd-pick-team ${teamCls}">
               ${pt ? `<span class="bd-pick-abbr" style="color:${pt.color}">${pt.abbr}</span>` : '<span class="bd-pick-abbr">?</span>'}
