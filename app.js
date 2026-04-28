@@ -1029,7 +1029,7 @@ function cardPicks(sid, t1, t2, pid) {
   if (actual && pick.winner) {
     const correct = pick.winner === actual;
     footer = `<div class="card-footer ${correct ? 'footer-correct' : 'footer-wrong'}">
-      ${correct ? '✓' : '✗'} <span class="pts-badge">${ptsEarned} pts</span>
+      <span class="pts-badge">${ptsEarned} pts</span>
     </div>`;
   } else if (locked) {
     footer = `<div class="card-footer footer-locked">🔒 Locked</div>`;
@@ -1420,7 +1420,10 @@ function renderLeaderboard() {
             const isMe  = p.id === currentUserId;
             const prevRank = snap[p.id]?.rank ?? null;
             const rank = i + 1;
-            const arrow = prevRank === null ? ''
+            const anyComplete = Object.keys(state.results).length > 0;
+            const arrow = !anyComplete
+              ? `<span class="rank-same">–</span>`
+              : prevRank === null ? `<span class="rank-same">–</span>`
               : rank < prevRank ? `<span class="rank-up">▲</span>`
               : rank > prevRank ? `<span class="rank-down">▼</span>`
               : `<span class="rank-same">–</span>`;
@@ -1540,8 +1543,7 @@ function renderPickBreakdown(rows) {
             <span class="bd-pick-name">${p.name}</span>
             <span class="bd-pick-team ${teamCls}">
               ${pt ? `<img src="${pt.logo}" alt="${pt.abbr}" /><span class="bd-pick-abbr" style="color:${pt.color}">${pt.abbr}</span>` : '<span class="bd-pick-abbr">?</span>'}
-              ${ok ? '<span class="bd-pick-mark ok">✓</span>' : bad ? '<span class="bd-pick-mark bad">✗</span>' : ''}
-              ${pick.games ? `<span class="bd-pick-games ${gamesCls}">in ${pick.games}${gok ? ' ✓' : gbad ? ` ✗(${ag})` : ''}</span>` : ''}
+              ${pick.games ? `<span class="bd-pick-games">${pick.games}</span>` : ''}
             </span>
             ${ptsEarned ? `<span class="bd-pts-earned">${ptsEarned} pts</span>` : ''}
           </div>`;
