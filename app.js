@@ -1363,7 +1363,7 @@ function renderPicksTab() {
     setTimeout(() => {
       highlighted.forEach(card => card.classList.remove('series-highlight'));
       highlightedSid = null;
-    }, 3000);
+    }, 1000);
   }
 }
 
@@ -1394,13 +1394,17 @@ function renderResults() {
     ${renderBracketLayout('results', null)}`;
 
   if (highlightedResultSid) {
-    el.querySelectorAll(`[data-series="${highlightedResultSid}"]`).forEach(card =>
-      card.classList.add('series-highlight'));
+    const highlightedR = [...el.querySelectorAll(`[data-series="${highlightedResultSid}"]`)];
+    highlightedR.forEach(card => card.classList.add('series-highlight'));
     setTimeout(() => {
       const first = el.querySelector(`.bracket-list [data-series="${highlightedResultSid}"]`)
         || el.querySelector(`[data-series="${highlightedResultSid}"]`);
       if (first) window.scrollTo({ top: first.getBoundingClientRect().top + window.pageYOffset - 120, behavior: 'smooth' });
     }, 80);
+    setTimeout(() => {
+      highlightedR.forEach(card => card.classList.remove('series-highlight'));
+      highlightedResultSid = null;
+    }, 1000);
   }
 }
 
