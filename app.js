@@ -1350,7 +1350,7 @@ function renderPicksTab() {
     setTimeout(() => {
       const first = el.querySelector(`.bracket-list [data-series="${highlightedSid}"]`)
         || el.querySelector(`[data-series="${highlightedSid}"]`);
-      if (first) window.scrollTo({ top: first.getBoundingClientRect().top + window.pageYOffset - 140, behavior: 'smooth' });
+      if (first) window.scrollTo({ top: first.getBoundingClientRect().top + window.pageYOffset - 120, behavior: 'smooth' });
     }, 80);
   }
 }
@@ -1384,7 +1384,7 @@ function renderResults() {
     setTimeout(() => {
       const first = el.querySelector(`.bracket-list [data-series="${highlightedResultSid}"]`)
         || el.querySelector(`[data-series="${highlightedResultSid}"]`);
-      if (first) window.scrollTo({ top: first.getBoundingClientRect().top + window.pageYOffset - 140, behavior: 'smooth' });
+      if (first) window.scrollTo({ top: first.getBoundingClientRect().top + window.pageYOffset - 120, behavior: 'smooth' });
     }, 80);
   }
 }
