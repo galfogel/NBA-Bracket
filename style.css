@@ -959,6 +959,8 @@ main { padding: 24px; box-sizing: border-box; width: 100%; }
   white-space: nowrap;
   flex-shrink: 0;
   align-items: center;
+  justify-content: flex-end;
+  width: 52px;
   gap: 4px;
 }
 .bd-pick-team img { width: 16px; height: 16px; object-fit: contain; }
