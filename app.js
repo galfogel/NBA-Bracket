@@ -948,7 +948,7 @@ function cardResults(sid, t1, t2) {
     </div>`;
   }
 
-  let footer = '';
+  let footer = `<div class="card-footer card-footer-spacer"></div>`;
   if (winner && ag) {
     const winEmoji = seriesEmoji(sid, winner);
     footer = `<div class="card-footer footer-winner">${TEAMS[winner].abbr} wins in ${ag} games${winEmoji ? ' ' + winEmoji : ''}</div>`;
@@ -1014,9 +1014,10 @@ function cardPicks(sid, t1, t2, pid) {
         ${[4, 5, 6, 7].map(n => {
           const sel = pick.games === n;
           const gcls = sel && ag ? (n === ag ? 'games-correct' : 'games-wrong') : '';
+          const gMark = gcls === 'games-correct' ? ' ✓' : '';
           return `<button class="games-btn ${sel ? 'selected' : ''} ${gcls}"
                           data-ps="${sid}" data-pg="${n}"
-                          ${!editable ? 'disabled' : ''}>${n}</button>`;
+                          ${!editable ? 'disabled' : ''}>${n}${gMark}</button>`;
         }).join('')}
       </div>
       <span class="games-bonus-hint">+10</span>
@@ -1036,7 +1037,7 @@ function cardPicks(sid, t1, t2, pid) {
   } else if (lockTs) {
     footer = `<div class="card-footer footer-countdown" data-lock-ts="${lockTs}" data-game-ts="${lockTs}">${formatCountdown(lockTs, lockTs)}</div>`;
   } else {
-    footer = '';
+    footer = `<div class="card-footer card-footer-spacer"></div>`;
   }
 
   const gapRow = sid === 'FINALS' ? (() => {
@@ -1126,7 +1127,8 @@ function cardView(sid, t1, t2, pid) {
         ${[4, 5, 6, 7].map(n => {
           const sel = pick.games === n;
           const gcls = sel && ag2 ? (n === ag2 ? 'games-correct' : 'games-wrong') : '';
-          return `<button class="games-btn ${sel ? 'selected' : ''} ${gcls}" disabled>${n}</button>`;
+          const gMark = gcls === 'games-correct' ? ' ✓' : '';
+          return `<button class="games-btn ${sel ? 'selected' : ''} ${gcls}" disabled>${n}${gMark}</button>`;
         }).join('')}
       </div>
       <span class="games-bonus-hint">+10</span>
@@ -1137,7 +1139,7 @@ function cardView(sid, t1, t2, pid) {
     ? `<div class="card-footer ${gOk ? 'footer-correct' : gBad ? 'footer-wrong' : 'footer-correct'}"><span class="pts-badge">${ptsEarned} pts</span></div>`
     : pickedWrong
     ? `<div class="card-footer footer-wrong">✗ 0 pts</div>`
-    : '';
+    : `<div class="card-footer card-footer-spacer"></div>`;
 
   const gapRow = sid === 'FINALS' && state.finalsGap[pid] != null
     ? `<div class="gap-input-row gap-readonly"><span class="gap-label">Game 1 gap:</span> <strong>${state.finalsGap[pid]} pts</strong></div>`
@@ -1421,7 +1423,8 @@ function renderLeaderboard() {
             const prevRank = snap[p.id]?.rank ?? null;
             const rank = i + 1;
             const anyComplete = Object.keys(state.results).length > 0;
-            const arrow = !anyComplete
+            const snapHasScores = Object.values(snap).some(s => (s.score ?? 0) > 0);
+            const arrow = !anyComplete || !snapHasScores
               ? `<span class="rank-same">–</span>`
               : prevRank === null ? `<span class="rank-same">–</span>`
               : rank < prevRank ? `<span class="rank-up">▲</span>`

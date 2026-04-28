@@ -1065,6 +1065,7 @@ main { padding: 24px; box-sizing: border-box; width: 100%; }
   color: var(--text-dim);
 }
 
+.card-footer-spacer { visibility: hidden; pointer-events: none; }
 .footer-locked   { color: #888; }
 .footer-deadline  { color: var(--text-dim); }
 .footer-countdown { color: var(--accent); font-weight: 600; }
