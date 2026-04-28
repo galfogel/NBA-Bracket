@@ -1352,6 +1352,8 @@ function renderPicksTab() {
     });
   });
 
+  clearTimeout(_highlightTimer);
+  el.querySelectorAll('.series-highlight').forEach(c => c.classList.remove('series-highlight'));
   if (highlightedSid) {
     const highlighted = [...el.querySelectorAll(`[data-series="${highlightedSid}"]`)];
     highlighted.forEach(card => card.classList.add('series-highlight'));
@@ -1360,7 +1362,7 @@ function renderPicksTab() {
         || el.querySelector(`[data-series="${highlightedSid}"]`);
       if (first) window.scrollTo({ top: first.getBoundingClientRect().top + window.pageYOffset - 120, behavior: 'smooth' });
     }, 80);
-    setTimeout(() => {
+    _highlightTimer = setTimeout(() => {
       highlighted.forEach(card => card.classList.remove('series-highlight'));
       highlightedSid = null;
     }, 1000);
@@ -1393,6 +1395,8 @@ function renderResults() {
     ${gapDisplay}
     ${renderBracketLayout('results', null)}`;
 
+  clearTimeout(_highlightResultTimer);
+  el.querySelectorAll('.series-highlight').forEach(c => c.classList.remove('series-highlight'));
   if (highlightedResultSid) {
     const highlightedR = [...el.querySelectorAll(`[data-series="${highlightedResultSid}"]`)];
     highlightedR.forEach(card => card.classList.add('series-highlight'));
@@ -1401,7 +1405,7 @@ function renderResults() {
         || el.querySelector(`[data-series="${highlightedResultSid}"]`);
       if (first) window.scrollTo({ top: first.getBoundingClientRect().top + window.pageYOffset - 120, behavior: 'smooth' });
     }, 80);
-    setTimeout(() => {
+    _highlightResultTimer = setTimeout(() => {
       highlightedR.forEach(card => card.classList.remove('series-highlight'));
       highlightedResultSid = null;
     }, 1000);
@@ -1427,6 +1431,8 @@ function clearBdUser() {
 }
 let highlightedSid = null;
 let highlightedResultSid = null;
+let _highlightTimer = null;
+let _highlightResultTimer = null;
 let seriesDetailSid = null;
 let gameDetailData  = null;
 let bdShowPoints = false;
