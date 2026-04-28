@@ -952,9 +952,10 @@ main { padding: 24px; box-sizing: border-box; width: 100%; }
   border-bottom: 1px solid var(--border);
 }
 .bd-pick-row:last-child { border-bottom: none; }
-.bd-pick-name { font-weight: 600; min-width: 0; flex: 1; color: var(--text-dim); font-size: 11px; }
+.bd-pick-name { font-weight: 600; min-width: 0; flex: 1; color: var(--text-dim); font-size: 11px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .bd-pick-team {
   display: flex;
+  white-space: nowrap;
   align-items: center;
   gap: 4px;
 }
