@@ -371,6 +371,23 @@ main { padding: 24px; box-sizing: border-box; width: 100%; }
 .sd-loser { opacity: 0.4; }
 .sd-dash { color: var(--text-dim); font-size: 16px; }
 .sd-no-data { color: var(--text-dim); font-size: 13px; text-align: center; padding: 32px 0; }
+.sd-game-row--clickable { cursor: pointer; }
+.sd-game-row--clickable:hover { border-color: var(--accent); }
+.sd-tap-hint { margin-left: auto; font-size: 10px; color: var(--text-dim); font-style: italic; }
+
+/* ── Game Detail (player stats) ─────────────────────────────── */
+.gd-team-block { margin-bottom: 20px; }
+.gd-team-header { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.gd-logo { width: 32px; height: 32px; }
+.gd-team-name { font-size: 15px; font-weight: 700; flex: 1; }
+.gd-score { font-size: 22px; font-weight: 800; color: var(--accent); }
+.gd-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.gd-table th { text-align: center; padding: 5px 4px; font-size: 10px; font-weight: 600; color: var(--text-dim); text-transform: uppercase; letter-spacing: .04em; border-bottom: 1px solid var(--border); }
+.gd-table th:first-child { text-align: left; }
+.gd-table td { text-align: center; padding: 6px 4px; border-bottom: 1px solid var(--border); color: var(--text-main); }
+.gd-table tr:last-child td { border-bottom: none; }
+.gd-name { text-align: left !important; font-weight: 600; max-width: 130px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.gd-pts { font-weight: 700; color: var(--green); }
 
 .team-row {
   display: flex;

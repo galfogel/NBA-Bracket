@@ -1,5 +1,5 @@
 {
-  "updated": "2026-04-28T21:44:01Z",
+  "updated": "2026-04-28T21:51:31Z",
   "records": {
     "ATL-NYK": {
       "NYK": 2,
@@ -38,6 +38,7 @@
     "ATL-NYK": [
       {
         "n": "Game 1",
+        "gameId": "0042500121",
         "home": "NYK",
         "homePts": 113,
         "away": "ATL",
@@ -46,6 +47,7 @@
       },
       {
         "n": "Game 2",
+        "gameId": "0042500122",
         "home": "NYK",
         "homePts": 106,
         "away": "ATL",
@@ -54,6 +56,7 @@
       },
       {
         "n": "Game 3",
+        "gameId": "0042500123",
         "home": "ATL",
         "homePts": 109,
         "away": "NYK",
@@ -62,6 +65,7 @@
       },
       {
         "n": "Game 4",
+        "gameId": "0042500124",
         "home": "ATL",
         "homePts": 98,
         "away": "NYK",
@@ -72,6 +76,7 @@
     "CLE-TOR": [
       {
         "n": "Game 1",
+        "gameId": "0042500131",
         "home": "CLE",
         "homePts": 126,
         "away": "TOR",
@@ -80,6 +85,7 @@
       },
       {
         "n": "Game 2",
+        "gameId": "0042500132",
         "home": "CLE",
         "homePts": 115,
         "away": "TOR",
@@ -88,6 +94,7 @@
       },
       {
         "n": "Game 3",
+        "gameId": "0042500133",
         "home": "TOR",
         "homePts": 126,
         "away": "CLE",
@@ -96,6 +103,7 @@
       },
       {
         "n": "Game 4",
+        "gameId": "0042500134",
         "home": "TOR",
         "homePts": 93,
         "away": "CLE",
@@ -106,6 +114,7 @@
     "DEN-MIN": [
       {
         "n": "Game 1",
+        "gameId": "0042500161",
         "home": "DEN",
         "homePts": 116,
         "away": "MIN",
@@ -114,6 +123,7 @@
       },
       {
         "n": "Game 2",
+        "gameId": "0042500162",
         "home": "DEN",
         "homePts": 114,
         "away": "MIN",
@@ -122,6 +132,7 @@
       },
       {
         "n": "Game 3",
+        "gameId": "0042500163",
         "home": "MIN",
         "homePts": 113,
         "away": "DEN",
@@ -130,6 +141,7 @@
       },
       {
         "n": "Game 4",
+        "gameId": "0042500164",
         "home": "MIN",
         "homePts": 112,
         "away": "DEN",
@@ -138,6 +150,7 @@
       },
       {
         "n": "Game 5",
+        "gameId": "0042500165",
         "home": "DEN",
         "homePts": 125,
         "away": "MIN",
@@ -148,6 +161,7 @@
     "HOU-LAL": [
       {
         "n": "Game 1",
+        "gameId": "0042500171",
         "home": "LAL",
         "homePts": 107,
         "away": "HOU",
@@ -156,6 +170,7 @@
       },
       {
         "n": "Game 2",
+        "gameId": "0042500172",
         "home": "LAL",
         "homePts": 101,
         "away": "HOU",
@@ -164,6 +179,7 @@
       },
       {
         "n": "Game 3",
+        "gameId": "0042500173",
         "home": "HOU",
         "homePts": 108,
         "away": "LAL",
@@ -172,6 +188,7 @@
       },
       {
         "n": "Game 4",
+        "gameId": "0042500174",
         "home": "HOU",
         "homePts": 115,
         "away": "LAL",
@@ -182,6 +199,7 @@
     "DET-ORL": [
       {
         "n": "Game 1",
+        "gameId": "0042500101",
         "home": "DET",
         "homePts": 101,
         "away": "ORL",
@@ -190,6 +208,7 @@
       },
       {
         "n": "Game 2",
+        "gameId": "0042500102",
         "home": "DET",
         "homePts": 98,
         "away": "ORL",
@@ -198,6 +217,7 @@
       },
       {
         "n": "Game 3",
+        "gameId": "0042500103",
         "home": "ORL",
         "homePts": 113,
         "away": "DET",
@@ -206,6 +226,7 @@
       },
       {
         "n": "Game 4",
+        "gameId": "0042500104",
         "home": "ORL",
         "homePts": 94,
         "away": "DET",
@@ -216,6 +237,7 @@
     "BOS-PHI": [
       {
         "n": "Game 1",
+        "gameId": "0042500111",
         "home": "BOS",
         "homePts": 123,
         "away": "PHI",
@@ -224,6 +246,7 @@
       },
       {
         "n": "Game 2",
+        "gameId": "0042500112",
         "home": "BOS",
         "homePts": 97,
         "away": "PHI",
@@ -232,6 +255,7 @@
       },
       {
         "n": "Game 3",
+        "gameId": "0042500113",
         "home": "PHI",
         "homePts": 100,
         "away": "BOS",
@@ -240,6 +264,7 @@
       },
       {
         "n": "Game 4",
+        "gameId": "0042500114",
         "home": "PHI",
         "homePts": 96,
         "away": "BOS",
@@ -250,6 +275,7 @@
     "OKC-PHX": [
       {
         "n": "Game 1",
+        "gameId": "0042500141",
         "home": "OKC",
         "homePts": 119,
         "away": "PHX",
@@ -258,6 +284,7 @@
       },
       {
         "n": "Game 2",
+        "gameId": "0042500142",
         "home": "OKC",
         "homePts": 120,
         "away": "PHX",
@@ -266,6 +293,7 @@
       },
       {
         "n": "Game 3",
+        "gameId": "0042500143",
         "home": "PHX",
         "homePts": 109,
         "away": "OKC",
@@ -274,6 +302,7 @@
       },
       {
         "n": "Game 4",
+        "gameId": "0042500144",
         "home": "PHX",
         "homePts": 122,
         "away": "OKC",
@@ -284,6 +313,7 @@
     "POR-SAS": [
       {
         "n": "Game 1",
+        "gameId": "0042500151",
         "home": "SAS",
         "homePts": 111,
         "away": "POR",
@@ -292,6 +322,7 @@
       },
       {
         "n": "Game 2",
+        "gameId": "0042500152",
         "home": "SAS",
         "homePts": 103,
         "away": "POR",
@@ -300,6 +331,7 @@
       },
       {
         "n": "Game 3",
+        "gameId": "0042500153",
         "home": "POR",
         "homePts": 108,
         "away": "SAS",
@@ -308,6 +340,7 @@
       },
       {
         "n": "Game 4",
+        "gameId": "0042500154",
         "home": "POR",
         "homePts": 93,
         "away": "SAS",

@@ -1370,6 +1370,7 @@ function renderPicksTab() {
 function renderResults() {
   const el = document.getElementById('tab-participants');
 
+  if (gameDetailData)  { el.innerHTML = renderGameDetail();                   return; }
   if (seriesDetailSid) { el.innerHTML = renderSeriesDetail(seriesDetailSid); return; }
 
   const gapDisplay = state.finalsGame1ActualGap != null
@@ -1419,7 +1420,62 @@ function clearBdUser() {
 let highlightedSid = null;
 let highlightedResultSid = null;
 let seriesDetailSid = null;
+let gameDetailData  = null;
 let bdShowPoints = false;
+function openGameDetail(gameId, seriesLabel, gameLabel) {
+  gameDetailData = { gameId, seriesLabel, gameLabel, loading: true, error: null, boxScore: null };
+  renderResults();
+  fetch(`https://cdn.nba.com/static/json/liveData/boxscore/boxscore_${gameId}.json`)
+    .then(r => r.json())
+    .then(d => { gameDetailData.boxScore = d.game; gameDetailData.loading = false; renderResults(); })
+    .catch(() => { gameDetailData.error = 'Could not load game stats.'; gameDetailData.loading = false; renderResults(); });
+}
+function closeGameDetail() {
+  gameDetailData = null;
+  renderResults();
+}
+function renderGameDetail() {
+  const { seriesLabel, gameLabel, loading, error, boxScore } = gameDetailData;
+  const title = `${gameLabel} · ${seriesLabel}`;
+  const header = `<button class="sd-back-btn" onclick="closeGameDetail()">← Back to Series</button>
+    <div class="sd-header"><div class="sd-series-name">${title}</div></div>`;
+
+  if (loading) return `<div class="series-detail">${header}<p class="sd-no-data">Loading stats…</p></div>`;
+  if (error)   return `<div class="series-detail">${header}<p class="sd-no-data">${error}</p></div>`;
+
+  function teamTable(teamData) {
+    const t = teamData.teamTricode;
+    const players = (teamData.players || [])
+      .filter(p => p.statistics?.minutesCalculated !== 'PT00M00.00S')
+      .sort((a, b) => (b.statistics?.points ?? 0) - (a.statistics?.points ?? 0));
+    const rows = players.map(p => {
+      const s = p.statistics || {};
+      const min = (s.minutesCalculated || '').replace('PT','').replace(/\..*$/,'').replace('M',':').replace('S','');
+      return `<tr>
+        <td class="gd-name">${p.name}</td>
+        <td>${min}</td>
+        <td class="gd-pts">${s.points ?? 0}</td>
+        <td>${s.reboundsTotal ?? 0}</td>
+        <td>${s.assists ?? 0}</td>
+        <td>${s.steals ?? 0}</td>
+        <td>${s.blocks ?? 0}</td>
+      </tr>`;
+    }).join('');
+    return `<div class="gd-team-block">
+      <div class="gd-team-header"><img src="${ESPN(t === 'SAS' ? 'sa' : t.toLowerCase())}" class="sd-logo gd-logo" /><span class="gd-team-name">${teamData.teamCity} ${teamData.teamName}</span><span class="gd-score">${teamData.score}</span></div>
+      <table class="gd-table">
+        <thead><tr><th>Player</th><th>MIN</th><th>PTS</th><th>REB</th><th>AST</th><th>STL</th><th>BLK</th></tr></thead>
+        <tbody>${rows}</tbody>
+      </table>
+    </div>`;
+  }
+
+  return `<div class="series-detail">
+    ${header}
+    ${teamTable(boxScore.homeTeam)}
+    ${teamTable(boxScore.awayTeam)}
+  </div>`;
+}
 function openSeriesDetail(sid) {
   seriesDetailSid = sid;
   renderResults();
@@ -1443,12 +1499,14 @@ function renderSeriesDetail(sid) {
 
   const teamByAbbr = key => Object.values(TEAMS).find(t => t.abbr === key) || { name: key, color: '#fff', logo: '' };
 
+  const seriesLabel = `${t1.abbr} vs ${t2.abbr}`;
   const gameRows = gamesData ? gamesData.map(g => {
     const hTeam = teamByAbbr(g.home);
     const aTeam = teamByAbbr(g.away);
     const homeWon = g.homePts > g.awayPts;
-    return `<div class="sd-game-row">
-      <div class="sd-game-meta"><span class="sd-game-label">${g.n}</span><span class="sd-date">${g.date}</span></div>
+    const clickable = g.gameId ? ` sd-game-row--clickable" onclick="openGameDetail('${g.gameId}','${seriesLabel}','${g.n}')"` : '"';
+    return `<div class="sd-game-row${clickable}>
+      <div class="sd-game-meta"><span class="sd-game-label">${g.n}</span><span class="sd-date">${g.date}</span>${g.gameId ? '<span class="sd-tap-hint">Tap for player stats</span>' : ''}</div>
       <div class="sd-score-line">
         <span class="sd-team ${homeWon ? 'sd-winner' : 'sd-loser'}">
           <img src="${hTeam.logo}" /><span style="color:${hTeam.color}">${g.home}</span>
@@ -1821,7 +1879,7 @@ let activeTab = 'bracket';
 function switchTab(tab) {
   window.scrollTo(0, 0);
   if (tab !== 'picks') highlightedSid = null;
-  if (tab !== 'participants') { highlightedResultSid = null; seriesDetailSid = null; }
+  if (tab !== 'participants') { highlightedResultSid = null; seriesDetailSid = null; gameDetailData = null; }
   activeTab = tab;
   sessionStorage.setItem('nba-active-tab', tab);
   document.querySelectorAll('.tab-btn').forEach(b =>

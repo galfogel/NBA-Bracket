@@ -94,6 +94,7 @@ def compute_game_scores(raw_games):
         key = "-".join(sorted([h, a]))
         series[key].append({
             "n":       g.get("seriesGameNumber"),
+            "gameId":  g.get("gameId"),
             "home":    h,
             "homePts": home.get("score") or 0,
             "away":    a,
