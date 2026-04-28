@@ -946,6 +946,7 @@ main { padding: 24px; box-sizing: border-box; width: 100%; }
 /* Per-user pick rows */
 .bd-picks { padding: 4px 0; }
 .bd-pick-row {
+  position: relative;
   display: flex;
   align-items: center;
   flex-wrap: nowrap;
@@ -954,6 +955,23 @@ main { padding: 24px; box-sizing: border-box; width: 100%; }
   height: 28px;
   font-size: 12px;
   border-bottom: 1px solid var(--border);
+}
+.bd-pick-row[data-pts]:hover::after {
+  content: attr(data-pts);
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 2px 7px;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--green);
+  pointer-events: none;
+  white-space: nowrap;
+  z-index: 10;
 }
 .bd-pick-row:last-child { border-bottom: none; }
 .bd-pick-name { font-weight: 600; min-width: 0; flex: 1; color: var(--text-dim); font-size: 11px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
