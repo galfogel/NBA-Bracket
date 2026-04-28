@@ -1353,13 +1353,17 @@ function renderPicksTab() {
   });
 
   if (highlightedSid) {
-    el.querySelectorAll(`[data-series="${highlightedSid}"]`).forEach(card =>
-      card.classList.add('series-highlight'));
+    const highlighted = [...el.querySelectorAll(`[data-series="${highlightedSid}"]`)];
+    highlighted.forEach(card => card.classList.add('series-highlight'));
     setTimeout(() => {
       const first = el.querySelector(`.bracket-list [data-series="${highlightedSid}"]`)
         || el.querySelector(`[data-series="${highlightedSid}"]`);
       if (first) window.scrollTo({ top: first.getBoundingClientRect().top + window.pageYOffset - 120, behavior: 'smooth' });
     }, 80);
+    setTimeout(() => {
+      highlighted.forEach(card => card.classList.remove('series-highlight'));
+      highlightedSid = null;
+    }, 3000);
   }
 }
 

@@ -343,6 +343,7 @@ main { padding: 24px; box-sizing: border-box; width: 100%; }
   overflow: hidden;
   width: 100%;
 }
+.matchup-card { transition: border-color 0.6s; }
 .matchup-card.series-highlight { border: 2px solid var(--accent); }
 .matchup-card[onclick] { cursor: pointer; }
 .matchup-card--clickable:hover { border-color: var(--accent); transition: border-color 0.15s; }
