@@ -945,6 +945,7 @@ main { padding: 24px; box-sizing: border-box; width: 100%; }
 .bd-pick-row {
   display: flex;
   align-items: center;
+  flex-wrap: nowrap;
   gap: 6px;
   padding: 5px 10px;
   font-size: 12px;

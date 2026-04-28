@@ -1554,7 +1554,7 @@ function renderPickBreakdown(rows) {
           return `<div class="bd-pick-row${isMe ? ' my-row' : ''}${rowBg}">
             <span class="bd-pick-name">${p.name}</span>
             <span class="bd-pick-team ${teamCls}">
-              ${pt ? `<img src="${pt.logo}" alt="${pt.abbr}" /><span class="bd-pick-abbr" style="color:${pt.color}">${pt.abbr}</span>` : '<span class="bd-pick-abbr">?</span>'}
+              ${pt ? `<span class="bd-pick-abbr" style="color:${pt.color}">${pt.abbr}</span>` : '<span class="bd-pick-abbr">?</span>'}
               ${pick.games ? `<span class="bd-pick-games">${pick.games}</span>` : ''}
             </span>
             ${ptsDisplay}
