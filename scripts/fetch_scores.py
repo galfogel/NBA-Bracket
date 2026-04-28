@@ -210,19 +210,21 @@ def fetch_box_scores(raw_games, existing_box_scores):
             r.raise_for_status()
             game = r.json().get("game", {})
 
+            def parse_mins(mins_raw):
+                # Handles PT38M, PT37M56.00S, PT00M, etc.
+                import re
+                m = re.match(r'PT(\d+)M(?:(\d+)(?:\.\d+)?S)?', mins_raw or '')
+                if not m:
+                    return "00:00"
+                return f"{int(m.group(1)):02d}:{int(m.group(2) or 0):02d}"
+
             def extract_players(team):
                 out = []
                 for p in team.get("players", []):
+                    if p.get("played") == "0" or p.get("played") == 0:
+                        continue
                     s = p.get("statistics") or {}
-                    mins_raw = s.get("minutesCalculated", "PT00M00.00S")
-                    # Convert PT12M34.00S → "12:34"
-                    try:
-                        mins_raw = mins_raw.replace("PT","")
-                        m, rest = mins_raw.split("M")
-                        s_val = rest.split(".")[0]
-                        mins = f"{int(m):02d}:{int(s_val):02d}"
-                    except Exception:
-                        mins = "00:00"
+                    mins = parse_mins(s.get("minutesCalculated", ""))
                     if mins == "00:00":
                         continue
                     out.append({
