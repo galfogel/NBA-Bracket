@@ -1343,6 +1343,11 @@ function renderPicksTab() {
       renderPicksTab();
     });
   });
+
+  if (highlightedSid) {
+    el.querySelectorAll(`[data-series="${highlightedSid}"]`).forEach(card =>
+      card.classList.add('series-highlight'));
+  }
 }
 
 // ============================================================
@@ -1386,8 +1391,10 @@ function clearBdUser() {
   bdUserFilter.clear();
   renderLeaderboard();
 }
-function goToAllPicksUser(pid) {
+let highlightedSid = null;
+function goToAllPicksUser(pid, sid = null) {
   viewingPid = pid;
+  highlightedSid = sid;
   switchTab('picks');
 }
 
@@ -1562,7 +1569,7 @@ function renderPickBreakdown(rows) {
             ptsDisplay = `<span class="bd-pts-earned">${ptsEarned} pts</span>`;
           }
           return `<div class="bd-pick-row${isMe ? ' my-row' : ''}${rowBg}">
-            <span class="bd-pick-name p-name-link" onclick="goToAllPicksUser('${p.id}')">${p.name}</span>
+            <span class="bd-pick-name p-name-link" onclick="goToAllPicksUser('${p.id}','${def.id}')">${p.name}</span>
             <span class="bd-pick-team ${teamCls}">
               ${pt ? `<span class="bd-pick-abbr" style="color:${pt.color}">${pt.abbr}</span>` : '<span class="bd-pick-abbr">?</span>'}
               ${pick.games ? `<span class="bd-pick-games">${pick.games}</span>` : ''}
@@ -1719,6 +1726,7 @@ let activeTab = 'bracket';
 
 function switchTab(tab) {
   window.scrollTo(0, 0);
+  if (tab !== 'picks') highlightedSid = null;
   activeTab = tab;
   sessionStorage.setItem('nba-active-tab', tab);
   document.querySelectorAll('.tab-btn').forEach(b =>
