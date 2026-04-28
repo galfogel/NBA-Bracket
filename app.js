@@ -1051,7 +1051,7 @@ function cardPicks(sid, t1, t2, pid) {
   })() : '';
 
   return `<div class="matchup-card ${locked && !pick.winner ? 'card-inactive' : ''}"
-               data-series="${sid}">
+               data-series="${sid}" onclick="handleSeriesCardClick(event,'${sid}')">
     ${row(t1)}<div class="series-divider"></div>${row(t2)}${gamesRow}${gapRow}${footer}
   </div>`;
 }
@@ -1145,7 +1145,7 @@ function cardView(sid, t1, t2, pid) {
     ? `<div class="gap-input-row gap-readonly"><span class="gap-label">Game 1 gap:</span> <strong>${state.finalsGap[pid]} pts</strong></div>`
     : '';
 
-  return `<div class="matchup-card" data-series="${sid}">
+  return `<div class="matchup-card" data-series="${sid}" onclick="handleSeriesCardClick(event,'${sid}')">
     ${row(t1)}<div class="series-divider"></div>${row(t2)}${gamesRow}${gapRow}${footer}
   </div>`;
 }
@@ -1347,9 +1347,11 @@ function renderPicksTab() {
   if (highlightedSid) {
     el.querySelectorAll(`[data-series="${highlightedSid}"]`).forEach(card =>
       card.classList.add('series-highlight'));
-    const first = el.querySelector(`.bracket-list [data-series="${highlightedSid}"]`)
-      || el.querySelector(`[data-series="${highlightedSid}"]`);
-    if (first) first.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    setTimeout(() => {
+      const first = el.querySelector(`.bracket-list [data-series="${highlightedSid}"]`)
+        || el.querySelector(`[data-series="${highlightedSid}"]`);
+      if (first) window.scrollTo({ top: first.getBoundingClientRect().top + window.pageYOffset - 80, behavior: 'smooth' });
+    }, 80);
   }
 }
 
@@ -1375,6 +1377,16 @@ function renderResults() {
     </div>
     ${gapDisplay}
     ${renderBracketLayout('results', null)}`;
+
+  if (highlightedResultSid) {
+    el.querySelectorAll(`[data-series="${highlightedResultSid}"]`).forEach(card =>
+      card.classList.add('series-highlight'));
+    setTimeout(() => {
+      const first = el.querySelector(`.bracket-list [data-series="${highlightedResultSid}"]`)
+        || el.querySelector(`[data-series="${highlightedResultSid}"]`);
+      if (first) window.scrollTo({ top: first.getBoundingClientRect().top + window.pageYOffset - 80, behavior: 'smooth' });
+    }, 80);
+  }
 }
 
 // ============================================================
@@ -1395,7 +1407,13 @@ function clearBdUser() {
   renderLeaderboard();
 }
 let highlightedSid = null;
+let highlightedResultSid = null;
 let bdShowPoints = false;
+function handleSeriesCardClick(e, sid) {
+  if (e.target.closest('.is-clickable, button, input, select, label')) return;
+  highlightedResultSid = sid;
+  switchTab('participants');
+}
 function toggleBdPoints() {
   bdShowPoints = !bdShowPoints;
   renderLeaderboard();
@@ -1500,8 +1518,8 @@ function renderPickBreakdown(rows) {
       <span class="bd-legend-item"><span class="bd-pts-earned">✓✓</span> Winner &amp; Games</span>
       <span class="bd-legend-item"><span class="bd-pts-earned">✓</span> Winner Only</span>
       <span class="bd-legend-item"><span class="bd-pts-earned bd-pts-wrong">✗</span> Wrong Pick</span>
-      <button class="bd-toggle-pts" onclick="toggleBdPoints()">${bdShowPoints ? 'Show Status' : 'Show Points'}</button>
     </div>
+    <button class="bd-toggle-pts" onclick="toggleBdPoints()">${bdShowPoints ? 'Show Final Status' : 'Show Points Earned'}</button>
   </div>`;
 
   const series = SERIES.filter(s => s.r === bdRoundFilter && isSeriesAvailable(s.id));
@@ -1570,7 +1588,7 @@ function renderPickBreakdown(rows) {
           let ptsDisplay = '';
           if (actual) {
             if (bdShowPoints) {
-              if (ok || bad) ptsDisplay = `<span class="bd-pts-earned${bad ? ' bd-pts-wrong' : ''}">${ptsEarned} pts</span>`;
+              if (ok || bad) ptsDisplay = `<span class="bd-pts-earned${bad ? ' bd-pts-wrong' : ''}">${ptsEarned}</span>`;
             } else {
               if (ok) ptsDisplay = `<span class="bd-pts-earned">${gok ? '✓✓' : '✓'}</span>`;
               else if (bad) ptsDisplay = `<span class="bd-pts-earned bd-pts-wrong">✗</span>`;
@@ -1737,6 +1755,7 @@ let activeTab = 'bracket';
 function switchTab(tab) {
   window.scrollTo(0, 0);
   if (tab !== 'picks') highlightedSid = null;
+  if (tab !== 'participants') highlightedResultSid = null;
   activeTab = tab;
   sessionStorage.setItem('nba-active-tab', tab);
   document.querySelectorAll('.tab-btn').forEach(b =>

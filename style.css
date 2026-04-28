@@ -344,6 +344,7 @@ main { padding: 24px; box-sizing: border-box; width: 100%; }
   width: 100%;
 }
 .matchup-card.series-highlight { border: 2px solid var(--accent); }
+.matchup-card[onclick] { cursor: pointer; }
 
 .team-row {
   display: flex;
