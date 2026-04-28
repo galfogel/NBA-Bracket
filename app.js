@@ -1568,8 +1568,8 @@ function renderPickBreakdown(rows) {
           } else if (ptsEarned) {
             ptsDisplay = `<span class="bd-pts-earned">${ptsEarned} pts</span>`;
           }
-          const dataPts = actual && ptsEarned ? ` data-pts="${ptsEarned} pts"` : '';
-          return `<div class="bd-pick-row${isMe ? ' my-row' : ''}${rowBg}"${dataPts}>
+          const tooltip = actual && ptsEarned ? ` title="${ptsEarned} pts"` : '';
+          return `<div class="bd-pick-row${isMe ? ' my-row' : ''}${rowBg}"${tooltip}>
             <span class="bd-pick-name p-name-link" onclick="goToAllPicksUser('${p.id}','${def.id}')">${p.name}</span>
             <span class="bd-pick-team ${teamCls}">
               ${pt ? `<span class="bd-pick-abbr" style="color:${pt.color}">${pt.abbr}</span>` : '<span class="bd-pick-abbr">?</span>'}
