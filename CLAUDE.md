@@ -26,7 +26,7 @@ Pure vanilla JS + CSS static site hosted on GitHub Pages. No framework, no build
 ### Access control
 No platform gate. The user "Fogel" is the commissioner/admin — identified by name match in `isAdmin` checks throughout the code.
 
-The login overlay has two tabs — **Sign In** (existing user) and **Sign Up** (new user) — controlled by `loginMode` and `setLoginMode()`. Sign In rejects unknown usernames. **Sign Up is currently blocked** — submitting the form shows "Registration is closed. The playoffs have already started." **The Sign In / Sign Up tab bar is hidden** (`display: none !important`) since only Sign In is active. The access code gate (`initGate()`) is bypassed — it always returns true. Switching accounts shows a **← Back** button (`canGoBack = true` in `showLoginOverlay()`) that restores the previous session without logging out.
+The login overlay has two tabs — **Sign In** (existing user) and **Sign Up** (new user) — controlled by `loginMode` and `setLoginMode()`. Sign In rejects unknown usernames. **Sign Up is currently blocked** — submitting the form shows "Registration is closed. The playoffs have already started." Switching accounts shows a **← Back** button (`canGoBack = true` in `showLoginOverlay()`) that restores the previous session without logging out.
 
 ### State: two layers
 - **`localStorage`** (`nba-bracket-2026-v2`): full app state. Never leaves the device.
@@ -59,7 +59,7 @@ On page load: `fetchPicks()` reads Firestore → `mergeRemoteState()` folds remo
 
 **Prizes**: Buy-in is 100 ₪ per player. Rules page shows formulas (not hardcoded amounts): 1st = (Prize pool − Buy-in) × 70%, 2nd = (Prize pool − Buy-in) × 30%, 3rd = Buy-in back. Leaderboard shows prizes on `.prize-bar`; actual amounts 1,050 ₪ / 450 ₪ / 100 ₪, prize pool = 1,600 ₪.
 
-**Series emoji** (`seriesEmoji(sid, leaderKey)`): shown on results cards and Pick Details breakdown next to the score. Based on the leader's pre-series fan win % from `WIN_PCT` (R1 only): ≤25% → 😮, ≤50% → 🤔, ≤75% → 🙂, >75% → 😎. Exception: SAS leading any series always returns 😭 (personal easter egg — SAS is favoured over Portland at ~98%). R2+ series have no `WIN_PCT` so emoji is always empty.
+**Series emoji** (`seriesEmoji(sid, leaderKey)`): shown on results cards next to the score when one team leads. Based on the leader's pre-series fan win % from `WIN_PCT` (R1 only): ≤25% → 😮, ≤50% → 🤔, ≤75% → 🙂, >75% → 😎. Exception: any team leading against Portland (W7) always returns 😭 (personal easter egg — Portland is at 2%). R2+ series have no `WIN_PCT` so emoji is always empty.
 
 ### Rendering
 Five tabs: **My Picks**, **All Picks**, **Results**, **Leaderboard**, **Rules**. Each renderer registered in `RENDERERS`; corresponding `#tab-{name}` div in `index.html`. Active tab persisted in `sessionStorage`; restored on page refresh, reset to My Picks on login.
@@ -76,7 +76,14 @@ The bracket has two parallel HTML outputs:
 **Pick visibility**: other users' picks hidden until series locks — unless viewer is admin (Fogel) or viewing own picks. Gap prediction shown on Finals card in All Picks only when the viewed user has submitted one.
 
 ### Scores pipeline
-`scripts/fetch_scores.py` runs hourly via GitHub Actions, hits `stats.nba.com` (retries up to 3×), writes `data/scores.json` with: `records` (wins per series, all rounds), `gameTimes` (preserved from prior run — R1 only, R2+ added manually), `finalsGame1Gap` (auto-detected from Game 1 point totals). Front-end `fetchScores()` runs on load and every 5 minutes: auto-sets series winners via `syncResultsFromAPI()`, auto-populates `state.finalsGame1ActualGap`.
+`scripts/fetch_scores.py` runs hourly via GitHub Actions, fetches from `cdn.nba.com/static/json/staticData/scheduleLeagueV2.json`, writes `data/scores.json` with:
+- `records` — win counts per series (keyed by sorted team abbr pair e.g. `"OKC-PHX"`)
+- `games` — per-game breakdown per series: `[{ n, gameId, home, homePts, away, awayPts, date }]`
+- `boxScores` — player stats per finished game keyed by `gameId`: `{ home: { tricode, city, name, score, players: [{name, jersey, min, pts, reb, ast, stl, blk}] }, away: {...} }`. Players sorted by pts; DNP players excluded. Minutes parsed from `PT38M` / `PT37M56.00S` format via regex. Already-fetched games are cached and skipped on subsequent runs.
+- `gameTimes` — preserved from prior run (R1 only; R2+ added manually)
+- `finalsGame1Gap` — auto-detected from Finals Game 1 point totals
+
+Front-end `fetchScores()` runs on load and every 5 minutes: auto-sets series winners via `syncResultsFromAPI()`, auto-populates `state.finalsGame1ActualGap`.
 
 ### Key non-obvious details
 - **Downstream clearing**: `clearResultDownstream()` recursively invalidates later-round results when a result is edited.
@@ -97,6 +104,8 @@ The bracket has two parallel HTML outputs:
 - **Leaderboard rank arrows**: snapshot (`SCORE_SNAPSHOT_KEY`) stores `__resultsCount` alongside per-user rank/score. Arrows (▲/▼/–) only appear when `Object.keys(state.results).length > snap.__resultsCount` — i.e. new series have completed since the last login. All users see "–" until a new series finishes after their session starts.
 - **Pick Details (breakdown) row**: layout is `display: flex` with three fixed-width columns — `.bd-pick-name` (`flex: 1`, truncates with `…`), `.bd-pick-team` (`width: 52px`, right-aligned), `.bd-pts-earned` (`width: 20px`, centered). All rows are `height: 28px` so users align horizontally across series cards. In-progress picks show green/yellow background; completed picks show ✓✓ (winner + games), ✓ (winner only), ✗ (wrong) in `.bd-pts-earned` (green) / `.bd-pts-wrong` (red). The result bar (`.bd-result`) below the series header shows live score + emoji, mirroring the Results tab footer. Two legends above the grid: "Pick Potential" (dot colours) and "Pick Status" (✓✓/✓/✗ meanings).
 - **All cards have equal height**: every `matchup-card` always renders a `.card-footer` — invisible spacer (`.card-footer-spacer`) when there is no real footer content, so finished and in-progress cards are the same height.
+- **Series detail view**: clicking a Results card opens `renderSeriesDetail(sid)` inline (same tab, no overlay). Shows logos, series status, and all game scores. Clicking a game row opens `renderGameDetail()` showing both teams' box scores from `scoresData.boxScores[gameId]`. Back buttons navigate up. State: `seriesDetailSid` / `gameDetailData`. Cleared when switching away from Results tab via `switchTab()`. Cards in My Picks and All Picks navigate to Results with `handleSeriesCardClick()`; all three card types show `.matchup-card--clickable` hover (orange border).
+- **Username → All Picks navigation**: `goToAllPicksUser(pid, sid)` sets `viewingPid` and `highlightedSid`, then calls `switchTab('picks')`. Names in Leaderboard table (`.p-name-link`) and Pick Details rows trigger this. Highlighted series gets `.series-highlight` class (orange border) and is scrolled into view after a 80ms delay with 120px header offset.
 - **User greeting + "Log out" button**: rendered in `updateUserDisplay()` — greeting shows `[name] is in the building!` where the name is wrapped in `.greeting-name` (bold, orange `var(--accent)`), rest is normal weight dimmed text. Logout is `.btn-switch-user`; clicking calls `switchUser()` which shows the login overlay.
 - **Leaderboard conference titles**: `.bd-conf-title` — "Eastern Conference" / "Western Conference" headers in the pick breakdown, styled orange (`var(--accent)`).
 - **Floating save/edit buttons**: `renderFloatingSaveBar(pid)` renders `.floating-save-bar` with `.fab-save` (orange) and `.fab-edit` buttons pinned to bottom-center of the My Picks tab. Replaces the old sticky round-controls bar. After saving, `showSaveToast('✓ Picks saved!')` shows a center-screen auto-dismissing toast.
