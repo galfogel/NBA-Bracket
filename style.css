@@ -1225,11 +1225,6 @@ main { padding: 24px; box-sizing: border-box; width: 100%; }
   font-weight: 700;
 }
 
-.games-btn.selected.games-wrong {
-  background: color-mix(in srgb, var(--green) 20%, var(--surface2));
-  border-color: var(--green);
-  color: var(--green);
-}
 
 .games-btn:disabled {
   opacity: 0.4;
