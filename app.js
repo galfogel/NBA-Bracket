@@ -1015,7 +1015,7 @@ function cardPicks(sid, t1, t2, pid) {
     </div>`;
   }
 
-  const gamesMark = ag && pick.games && pick.games === ag ? '<span class="win-mark">✓</span>' : '';
+  const gamesMark = ag && pick.games ? (pick.games === ag ? '<span class="win-mark">✓</span>' : '<span class="win-mark win-mark--wrong">✗</span>') : '';
   const gamesRow = pick.winner ? `
     <div class="games-selector">
       <span class="games-label">Number of Games:</span>
@@ -1128,7 +1128,7 @@ function cardView(sid, t1, t2, pid) {
   const gBad   = pick.games && ag2 && pick.games !== ag2;
   const ptsEarned = seriesPoints(pid, sid);
 
-  const gamesMark2 = ag2 && pick.games && pick.games === ag2 ? '<span class="win-mark">✓</span>' : '';
+  const gamesMark2 = ag2 && pick.games ? (pick.games === ag2 ? '<span class="win-mark">✓</span>' : '<span class="win-mark win-mark--wrong">✗</span>') : '';
   const gamesRow = pick.winner ? `
     <div class="games-selector">
       <span class="games-label">Number of Games:</span>
@@ -1146,7 +1146,7 @@ function cardView(sid, t1, t2, pid) {
   const footer = ptsEarned
     ? `<div class="card-footer ${gOk ? 'footer-correct' : gBad ? 'footer-wrong' : 'footer-correct'}"><span class="pts-badge">${ptsEarned} pts</span></div>`
     : pickedWrong
-    ? `<div class="card-footer footer-wrong">✗ 0 pts</div>`
+    ? `<div class="card-footer footer-wrong">0 pts</div>`
     : `<div class="card-footer card-footer-spacer"></div>`;
 
   const gapRow = sid === 'FINALS' && state.finalsGap[pid] != null
