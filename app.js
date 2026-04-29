@@ -582,7 +582,7 @@ function startApp() {
     leaderboardMessage  = (tab === 'leaderboard') ? getRankMessage(currentUserId) : '';
     switchTab(tab);
   }
-  saveScoreSnapshot();
+  if (!localStorage.getItem(SCORE_SNAPSHOT_KEY)) saveScoreSnapshot();
 }
 
 function updateUserDisplay() {
@@ -759,6 +759,17 @@ async function fetchScores() {
 function syncResultsFromAPI() {
   if (!scoresData) return;
   let changed = false;
+
+  let willChange = false;
+  for (const def of SERIES) {
+    if (state.results[def.id]) continue;
+    const [t1, t2] = resolveTeams(def.id);
+    if (!t1 || !t2) continue;
+    const rec = getRecord(def.id);
+    if (!rec) continue;
+    if (rec.t1Wins >= 4 || rec.t2Wins >= 4) { willChange = true; break; }
+  }
+  if (willChange) saveScoreSnapshot();
 
   for (const def of SERIES) {
     if (state.results[def.id]) continue;
@@ -1595,7 +1606,7 @@ function renderLeaderboard() {
             const rank = i + 1;
             const currentResultsCount = Object.keys(state.results).length;
             const snapResultsCount = snap.__resultsCount ?? 0;
-            const arrow = currentResultsCount < 2 || currentResultsCount <= snapResultsCount
+            const arrow = currentResultsCount < 2
               ? `<span class="rank-same">–</span>`
               : prevRank === null ? `<span class="rank-same">–</span>`
               : rank < prevRank ? `<span class="rank-up">▲</span>`
