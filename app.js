@@ -1038,7 +1038,7 @@ function cardPicks(sid, t1, t2, pid) {
   if (actual && pick.winner) {
     const correct = pick.winner === actual;
     footer = `<div class="card-footer ${correct ? 'footer-correct' : 'footer-wrong'}">
-      <span class="pts-badge">${ptsEarned} pts</span>
+      <span class="pts-badge"${correct ? '' : ' style="color:var(--red)"'}>${ptsEarned} pts</span>
     </div>`;
   } else if (locked) {
     footer = `<div class="card-footer footer-locked">🔒 Locked</div>`;
@@ -1146,7 +1146,7 @@ function cardView(sid, t1, t2, pid) {
   const footer = ptsEarned
     ? `<div class="card-footer ${gOk ? 'footer-correct' : gBad ? 'footer-wrong' : 'footer-correct'}"><span class="pts-badge">${ptsEarned} pts</span></div>`
     : pickedWrong
-    ? `<div class="card-footer footer-wrong"><span class="pts-badge">0 pts</span></div>`
+    ? `<div class="card-footer footer-wrong"><span class="pts-badge" style="color:var(--red)">0 pts</span></div>`
     : `<div class="card-footer card-footer-spacer"></div>`;
 
   const gapRow = sid === 'FINALS' && state.finalsGap[pid] != null
