@@ -1146,7 +1146,7 @@ function cardView(sid, t1, t2, pid) {
   const footer = ptsEarned
     ? `<div class="card-footer ${gOk ? 'footer-correct' : gBad ? 'footer-wrong' : 'footer-correct'}"><span class="pts-badge">${ptsEarned} pts</span></div>`
     : pickedWrong
-    ? `<div class="card-footer footer-wrong">0 pts</div>`
+    ? `<div class="card-footer footer-wrong"><span class="pts-badge">0 pts</span></div>`
     : `<div class="card-footer card-footer-spacer"></div>`;
 
   const gapRow = sid === 'FINALS' && state.finalsGap[pid] != null
