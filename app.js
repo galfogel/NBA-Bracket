@@ -1595,7 +1595,7 @@ function renderLeaderboard() {
             const rank = i + 1;
             const currentResultsCount = Object.keys(state.results).length;
             const snapResultsCount = snap.__resultsCount ?? 0;
-            const arrow = currentResultsCount <= snapResultsCount
+            const arrow = currentResultsCount < 2 || currentResultsCount <= snapResultsCount
               ? `<span class="rank-same">–</span>`
               : prevRank === null ? `<span class="rank-same">–</span>`
               : rank < prevRank ? `<span class="rank-up">▲</span>`
