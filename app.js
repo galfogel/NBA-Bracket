@@ -1650,8 +1650,8 @@ function renderPickBreakdown(rows) {
     <div class="bd-legend">
       <span class="bd-legend-title">Final Status:</span>
       <span class="bd-legend-item"><span class="bd-pts-earned">✓✓</span> Winner &amp; Games</span>
-      <span class="bd-legend-item"><span class="bd-pts-earned">✓</span> Winner Only</span>
-      <span class="bd-legend-item"><span class="bd-pts-earned bd-pts-wrong">✗</span> Wrong Pick</span>
+      <span class="bd-legend-item"><span class="bd-pts-earned">✓</span><span class="bd-pts-earned bd-pts-wrong">✗</span> Winner Only</span>
+      <span class="bd-legend-item"><span class="bd-pts-earned bd-pts-wrong">✗✗</span> Wrong Pick</span>
     </div>
     <button class="bd-toggle-pts" onclick="toggleBdPoints()">${bdShowPoints ? 'Show Final Status' : 'Show Points Earned'}</button>
   </div>`;
@@ -1724,8 +1724,10 @@ function renderPickBreakdown(rows) {
             if (bdShowPoints) {
               if (ok || bad) ptsDisplay = `<span class="bd-pts-earned${bad ? ' bd-pts-wrong' : ''}">${ptsEarned}</span>`;
             } else {
-              if (ok) ptsDisplay = `<span class="bd-pts-earned">${gok ? '✓✓' : '✓'}</span>`;
-              else if (bad) ptsDisplay = `<span class="bd-pts-earned bd-pts-wrong">✗</span>`;
+              if (ok) ptsDisplay = gok
+                ? `<span class="bd-pts-earned">✓✓</span>`
+                : `<span class="bd-pts-earned">✓</span><span class="bd-pts-earned bd-pts-wrong">✗</span>`;
+              else if (bad) ptsDisplay = `<span class="bd-pts-earned bd-pts-wrong">✗✗</span>`;
             }
           } else if (ptsEarned) {
             ptsDisplay = `<span class="bd-pts-earned">${ptsEarned} pts</span>`;
