@@ -1018,7 +1018,7 @@ function cardPicks(sid, t1, t2, pid) {
   const gamesMark = ag && pick.games ? (pick.games === ag ? '<span class="win-mark">✓</span>' : '<span class="win-mark win-mark--wrong">✗</span>') : '';
   const gamesRow = pick.winner ? `
     <div class="games-selector">
-      <span class="games-label">Number of Games:</span>
+      <span class="games-label">Games:</span>
       <div class="games-btns">
         ${[4, 5, 6, 7].map(n => {
           const sel = pick.games === n;
@@ -1131,7 +1131,7 @@ function cardView(sid, t1, t2, pid) {
   const gamesMark2 = ag2 && pick.games ? (pick.games === ag2 ? '<span class="win-mark">✓</span>' : '<span class="win-mark win-mark--wrong">✗</span>') : '';
   const gamesRow = pick.winner ? `
     <div class="games-selector">
-      <span class="games-label">Number of Games:</span>
+      <span class="games-label">Games:</span>
       <div class="games-btns">
         ${[4, 5, 6, 7].map(n => {
           const sel = pick.games === n;
