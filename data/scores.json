@@ -1,5 +1,5 @@
 {
-  "updated": "2026-04-29T23:50:13Z",
+  "updated": "2026-04-30T02:14:32Z",
   "records": {
     "ATL-NYK": {
       "NYK": 3,
@@ -19,7 +19,7 @@
     },
     "DET-ORL": {
       "ORL": 3,
-      "DET": 1
+      "DET": 2
     },
     "BOS-PHI": {
       "BOS": 3,
@@ -241,6 +241,15 @@
         "away": "DET",
         "awayPts": 88,
         "date": "2026-04-27"
+      },
+      {
+        "n": "Game 5",
+        "gameId": "0042500105",
+        "home": "DET",
+        "homePts": 116,
+        "away": "ORL",
+        "awayPts": 109,
+        "date": "2026-04-29"
       }
     ],
     "BOS-PHI": [
@@ -9201,6 +9210,194 @@
             "ast": 0,
             "stl": 0,
             "blk": 0
+          }
+        ]
+      }
+    },
+    "0042500105": {
+      "home": {
+        "tricode": "DET",
+        "city": "Detroit",
+        "name": "Pistons",
+        "score": 116,
+        "players": [
+          {
+            "name": "Cade Cunningham",
+            "jersey": "2",
+            "min": "44:00",
+            "pts": 45,
+            "reb": 4,
+            "ast": 5,
+            "stl": 1,
+            "blk": 0
+          },
+          {
+            "name": "Tobias Harris",
+            "jersey": "12",
+            "min": "31:00",
+            "pts": 23,
+            "reb": 8,
+            "ast": 1,
+            "stl": 2,
+            "blk": 0
+          },
+          {
+            "name": "Jalen Duren",
+            "jersey": "0",
+            "min": "28:00",
+            "pts": 12,
+            "reb": 9,
+            "ast": 2,
+            "stl": 0,
+            "blk": 2
+          },
+          {
+            "name": "Duncan Robinson",
+            "jersey": "55",
+            "min": "25:00",
+            "pts": 12,
+            "reb": 3,
+            "ast": 1,
+            "stl": 0,
+            "blk": 0
+          },
+          {
+            "name": "Ausar Thompson",
+            "jersey": "9",
+            "min": "36:00",
+            "pts": 6,
+            "reb": 15,
+            "ast": 6,
+            "stl": 5,
+            "blk": 2
+          },
+          {
+            "name": "Daniss Jenkins",
+            "jersey": "24",
+            "min": "16:00",
+            "pts": 6,
+            "reb": 0,
+            "ast": 2,
+            "stl": 1,
+            "blk": 0
+          },
+          {
+            "name": "Isaiah Stewart",
+            "jersey": "28",
+            "min": "20:00",
+            "pts": 5,
+            "reb": 5,
+            "ast": 0,
+            "stl": 0,
+            "blk": 1
+          },
+          {
+            "name": "Javonte Green",
+            "jersey": "31",
+            "min": "15:00",
+            "pts": 5,
+            "reb": 2,
+            "ast": 1,
+            "stl": 1,
+            "blk": 0
+          },
+          {
+            "name": "Caris LeVert",
+            "jersey": "8",
+            "min": "25:00",
+            "pts": 2,
+            "reb": 3,
+            "ast": 2,
+            "stl": 0,
+            "blk": 0
+          }
+        ]
+      },
+      "away": {
+        "tricode": "ORL",
+        "city": "Orlando",
+        "name": "Magic",
+        "score": 109,
+        "players": [
+          {
+            "name": "Paolo Banchero",
+            "jersey": "5",
+            "min": "41:00",
+            "pts": 45,
+            "reb": 9,
+            "ast": 7,
+            "stl": 2,
+            "blk": 0
+          },
+          {
+            "name": "Anthony Black",
+            "jersey": "0",
+            "min": "39:00",
+            "pts": 19,
+            "reb": 5,
+            "ast": 3,
+            "stl": 3,
+            "blk": 0
+          },
+          {
+            "name": "Desmond Bane",
+            "jersey": "3",
+            "min": "34:00",
+            "pts": 18,
+            "reb": 5,
+            "ast": 1,
+            "stl": 3,
+            "blk": 0
+          },
+          {
+            "name": "Jalen Suggs",
+            "jersey": "4",
+            "min": "37:00",
+            "pts": 10,
+            "reb": 2,
+            "ast": 5,
+            "stl": 3,
+            "blk": 0
+          },
+          {
+            "name": "Wendell Carter Jr.",
+            "jersey": "34",
+            "min": "34:00",
+            "pts": 9,
+            "reb": 4,
+            "ast": 4,
+            "stl": 1,
+            "blk": 3
+          },
+          {
+            "name": "Jamal Cain",
+            "jersey": "8",
+            "min": "25:00",
+            "pts": 5,
+            "reb": 4,
+            "ast": 1,
+            "stl": 0,
+            "blk": 0
+          },
+          {
+            "name": "Tristan da Silva",
+            "jersey": "23",
+            "min": "16:00",
+            "pts": 3,
+            "reb": 3,
+            "ast": 0,
+            "stl": 0,
+            "blk": 0
+          },
+          {
+            "name": "Goga Bitadze",
+            "jersey": "35",
+            "min": "14:00",
+            "pts": 0,
+            "reb": 1,
+            "ast": 0,
+            "stl": 0,
+            "blk": 2
           }
         ]
       }
