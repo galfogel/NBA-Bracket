@@ -1006,7 +1006,7 @@ function cardPicks(sid, t1, t2, pid) {
     const isPicked = pick.winner === key;
     const isOk     = isPicked && actual && actual === key;
     const isBad    = isPicked && actual && actual !== key;
-    const cls      = isPicked ? (isBad ? 'is-wrong-pick' : 'is-winner') : '';
+    const cls      = isPicked ? (isBad ? 'is-wrong-pick' : isOk ? 'is-winner' : 'is-selected') : '';
     const mark     = isPicked ? (isOk ? '✓' : isBad ? '✗' : '') : '';
     const markCls  = isBad ? 'win-mark win-mark--wrong' : 'win-mark';
     const pct      = getWinPct(sid, key);
@@ -1115,7 +1115,7 @@ function cardView(sid, t1, t2, pid) {
     const isPicked = pick.winner === key;
     const isOk     = isPicked && actual && actual === key;
     const isBad    = isPicked && actual && actual !== key;
-    const cls      = isPicked ? (isBad ? 'is-wrong-pick' : 'is-winner') : '';
+    const cls      = isPicked ? (isBad ? 'is-wrong-pick' : isOk ? 'is-winner' : 'is-selected') : '';
     const mark     = isOk ? '✓' : isBad ? '✗' : '';
     const markCls  = isBad ? 'win-mark win-mark--wrong' : 'win-mark';
     const pct      = getWinPct(sid, key);

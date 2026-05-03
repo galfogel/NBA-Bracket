@@ -407,9 +407,14 @@ main { padding: 24px; box-sizing: border-box; width: 100%; }
   border-left: 3px solid var(--green);
 }
 
+.team-row.is-selected {
+  background: color-mix(in srgb, #eab308 14%, var(--surface));
+  border-left: 3px solid #eab308;
+}
+
 .team-row.is-wrong-pick {
-  background: color-mix(in srgb, var(--green) 14%, var(--surface));
-  border-left: 3px solid var(--green);
+  background: color-mix(in srgb, var(--red) 14%, var(--surface));
+  border-left: 3px solid var(--red);
 }
 
 .team-row.is-clickable { cursor: pointer; }
@@ -919,7 +924,7 @@ main { padding: 24px; box-sizing: border-box; width: 100%; }
 .bd-clear-filter:hover { color: var(--text); border-color: var(--text-dim); }
 
 .bd-pot-dot { width: 20px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
-.bd-pot-dot::after { content: ''; display: block; width: 8px; height: 8px; border-radius: 50%; }
+.bd-pot-dot::after { content: ''; display: block; width: 9px; height: 9px; border-radius: 50%; opacity: 0.75; }
 .bd-pot-dot.green::after  { background: #22c55e; }
 .bd-pot-dot.yellow::after { background: #eab308; }
 
@@ -1214,9 +1219,9 @@ main { padding: 24px; box-sizing: border-box; width: 100%; }
 }
 
 .games-btn.selected {
-  background: color-mix(in srgb, var(--green) 20%, var(--surface2));
-  border-color: var(--green);
-  color: var(--green);
+  background: color-mix(in srgb, #eab308 20%, var(--surface2));
+  border-color: #eab308;
+  color: #eab308;
 }
 
 .games-btn.selected.games-correct {
@@ -1224,6 +1229,12 @@ main { padding: 24px; box-sizing: border-box; width: 100%; }
   border-color: var(--green);
   color: #fff;
   font-weight: 700;
+}
+
+.games-btn.selected.games-wrong {
+  background: color-mix(in srgb, var(--red) 25%, var(--surface2));
+  border-color: var(--red);
+  color: var(--red);
 }
 
 
