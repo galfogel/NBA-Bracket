@@ -573,14 +573,15 @@ function getLandingTab(pid) {
 
 function startApp() {
   updateUserDisplay();
+  const unlocked = SERIES.filter(s => isSeriesAvailable(s.id) && !isSeriesLocked(s.id));
+  showIncompleteToast = unlocked.some(s => { const p = getPick(currentUserId, s.id); return !p.winner || !p.games; });
+  leaderboardMessage  = scoresHaveChanged() ? getRankMessage(currentUserId) : '';
+
   const savedTab = sessionStorage.getItem('nba-active-tab');
   if (savedTab && RENDERERS[savedTab]) {
     switchTab(savedTab);
   } else {
-    const tab = getLandingTab(currentUserId);
-    showIncompleteToast = (tab === 'bracket');
-    leaderboardMessage  = (tab === 'leaderboard') ? getRankMessage(currentUserId) : '';
-    switchTab(tab);
+    switchTab(getLandingTab(currentUserId));
   }
   if (!localStorage.getItem(SCORE_SNAPSHOT_KEY)) saveScoreSnapshot();
 }
