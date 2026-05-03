@@ -1,5 +1,5 @@
 {
-  "updated": "2026-05-03T02:11:12Z",
+  "updated": "2026-05-03T05:40:25Z",
   "records": {
     "ATL-NYK": {
       "NYK": 4,
@@ -23,7 +23,7 @@
     },
     "BOS-PHI": {
       "BOS": 3,
-      "PHI": 3
+      "PHI": 4
     },
     "OKC-PHX": {
       "OKC": 4,
@@ -369,6 +369,15 @@
         "away": "BOS",
         "awayPts": 93,
         "date": "2026-04-30"
+      },
+      {
+        "n": "Game 7",
+        "gameId": "0042500117",
+        "home": "BOS",
+        "homePts": 100,
+        "away": "PHI",
+        "awayPts": 109,
+        "date": "2026-05-02"
       }
     ],
     "OKC-PHX": [
@@ -11303,6 +11312,214 @@
             "reb": 1,
             "ast": 1,
             "stl": 1,
+            "blk": 0
+          }
+        ]
+      }
+    },
+    "0042500117": {
+      "home": {
+        "tricode": "BOS",
+        "city": "Boston",
+        "name": "Celtics",
+        "score": 100,
+        "players": [
+          {
+            "name": "Jaylen Brown",
+            "jersey": "7",
+            "min": "40:00",
+            "pts": 33,
+            "reb": 9,
+            "ast": 4,
+            "stl": 0,
+            "blk": 3
+          },
+          {
+            "name": "Derrick White",
+            "jersey": "9",
+            "min": "45:00",
+            "pts": 26,
+            "reb": 6,
+            "ast": 4,
+            "stl": 0,
+            "blk": 3
+          },
+          {
+            "name": "Neemias Queta",
+            "jersey": "88",
+            "min": "33:00",
+            "pts": 17,
+            "reb": 12,
+            "ast": 1,
+            "stl": 0,
+            "blk": 0
+          },
+          {
+            "name": "Payton Pritchard",
+            "jersey": "11",
+            "min": "39:00",
+            "pts": 13,
+            "reb": 5,
+            "ast": 7,
+            "stl": 1,
+            "blk": 0
+          },
+          {
+            "name": "Sam Hauser",
+            "jersey": "30",
+            "min": "30:00",
+            "pts": 11,
+            "reb": 3,
+            "ast": 1,
+            "stl": 0,
+            "blk": 0
+          },
+          {
+            "name": "Baylor Scheierman",
+            "jersey": "55",
+            "min": "22:00",
+            "pts": 0,
+            "reb": 6,
+            "ast": 2,
+            "stl": 1,
+            "blk": 0
+          },
+          {
+            "name": "Luka Garza",
+            "jersey": "52",
+            "min": "09:00",
+            "pts": 0,
+            "reb": 0,
+            "ast": 0,
+            "stl": 0,
+            "blk": 1
+          },
+          {
+            "name": "Ron Harper Jr.",
+            "jersey": "13",
+            "min": "04:00",
+            "pts": 0,
+            "reb": 0,
+            "ast": 0,
+            "stl": 2,
+            "blk": 0
+          },
+          {
+            "name": "Jordan Walsh",
+            "jersey": "27",
+            "min": "05:00",
+            "pts": 0,
+            "reb": 0,
+            "ast": 0,
+            "stl": 0,
+            "blk": 0
+          },
+          {
+            "name": "Hugo Gonz\u00e1lez",
+            "jersey": "28",
+            "min": "13:00",
+            "pts": 0,
+            "reb": 3,
+            "ast": 0,
+            "stl": 0,
+            "blk": 0
+          }
+        ]
+      },
+      "away": {
+        "tricode": "PHI",
+        "city": "Philadelphia",
+        "name": "76ers",
+        "score": 109,
+        "players": [
+          {
+            "name": "Joel Embiid",
+            "jersey": "21",
+            "min": "39:00",
+            "pts": 34,
+            "reb": 12,
+            "ast": 6,
+            "stl": 0,
+            "blk": 1
+          },
+          {
+            "name": "Tyrese Maxey",
+            "jersey": "0",
+            "min": "45:00",
+            "pts": 30,
+            "reb": 11,
+            "ast": 7,
+            "stl": 0,
+            "blk": 0
+          },
+          {
+            "name": "VJ Edgecombe",
+            "jersey": "77",
+            "min": "44:00",
+            "pts": 23,
+            "reb": 6,
+            "ast": 4,
+            "stl": 0,
+            "blk": 0
+          },
+          {
+            "name": "Paul George",
+            "jersey": "8",
+            "min": "42:00",
+            "pts": 13,
+            "reb": 3,
+            "ast": 1,
+            "stl": 0,
+            "blk": 0
+          },
+          {
+            "name": "Kelly Oubre Jr.",
+            "jersey": "9",
+            "min": "31:00",
+            "pts": 6,
+            "reb": 5,
+            "ast": 2,
+            "stl": 0,
+            "blk": 0
+          },
+          {
+            "name": "Quentin Grimes",
+            "jersey": "5",
+            "min": "26:00",
+            "pts": 3,
+            "reb": 6,
+            "ast": 4,
+            "stl": 0,
+            "blk": 0
+          },
+          {
+            "name": "Andre Drummond",
+            "jersey": "1",
+            "min": "09:00",
+            "pts": 0,
+            "reb": 1,
+            "ast": 1,
+            "stl": 0,
+            "blk": 0
+          },
+          {
+            "name": "Justin Edwards",
+            "jersey": "11",
+            "min": "02:00",
+            "pts": 0,
+            "reb": 0,
+            "ast": 0,
+            "stl": 0,
+            "blk": 0
+          },
+          {
+            "name": "Dominick Barlow",
+            "jersey": "25",
+            "min": "02:00",
+            "pts": 0,
+            "reb": 0,
+            "ast": 0,
+            "stl": 0,
             "blk": 0
           }
         ]
