@@ -918,17 +918,17 @@ main { padding: 24px; box-sizing: border-box; width: 100%; }
 .bd-clear-filter { font-size: 12px; padding: 4px 10px; border-radius: 20px; border: 1px solid var(--border); background: transparent; color: var(--text-dim); cursor: pointer; }
 .bd-clear-filter:hover { color: var(--text); border-color: var(--text-dim); }
 
-.bd-row-green  { background: color-mix(in srgb, #22c55e 22%, transparent) !important; }
-.bd-row-yellow { background: color-mix(in srgb, #eab308 22%, transparent) !important; }
-.bd-row-red    { background: color-mix(in srgb, #ef4444 22%, transparent) !important; }
+.bd-pot-dot { width: 20px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+.bd-pot-dot::after { content: ''; display: block; width: 8px; height: 8px; border-radius: 50%; }
+.bd-pot-dot.green::after  { background: #22c55e; }
+.bd-pot-dot.yellow::after { background: #eab308; }
 
 .bd-legend { display: flex; align-items: center; gap: 12px; margin-top: 8px; flex-wrap: wrap; }
 .bd-legend-title { font-size: 11px; font-weight: 700; color: var(--text-dim); }
 .bd-legend-item { display: flex; align-items: center; gap: 5px; font-size: 11px; color: var(--text-dim); }
-.bd-legend-dot { width: 9px; height: 9px; border-radius: 2px; flex-shrink: 0; opacity: 0.75; }
+.bd-legend-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; opacity: 0.75; }
 .bd-legend-dot.green  { background: #22c55e; }
 .bd-legend-dot.yellow { background: #eab308; }
-.bd-legend-dot.red    { background: #ef4444; }
 
 .games-bonus-hint { margin-left: auto; padding-right: 2px; color: var(--text-dim); font-size: 12px; font-weight: 700; line-height: 1; }
 .games-btns { display: flex; gap: 4px; }

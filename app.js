@@ -1630,7 +1630,9 @@ function renderPickBreakdown(rows) {
   const adminView = isAdmin();
 
   const availRounds = [1,2,3,4].filter(r => SERIES.some(s => s.r === r && isSeriesAvailable(s.id)));
-  if (!availRounds.includes(bdRoundFilter)) bdRoundFilter = availRounds[availRounds.length - 1] ?? 1;
+  const allKnownRounds = [1,2,3,4].filter(r => { const rs = SERIES.filter(s => s.r === r); return rs.length > 0 && rs.every(s => isSeriesAvailable(s.id)); });
+  const defaultRound = allKnownRounds.length ? allKnownRounds[allKnownRounds.length - 1] : availRounds[0] ?? 1;
+  if (!availRounds.includes(bdRoundFilter)) bdRoundFilter = defaultRound;
   const filteredRows = bdUserFilter.size > 0 ? rows.filter(p => bdUserFilter.has(p.id)) : rows;
 
   const roundOptions = availRounds
@@ -1657,7 +1659,6 @@ function renderPickBreakdown(rows) {
       <span class="bd-legend-title">Potential Status:</span>
       <span class="bd-legend-item"><span class="bd-legend-dot green"></span> Winner &amp; Games</span>
       <span class="bd-legend-item"><span class="bd-legend-dot yellow"></span> Winner Only</span>
-      <span class="bd-legend-item"><span class="bd-legend-dot red"></span> Eliminated</span>
     </div>
     <div class="bd-legend">
       <span class="bd-legend-title">Final Status:</span>
@@ -1726,11 +1727,9 @@ function renderPickBreakdown(rows) {
           const pickedIsT1 = pick.winner === t1k;
           const opponentWins = !actual && pick.winner ? (pickedIsT1 ? (rec ? rec.t2Wins : 0) : (rec ? rec.t1Wins : 0)) : 0;
           const gamesImpossible = !actual && pick.games && pick.games < opponentWins + 4;
-          let rowBg = '';
-          if (pick.winner && !actual) {
-            if (gamesImpossible) rowBg = ' bd-row-yellow';
-            else rowBg = ' bd-row-green';
-          }
+          const potDot = (!actual && pick.winner)
+            ? `<span class="bd-pot-dot ${gamesImpossible ? 'yellow' : 'green'}"></span>`
+            : '';
           let ptsDisplay = '';
           if (actual) {
             if (bdShowPoints) {
@@ -1744,13 +1743,13 @@ function renderPickBreakdown(rows) {
           } else if (ptsEarned) {
             ptsDisplay = `<span class="bd-pts-earned">${ptsEarned} pts</span>`;
           }
-          return `<div class="bd-pick-row${isMe ? ' my-row' : ''}${rowBg}">
+          return `<div class="bd-pick-row${isMe ? ' my-row' : ''}">
             <span class="bd-pick-name p-name-link" onclick="goToAllPicksUser('${p.id}','${def.id}')">${p.name}</span>
             <span class="bd-pick-team ${teamCls}">
               ${pt ? `<span class="bd-pick-abbr" style="color:${pt.color}">${pt.abbr}</span>` : '<span class="bd-pick-abbr">?</span>'}
               ${pick.games ? `<span class="bd-pick-games">${pick.games}</span>` : ''}
             </span>
-            ${ptsDisplay}
+            ${ptsDisplay}${potDot}
           </div>`;
         }).join('');
       } else {
