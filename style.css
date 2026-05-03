@@ -408,7 +408,7 @@ main { padding: 24px; box-sizing: border-box; width: 100%; }
 }
 
 .team-row.is-selected {
-  background: color-mix(in srgb, #eab308 14%, var(--surface));
+  background: color-mix(in srgb, #eab308 25%, var(--surface));
   border-left: 3px solid #eab308;
 }
 

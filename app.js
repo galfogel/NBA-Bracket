@@ -1007,8 +1007,8 @@ function cardPicks(sid, t1, t2, pid) {
     const isOk     = isPicked && actual && actual === key;
     const isBad    = isPicked && actual && actual !== key;
     const cls      = isPicked ? (isBad ? 'is-wrong-pick' : isOk ? 'is-winner' : 'is-selected') : '';
-    const mark     = isPicked ? (isOk ? '✓' : isBad ? '✗' : '') : '';
-    const markCls  = isBad ? 'win-mark win-mark--wrong' : 'win-mark';
+    const mark     = '';
+    const markCls  = 'win-mark';
     const pct      = getWinPct(sid, key);
     const basePts  = ROUND_POINTS[SERIES_MAP[sid].r];
     const bonus    = getUpsetBonus(sid, key, basePts);
@@ -1027,7 +1027,7 @@ function cardPicks(sid, t1, t2, pid) {
     </div>`;
   }
 
-  const gamesMark = ag && pick.games ? (pick.games === ag ? '<span class="win-mark">✓</span>' : '<span class="win-mark win-mark--wrong">✗</span>') : '';
+  const gamesMark = '';
   const gamesRow = pick.winner ? `
     <div class="games-selector">
       <span class="games-label">Games:</span>
@@ -1116,8 +1116,8 @@ function cardView(sid, t1, t2, pid) {
     const isOk     = isPicked && actual && actual === key;
     const isBad    = isPicked && actual && actual !== key;
     const cls      = isPicked ? (isBad ? 'is-wrong-pick' : isOk ? 'is-winner' : 'is-selected') : '';
-    const mark     = isOk ? '✓' : isBad ? '✗' : '';
-    const markCls  = isBad ? 'win-mark win-mark--wrong' : 'win-mark';
+    const mark     = '';
+    const markCls  = 'win-mark';
     const pct      = getWinPct(sid, key);
     const basePts  = ROUND_POINTS[SERIES_MAP[sid].r];
     const bonus    = getUpsetBonus(sid, key, basePts);
@@ -1140,7 +1140,7 @@ function cardView(sid, t1, t2, pid) {
   const gBad   = pick.games && ag2 && pick.games !== ag2;
   const ptsEarned = seriesPoints(pid, sid);
 
-  const gamesMark2 = ag2 && pick.games ? (pick.games === ag2 ? '<span class="win-mark">✓</span>' : '<span class="win-mark win-mark--wrong">✗</span>') : '';
+  const gamesMark2 = '';
   const gamesRow = pick.winner ? `
     <div class="games-selector">
       <span class="games-label">Games:</span>
