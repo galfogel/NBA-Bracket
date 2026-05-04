@@ -909,7 +909,7 @@ main { padding: 24px; box-sizing: border-box; width: 100%; }
 .rank-num   { min-width: 1.4em; text-align: center; }
 .rank-up    { font-size: 10px; color: #22c55e; line-height: 1; display: inline-flex; align-items: center; height: 12px; }
 .rank-down  { font-size: 10px; color: #ef4444; line-height: 1; display: inline-flex; align-items: center; height: 12px; }
-.rank-same  { display: inline-flex; align-items: center; justify-content: center; height: 12px; }
+.rank-same  { display: inline-flex; align-items: center; justify-content: center; height: 12px; width: 10px; }
 .rank-same-line { display: block; width: 5px; height: 2px; background: #eab308; border-radius: 1px; }
 .rnd-abbr { display: none; }
 
