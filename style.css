@@ -609,7 +609,7 @@ main { padding: 24px; box-sizing: border-box; width: 100%; }
 .bracket-list--single .win-mark          { font-size: 17px; }
 .bracket-list--single .games-label       { font-size: 14px; }
 .bracket-list--single .games-btn         { font-size: 14px; padding: 6px 10px; }
-.bracket-list--single .games-selector    { justify-content: center; gap: 8px; padding-right: 10px; }
+.bracket-list--single .games-selector    { justify-content: flex-start; gap: 8px; padding-left: 28px; padding-right: 10px; }
 .bracket-list--single .card-footer       { font-size: 12px; }
 .bracket-list--single .pts-badge         { font-size: 14px; }
 .bracket-list--single .blist-round-title { font-size: 13px; }
@@ -1186,7 +1186,7 @@ main { padding: 24px; box-sizing: border-box; width: 100%; }
   display: flex;
   align-items: center;
   gap: 4px;
-  padding: 2px 6px;
+  padding: 2px 6px 2px 24px;
   border-top: 1px solid var(--border);
   background: var(--surface2);
 }
@@ -1202,7 +1202,7 @@ main { padding: 24px; box-sizing: border-box; width: 100%; }
 .games-btn {
   background: transparent;
   border: 1px solid var(--border);
-  color: var(--text);
+  color: #fff;
   padding: 1px 5px;
   border-radius: 4px;
   font-size: 9px;
