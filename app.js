@@ -512,8 +512,9 @@ function switchUser() {
 }
 
 const SCORE_SNAPSHOT_KEY = 'nba-2026-rank-snap';
-let showIncompleteToast = false;
+let showIncompleteToast  = false;
 let leaderboardMessage   = '';
+let leaderboardPositive  = false;
 
 function getLeaderboardRows() {
   return state.participants
@@ -550,22 +551,23 @@ function getRankMessage(pid) {
   const prevRank = snap[pid]?.rank ?? null;
   const rows = getLeaderboardRows();
   const idx = rows.findIndex(p => p.id === pid);
-  if (idx < 0) return '';
+  if (idx < 0) return { msg: '', positive: false };
   const rank = idx + 1;
+  const suffix = ['st','nd','rd'][rank - 1] || 'th';
   if (rank <= 3) {
     const place = ['1st', '2nd', '3rd'][idx];
     const medal = ['🥇', '🥈', '🥉'][idx];
-    return `Congrats! You've taken ${place} place! ${medal}`;
+    return { msg: `Congrats! You've taken ${place} place! ${medal}`, positive: true };
   }
   if (prevRank !== null && rank < prevRank) {
     const d = prevRank - rank;
-    return `You've moved ${d} place${d > 1 ? 's' : ''} up! 🚀`;
+    return { msg: `You've moved ${d} place${d > 1 ? 's' : ''} up! 🚀`, positive: true };
   }
   if (prevRank !== null && rank > prevRank) {
     const d = rank - prevRank;
-    return `You've moved ${d} place${d > 1 ? 's' : ''} down 📉`;
+    return { msg: `You've moved ${d} place${d > 1 ? 's' : ''} down 📉`, positive: false };
   }
-  return '';
+  return { msg: `You're holding ${rank}${suffix} place 🔒`, positive: false };
 }
 
 function getLandingTab(pid) {
@@ -580,7 +582,9 @@ function startApp() {
   updateUserDisplay();
   const unlocked = SERIES.filter(s => isSeriesAvailable(s.id) && !isSeriesLocked(s.id));
   showIncompleteToast = unlocked.some(s => { const p = getPick(currentUserId, s.id); return !p.winner || !p.games; });
-  leaderboardMessage  = scoresHaveChanged() ? getRankMessage(currentUserId) : '';
+  const rankInfo      = getRankMessage(currentUserId);
+  leaderboardMessage  = rankInfo.msg;
+  leaderboardPositive = rankInfo.positive;
 
   const savedTab = sessionStorage.getItem('nba-active-tab');
   if (savedTab && RENDERERS[savedTab]) {
@@ -1584,7 +1588,7 @@ function renderLeaderboard() {
 
   const rows = getLeaderboardRows();
   const snap = JSON.parse(localStorage.getItem(SCORE_SNAPSHOT_KEY) || '{}');
-  const msgHtml = leaderboardMessage ? `<div class="landing-toast">${leaderboardMessage}</div>` : '';
+  const msgHtml = leaderboardMessage ? `<div class="landing-toast${leaderboardPositive ? ' toast-positive' : ''}">${leaderboardMessage}</div>` : '';
 
   el.innerHTML = `
     <div class="leaderboard-wrap">
@@ -1907,7 +1911,7 @@ function switchTab(tab) {
   if (tab !== 'picks') highlightedSid = null;
   if (tab !== 'participants') { highlightedResultSid = null; seriesDetailSid = null; gameDetailData = null; }
   if (activeTab === 'bracket'     && tab !== 'bracket')     showIncompleteToast = false;
-  if (activeTab === 'leaderboard' && tab !== 'leaderboard') leaderboardMessage  = '';
+  if (activeTab === 'leaderboard' && tab !== 'leaderboard') { leaderboardMessage = ''; leaderboardPositive = false; }
   activeTab = tab;
   sessionStorage.setItem('nba-active-tab', tab);
   document.querySelectorAll('.tab-btn').forEach(b =>

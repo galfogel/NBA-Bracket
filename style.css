@@ -917,21 +917,21 @@ main { padding: 24px; box-sizing: border-box; width: 100%; }
 .bd-filter-bar h3 { font-size: 16px; margin: 0; }
 .bd-filter-bar select { font-size: 13px; padding: 4px 8px; border-radius: 6px; border: 1px solid var(--border); background: var(--surface2); color: var(--text); cursor: pointer; width: 100%; }
 .bd-user-tiles { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
-.bd-user-tile { font-size: 13px; padding: 5px 12px; border-radius: 20px; border: 1px solid var(--border); background: var(--surface2); color: var(--text-muted, #888); cursor: pointer; transition: background 0.15s, color 0.15s, border-color 0.15s; }
+.bd-user-tile { font-size: 11px; padding: 4px 10px; border-radius: 20px; border: 1px solid var(--border); background: var(--surface2); color: var(--text-muted, #888); cursor: pointer; transition: background 0.15s, color 0.15s, border-color 0.15s; }
 .bd-user-tile:hover { border-color: var(--accent, #4f8ef7); color: var(--text); }
 .bd-user-tile.active { background: var(--accent, #4f8ef7); border-color: var(--accent, #4f8ef7); color: #fff; }
 .bd-clear-filter { font-size: 12px; padding: 4px 10px; border-radius: 20px; border: 1px solid var(--border); background: transparent; color: var(--text-dim); cursor: pointer; }
 .bd-clear-filter:hover { color: var(--text); border-color: var(--text-dim); }
 
 .bd-pot-dot { width: 20px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
-.bd-pot-dot::after { content: ''; display: block; width: 9px; height: 9px; border-radius: 50%; opacity: 0.75; }
+.bd-pot-dot::after { content: ''; display: block; width: 7px; height: 7px; border-radius: 50%; opacity: 0.75; }
 .bd-pot-dot.green::after  { background: #22c55e; }
 .bd-pot-dot.yellow::after { background: #eab308; }
 
 .bd-legend { display: flex; align-items: center; gap: 12px; margin-top: 8px; flex-wrap: wrap; }
-.bd-legend-title { font-size: 11px; font-weight: 700; color: var(--text-dim); }
-.bd-legend-item { display: flex; align-items: center; gap: 5px; font-size: 11px; color: var(--text-dim); }
-.bd-legend-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; opacity: 0.75; }
+.bd-legend-title { font-size: 10px; font-weight: 700; color: var(--text-dim); }
+.bd-legend-item { display: flex; align-items: center; gap: 4px; font-size: 10px; color: var(--text-dim); }
+.bd-legend-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; opacity: 0.75; }
 .bd-legend-dot.green  { background: #22c55e; }
 .bd-legend-dot.yellow { background: #eab308; }
 
@@ -1469,9 +1469,9 @@ main { padding: 24px; box-sizing: border-box; width: 100%; }
 
   /* ── Pick Details legend: single row ── */
   .bd-legend { flex-wrap: nowrap; gap: 8px; }
-  .bd-legend-title { font-size: 10px; white-space: nowrap; }
-  .bd-legend-item { font-size: 10px; gap: 3px; white-space: nowrap; }
-  .bd-legend-dot { width: 8px; height: 8px; }
+  .bd-legend-title { font-size: 9px; white-space: nowrap; }
+  .bd-legend-item { font-size: 9px; gap: 3px; white-space: nowrap; }
+  .bd-legend-dot { width: 7px; height: 7px; }
 
   /* ── Rules: stack +bonus below base pts in upset table ── */
   .info-table .pot-base  { display: block; }
@@ -1518,6 +1518,11 @@ main { padding: 24px; box-sizing: border-box; width: 100%; }
   margin-bottom: 16px;
   font-size: 14px;
   font-weight: 600;
+}
+.landing-toast.toast-positive {
+  background: color-mix(in srgb, var(--green) 12%, var(--surface));
+  border-color: var(--green);
+  color: var(--green);
 }
 
 .sync-toast {
