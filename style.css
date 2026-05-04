@@ -1202,7 +1202,7 @@ main { padding: 24px; box-sizing: border-box; width: 100%; }
 .games-btn {
   background: transparent;
   border: 1px solid var(--border);
-  color: #fff;
+  color: var(--text);
   padding: 1px 5px;
   border-radius: 4px;
   font-size: 9px;
