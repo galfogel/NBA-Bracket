@@ -1635,11 +1635,11 @@ function renderLeaderboard() {
             const currentResultsCount = Object.keys(state.results).length;
             const snapResultsCount = snap.__resultsCount ?? 0;
             const arrow = currentResultsCount < 2
-              ? `<span class="rank-same">–</span>`
-              : prevRank === null ? `<span class="rank-same">–</span>`
+              ? `<span class="rank-same"><span class="rank-same-line"></span></span>`
+              : prevRank === null ? `<span class="rank-same"><span class="rank-same-line"></span></span>`
               : rank < prevRank ? `<span class="rank-up">▲</span>`
               : rank > prevRank ? `<span class="rank-down">▼</span>`
-              : `<span class="rank-same">–</span>`;
+              : `<span class="rank-same"><span class="rank-same-line"></span></span>`;
             return `<tr class="${i === 0 && p.score > 0 ? 'leader-row' : ''} ${isMe ? 'my-row' : ''}">
               <td class="rank-cell"><span class="rank-inner"><span class="rank-num">${medal || rank}</span>${arrow}</span></td>
               <td class="p-name-cell"><span class="p-name-link" onclick="goToAllPicksUser('${p.id}')">${p.name}</span>${isMe ? ' <span class="you-badge">you</span>' : ''}</td>
