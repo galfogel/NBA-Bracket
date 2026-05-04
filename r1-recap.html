@@ -34,20 +34,18 @@ nav{
   position:sticky;top:0;z-index:100;
   background:rgba(15,22,35,0.92);backdrop-filter:blur(12px);
   border-bottom:1px solid var(--border);
-  padding:0 24px;
-  display:flex;align-items:center;gap:0;
-  height:52px;overflow-x:auto;
+  padding:0 20px;
+  display:flex;align-items:center;justify-content:flex-end;
+  height:44px;
 }
-.nav-logo{font-size:18px;font-weight:900;color:var(--gold);margin-right:24px;white-space:nowrap}
-.nav-links{display:flex;gap:4px}
-.nav-link{
+.back-link{
   padding:6px 14px;border-radius:20px;
-  font-size:13px;font-weight:600;color:var(--dim);
+  font-size:13px;font-weight:600;color:var(--gold);
   text-decoration:none;white-space:nowrap;
-  transition:all .15s;
+  border:1px solid rgba(245,166,35,.3);
+  transition:background .15s;
 }
-.nav-link:hover{color:var(--text);background:var(--navy3)}
-.nav-link.active{color:var(--gold);background:rgba(245,166,35,.1)}
+.back-link:hover{background:rgba(245,166,35,.1)}
 
 /* ── HERO ── */
 .hero{
@@ -267,29 +265,7 @@ footer{
 }
 
 /* ── RESPONSIVE ── */
-/* ── HERO NAV (mobile only) ── */
-.hero-nav{display:none}
-
 @media(max-width:600px){
-  /* Sticky nav: logo + back link only */
-  .nav-links{display:none}
-  nav{justify-content:space-between;padding:0 16px}
-  .nav-logo{margin-right:0}
-  #nav-back-mobile{display:block!important}
-
-  /* Hero nav links below title */
-  .hero-nav{
-    display:flex;flex-wrap:wrap;gap:8px;
-    justify-content:center;margin-top:28px;
-  }
-  .hero-nav a{
-    padding:8px 18px;border-radius:20px;
-    background:var(--navy3);border:1px solid var(--border);
-    color:var(--text);text-decoration:none;
-    font-size:13px;font-weight:600;
-  }
-  .hero-nav a.back{color:var(--gold);border-color:var(--gold)}
-
   /* Hero */
   .hero{padding:40px 16px 36px}
   .hero-pills{flex-direction:column;align-items:center}
@@ -318,15 +294,7 @@ footer{
 
 <!-- NAV -->
 <nav>
-  <div class="nav-logo">🏀 NBA 2026</div>
-  <div class="nav-links">
-    <a class="nav-link active" href="#leaderboard">Leaderboard</a>
-    <a class="nav-link" href="#series">Series</a>
-    <a class="nav-link" href="#insights">Insights</a>
-    <a class="nav-link" href="#picks">All Picks</a>
-    <a class="nav-link" href="index.html">← Back to App</a>
-  </div>
-  <a class="nav-link" href="index.html" style="display:none;color:var(--gold)" id="nav-back-mobile">← App</a>
+  <a class="back-link" href="index.html">← App</a>
 </nav>
 
 <!-- HERO -->
@@ -334,13 +302,6 @@ footer{
   <div class="hero-eyebrow">NBA Playoffs 2026 · Bracket Challenge</div>
   <div class="hero-title">Round 1 Recap</div>
   <div class="hero-sub">16 players · 8 series · 3 upsets · 45 games played</div>
-  <div class="hero-nav">
-    <a href="#leaderboard">🏆 Leaderboard</a>
-    <a href="#series">🏟️ Series</a>
-    <a href="#insights">📊 Insights</a>
-    <a href="#picks">📋 All Picks</a>
-    <a href="index.html" class="back">← Back to App</a>
-  </div>
   <div class="hero-pills">
     <div class="pill"><span>🥇</span>Chemicu leads at 88 pts</div>
     <div class="pill"><span>😱</span>PHI upset — 0/16 called it</div>
@@ -985,7 +946,6 @@ footer{
 
 <footer>
   🏀 NBA Playoffs 2026 Bracket Challenge · Round 1 Recap · Generated May 2026
-  <span style="margin-left:16px"><a href="index.html" style="color:var(--gold);text-decoration:none">← Back to Live App</a></span>
 </footer>
 
 <script>
@@ -996,19 +956,6 @@ window.addEventListener('load', () => {
     el.style.width = '0';
     setTimeout(() => { el.style.width = w; }, 100);
   });
-  // Active nav on scroll
-  const sections = document.querySelectorAll('section[id]');
-  const links = document.querySelectorAll('.nav-link[href^="#"]');
-  const obs = new IntersectionObserver(entries => {
-    entries.forEach(e => {
-      if (e.isIntersecting) {
-        links.forEach(l => l.classList.remove('active'));
-        const link = document.querySelector(`.nav-link[href="#${e.target.id}"]`);
-        if (link) link.classList.add('active');
-      }
-    });
-  }, { threshold: 0.3 });
-  sections.forEach(s => obs.observe(s));
 });
 </script>
 </body>
