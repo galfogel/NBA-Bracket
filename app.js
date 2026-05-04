@@ -1185,7 +1185,6 @@ function renderBracket() {
   const toast = showIncompleteToast
     ? `<div class="landing-toast">You have pending picks — lock them in before tip-off! ⏰</div>`
     : '';
-  showIncompleteToast = false;
   el.innerHTML = `${toast}
     ${renderBracketLayout('picks', currentUserId)}
     ${renderFloatingSaveBar(currentUserId)}`;
@@ -1586,7 +1585,6 @@ function renderLeaderboard() {
   const rows = getLeaderboardRows();
   const snap = JSON.parse(localStorage.getItem(SCORE_SNAPSHOT_KEY) || '{}');
   const msgHtml = leaderboardMessage ? `<div class="landing-toast">${leaderboardMessage}</div>` : '';
-  leaderboardMessage = '';
 
   el.innerHTML = `
     <div class="leaderboard-wrap">
@@ -1908,6 +1906,8 @@ function switchTab(tab) {
   window.scrollTo(0, 0);
   if (tab !== 'picks') highlightedSid = null;
   if (tab !== 'participants') { highlightedResultSid = null; seriesDetailSid = null; gameDetailData = null; }
+  if (activeTab === 'bracket'     && tab !== 'bracket')     showIncompleteToast = false;
+  if (activeTab === 'leaderboard' && tab !== 'leaderboard') leaderboardMessage  = '';
   activeTab = tab;
   sessionStorage.setItem('nba-active-tab', tab);
   document.querySelectorAll('.tab-btn').forEach(b =>
