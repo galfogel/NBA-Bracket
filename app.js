@@ -1786,16 +1786,32 @@ function renderPickBreakdown(rows) {
       return `<div class="breakdown-series">${teamsHeader}${resultBar}<div class="bd-picks">${pickRows}</div></div>`;
     }
 
-    const confs = bdRoundFilter < 4 ? ['East', 'West'] : [null];
-    for (const conf of confs) {
-      const confSeries = conf ? series.filter(s => s.conf === conf) : series;
-      if (!confSeries.length) continue;
-      const confLabel = conf === 'East' ? 'Eastern Conference' : conf === 'West' ? 'Western Conference' : bdRoundFilter === 4 ? 'NBA Finals' : '';
-      html += `<div class="breakdown-round">`;
-      if (confLabel) html += `<h4 class="bd-conf-title">${confLabel}</h4>`;
-      html += `<div class="breakdown-grid">`;
-      for (const def of confSeries) html += renderSeriesCard(def);
-      html += '</div></div>';
+    if (bdRoundFilter >= 2 && bdRoundFilter < 4) {
+      // R2/R3: East and West side by side, centered
+      html += '<div class="breakdown-confs-row">';
+      for (const conf of ['East', 'West']) {
+        const confSeries = series.filter(s => s.conf === conf);
+        if (!confSeries.length) continue;
+        const confLabel = conf === 'East' ? 'Eastern Conference' : 'Western Conference';
+        html += `<div class="breakdown-round breakdown-conf-col">`;
+        html += `<h4 class="bd-conf-title">${confLabel}</h4>`;
+        html += `<div class="breakdown-grid">`;
+        for (const def of confSeries) html += renderSeriesCard(def);
+        html += '</div></div>';
+      }
+      html += '</div>';
+    } else {
+      const confs = bdRoundFilter < 4 ? ['East', 'West'] : [null];
+      for (const conf of confs) {
+        const confSeries = conf ? series.filter(s => s.conf === conf) : series;
+        if (!confSeries.length) continue;
+        const confLabel = conf === 'East' ? 'Eastern Conference' : conf === 'West' ? 'Western Conference' : bdRoundFilter === 4 ? 'NBA Finals' : '';
+        html += `<div class="breakdown-round${bdRoundFilter === 4 ? ' breakdown-finals-centered' : ''}">`;
+        if (confLabel) html += `<h4 class="bd-conf-title">${confLabel}</h4>`;
+        html += `<div class="breakdown-grid">`;
+        for (const def of confSeries) html += renderSeriesCard(def);
+        html += '</div></div>';
+      }
     }
   }
 
