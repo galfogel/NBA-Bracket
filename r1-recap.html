@@ -267,13 +267,50 @@ footer{
 }
 
 /* ── RESPONSIVE ── */
+/* ── HERO NAV (mobile only) ── */
+.hero-nav{display:none}
+
 @media(max-width:600px){
-  .lb-row,.lb-head{grid-template-columns:44px 1fr 56px 56px}
+  /* Sticky nav: logo + back link only */
+  .nav-links{display:none}
+  nav{justify-content:space-between;padding:0 16px}
+  .nav-logo{margin-right:0}
+  #nav-back-mobile{display:block!important}
+
+  /* Hero nav links below title */
+  .hero-nav{
+    display:flex;flex-wrap:wrap;gap:8px;
+    justify-content:center;margin-top:28px;
+  }
+  .hero-nav a{
+    padding:8px 18px;border-radius:20px;
+    background:var(--navy3);border:1px solid var(--border);
+    color:var(--text);text-decoration:none;
+    font-size:13px;font-weight:600;
+  }
+  .hero-nav a.back{color:var(--gold);border-color:var(--gold)}
+
+  /* Hero */
+  .hero{padding:40px 16px 36px}
+  .hero-pills{flex-direction:column;align-items:center}
+  .pill{width:100%;max-width:320px;text-align:center}
+
+  /* Layout */
+  .container{padding:28px 14px}
+  .section{margin-bottom:40px}
+
+  /* Leaderboard: 3 cols (rank, name, pts) */
+  .lb-row,.lb-head{grid-template-columns:44px 1fr 60px}
   .bar-col{display:none}
-  .lb-head span:last-child{display:none}
-  .hero{padding:48px 16px 36px}
-  .container{padding:32px 14px}
-  .section{margin-bottom:48px}
+  .correct{display:none}
+  .lb-head span:nth-child(4),.lb-head span:nth-child(5){display:none}
+  .lb-row .correct{display:none}
+
+  /* Series & insights: force single column */
+  .series-grid,.insights-grid{grid-template-columns:1fr}
+
+  /* Callout text */
+  .callout-body{font-size:11px}
 }
 </style>
 </head>
@@ -289,6 +326,7 @@ footer{
     <a class="nav-link" href="#picks">All Picks</a>
     <a class="nav-link" href="index.html">← Back to App</a>
   </div>
+  <a class="nav-link" href="index.html" style="display:none;color:var(--gold)" id="nav-back-mobile">← App</a>
 </nav>
 
 <!-- HERO -->
@@ -296,6 +334,13 @@ footer{
   <div class="hero-eyebrow">NBA Playoffs 2026 · Bracket Challenge</div>
   <div class="hero-title">Round 1 Recap</div>
   <div class="hero-sub">16 players · 8 series · 3 upsets · 45 games played</div>
+  <div class="hero-nav">
+    <a href="#leaderboard">🏆 Leaderboard</a>
+    <a href="#series">🏟️ Series</a>
+    <a href="#insights">📊 Insights</a>
+    <a href="#picks">📋 All Picks</a>
+    <a href="index.html" class="back">← Back to App</a>
+  </div>
   <div class="hero-pills">
     <div class="pill"><span>🥇</span>Chemicu leads at 88 pts</div>
     <div class="pill"><span>😱</span>PHI upset — 0/16 called it</div>
