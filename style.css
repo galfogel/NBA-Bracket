@@ -607,8 +607,8 @@ main { padding: 24px; box-sizing: border-box; width: 100%; }
 .bracket-list--single .games-bonus-hint  { font-size: 14px; }
 .bracket-list--single .fan-pct           { display: inline; font-size: 14px; color: var(--text); }
 .bracket-list--single .win-mark          { font-size: 17px; }
-.bracket-list--single .games-label       { font-size: 13px; }
-.bracket-list--single .games-btn         { font-size: 17px; padding: 6px 10px; }
+.bracket-list--single .games-label       { font-size: 14px; }
+.bracket-list--single .games-btn         { font-size: 14px; padding: 6px 10px; }
 .bracket-list--single .games-selector    { justify-content: center; gap: 8px; padding-right: 10px; }
 .bracket-list--single .card-footer       { font-size: 12px; }
 .bracket-list--single .pts-badge         { font-size: 14px; }
@@ -1192,8 +1192,8 @@ main { padding: 24px; box-sizing: border-box; width: 100%; }
 }
 
 .games-label {
-  font-size: 10px;
-  color: var(--text-dim);
+  font-size: 9px;
+  color: var(--text);
   flex-shrink: 0;
   margin-right: 2px;
 }
@@ -1202,10 +1202,10 @@ main { padding: 24px; box-sizing: border-box; width: 100%; }
 .games-btn {
   background: transparent;
   border: 1px solid var(--border);
-  color: var(--text-dim);
+  color: var(--text);
   padding: 1px 5px;
   border-radius: 4px;
-  font-size: 11px;
+  font-size: 9px;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.1s;

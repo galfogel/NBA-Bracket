@@ -511,7 +511,7 @@ function switchUser() {
   showLoginOverlay(!!prevUserId);
 }
 
-const SCORE_SNAPSHOT_KEY = 'nba-2026-rank-snap-v2';
+const SCORE_SNAPSHOT_KEY = 'nba-2026-rank-snap';
 let showIncompleteToast  = false;
 let leaderboardMessage   = '';
 let leaderboardToastCls  = '';
@@ -1079,8 +1079,8 @@ function cardPicks(sid, t1, t2, pid) {
     return '';
   })() : '';
 
-  return `<div class="matchup-card matchup-card--clickable ${locked && !pick.winner ? 'card-inactive' : ''}"
-               data-series="${sid}" onclick="handleSeriesCardClick(event,'${sid}')">
+  return `<div class="matchup-card${locked ? ' matchup-card--clickable' : ''} ${locked && !pick.winner ? 'card-inactive' : ''}"
+               data-series="${sid}" onclick="handleSeriesCardClick(event,'${sid}',${locked})">
     ${row(t1)}<div class="series-divider"></div>${row(t2)}${gamesRow}${gapRow}${footer}
   </div>`;
 }
@@ -1563,8 +1563,9 @@ function renderSeriesDetail(sid) {
     <div class="sd-games">${gameRows}</div>
   </div>`;
 }
-function handleSeriesCardClick(e, sid) {
+function handleSeriesCardClick(e, sid, allowNav = true) {
   if (e.target.closest('.is-clickable, button, input, select, label')) return;
+  if (!allowNav) return;
   highlightedResultSid = sid;
   switchTab('participants');
 }
