@@ -512,8 +512,22 @@ function switchUser() {
 }
 
 const SCORE_SNAPSHOT_KEY = 'nba-2026-rank-snap';
+const LB_NOTIF_KEY       = 'nba-2026-lb-notif';
 let leaderboardMessage   = '';
 let leaderboardToastCls  = '';
+
+function getLbSeenRank(pid) {
+  try { return JSON.parse(localStorage.getItem(LB_NOTIF_KEY) || '{}')[pid] ?? null; } catch { return null; }
+}
+function markLbSeen(pid) {
+  const rank = getLeaderboardRows().findIndex(p => p.id === pid) + 1;
+  if (!rank) return;
+  try {
+    const seen = JSON.parse(localStorage.getItem(LB_NOTIF_KEY) || '{}');
+    seen[pid] = rank;
+    localStorage.setItem(LB_NOTIF_KEY, JSON.stringify(seen));
+  } catch {}
+}
 
 function getLeaderboardRows() {
   return state.participants
@@ -579,9 +593,16 @@ function getLandingTab(pid) {
 
 function startApp() {
   updateUserDisplay();
-  const rankInfo      = getRankMessage(currentUserId);
-  leaderboardMessage  = rankInfo.msg;
-  leaderboardToastCls = rankInfo.toastCls;
+  const currentRank = getLeaderboardRows().findIndex(p => p.id === currentUserId) + 1;
+  const lastSeenRank = getLbSeenRank(currentUserId);
+  if (currentRank > 0 && currentRank !== lastSeenRank) {
+    const rankInfo  = getRankMessage(currentUserId);
+    leaderboardMessage  = rankInfo.msg;
+    leaderboardToastCls = rankInfo.toastCls;
+  } else {
+    leaderboardMessage  = '';
+    leaderboardToastCls = '';
+  }
 
   const savedTab = sessionStorage.getItem('nba-active-tab');
   if (savedTab && RENDERERS[savedTab]) {
@@ -1912,7 +1933,7 @@ function switchTab(tab) {
   if (tab !== 'picks') highlightedSid = null;
   if (tab !== 'participants') { highlightedResultSid = null; seriesDetailSid = null; gameDetailData = null; }
 
-  if (activeTab === 'leaderboard' && tab !== 'leaderboard') { leaderboardMessage = ''; leaderboardToastCls = ''; }
+  if (activeTab === 'leaderboard' && tab !== 'leaderboard') { markLbSeen(currentUserId); leaderboardMessage = ''; leaderboardToastCls = ''; }
   activeTab = tab;
   sessionStorage.setItem('nba-active-tab', tab);
   document.querySelectorAll('.tab-btn').forEach(b =>
