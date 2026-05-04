@@ -1949,7 +1949,7 @@ function switchTab(tab) {
   RENDERERS[tab]();
   // Refresh shared picks when switching to All Picks or Leaderboard
   if (tab === 'picks' || tab === 'leaderboard') {
-    fetchPicks().then(() => { RENDERERS[tab](); window.scrollTo(0, 0); });
+    fetchPicks().then(() => { RENDERERS[tab](); });
   }
 }
 
