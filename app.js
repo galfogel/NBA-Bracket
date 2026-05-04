@@ -57,6 +57,11 @@ const WIN_PCT = {
   W4v5: { t1: 35, t2: 65 },
   W2v7: { t1: 98, t2: 2  },
   W3v6: { t1: 82, t2: 18 },
+  // R2
+  EQ1:  { t1: 58, t2: 42 },  // DET vs CLE
+  EQ2:  { t1: 29, t2: 71 },  // PHI vs NYK
+  WQ1:  { t1: 91, t2: 9  },  // OKC vs LAL
+  WQ2:  { t1: 87, t2: 13 },  // SAS vs MIN
 };
 
 function getWinPct(sid, teamKey) {
