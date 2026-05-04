@@ -516,15 +516,13 @@ const LB_NOTIF_KEY       = 'nba-2026-lb-notif';
 let leaderboardMessage   = '';
 let leaderboardToastCls  = '';
 
-function getLbSeenRank(pid) {
-  try { return JSON.parse(localStorage.getItem(LB_NOTIF_KEY) || '{}')[pid] ?? null; } catch { return null; }
+function getLbSeenData(pid) {
+  try { return JSON.parse(localStorage.getItem(LB_NOTIF_KEY) || '{}')[pid] ?? -1; } catch { return -1; }
 }
 function markLbSeen(pid) {
-  const rank = getLeaderboardRows().findIndex(p => p.id === pid) + 1;
-  if (!rank) return;
   try {
     const seen = JSON.parse(localStorage.getItem(LB_NOTIF_KEY) || '{}');
-    seen[pid] = rank;
+    seen[pid] = Object.keys(state.results).length;
     localStorage.setItem(LB_NOTIF_KEY, JSON.stringify(seen));
   } catch {}
 }
@@ -593,10 +591,10 @@ function getLandingTab(pid) {
 
 function startApp() {
   updateUserDisplay();
-  const currentRank = getLeaderboardRows().findIndex(p => p.id === currentUserId) + 1;
-  const lastSeenRank = getLbSeenRank(currentUserId);
-  if (currentRank > 0 && currentRank !== lastSeenRank) {
-    const rankInfo  = getRankMessage(currentUserId);
+  const currentResultsCount = Object.keys(state.results).length;
+  const lbSeen = getLbSeenData(currentUserId);
+  if (currentResultsCount > lbSeen) {
+    const rankInfo      = getRankMessage(currentUserId);
     leaderboardMessage  = rankInfo.msg;
     leaderboardToastCls = rankInfo.toastCls;
   } else {
@@ -1610,6 +1608,7 @@ function renderLeaderboard() {
   const rows = getLeaderboardRows();
   const snap = JSON.parse(localStorage.getItem(SCORE_SNAPSHOT_KEY) || '{}');
   const msgHtml = leaderboardMessage ? `<div class="landing-toast${leaderboardToastCls ? ' ' + leaderboardToastCls : ''}">${leaderboardMessage}</div>` : '';
+  if (leaderboardMessage) markLbSeen(currentUserId);
 
   el.innerHTML = `
     <div class="leaderboard-wrap">
@@ -1642,7 +1641,7 @@ function renderLeaderboard() {
               : rank > prevRank ? `<span class="rank-down">▼</span>`
               : `<span class="rank-same">–</span>`;
             return `<tr class="${i === 0 && p.score > 0 ? 'leader-row' : ''} ${isMe ? 'my-row' : ''}">
-              <td class="rank-cell"><span class="rank-num">${medal || rank}</span>${arrow}</td>
+              <td class="rank-cell"><span class="rank-inner"><span class="rank-num">${medal || rank}</span>${arrow}</span></td>
               <td class="p-name-cell"><span class="p-name-link" onclick="goToAllPicksUser('${p.id}')">${p.name}</span>${isMe ? ' <span class="you-badge">you</span>' : ''}</td>
               ${rs.map(s => `<td>${s > 0 ? s : '–'}</td>`).join('')}
               <td class="total-cell">${p.score}</td>

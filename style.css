@@ -904,7 +904,8 @@ main { padding: 24px; box-sizing: border-box; width: 100%; }
 .p-name-link { cursor: pointer; }
 .p-name-link:hover { color: var(--accent); }
 .total-cell { font-weight: 700; color: var(--green); }
-.rank-cell  { white-space: nowrap; display: flex; align-items: center; gap: 4px; }
+.rank-cell  { white-space: nowrap; }
+.rank-inner { display: inline-flex; align-items: center; gap: 4px; white-space: nowrap; }
 .rank-num   { min-width: 1.4em; text-align: center; }
 .rank-up    { font-size: 10px; color: #22c55e; line-height: 1; }
 .rank-down  { font-size: 10px; color: #ef4444; line-height: 1; }
