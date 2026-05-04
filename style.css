@@ -904,11 +904,11 @@ main { padding: 24px; box-sizing: border-box; width: 100%; }
 .p-name-link { cursor: pointer; }
 .p-name-link:hover { color: var(--accent); }
 .total-cell { font-weight: 700; color: var(--green); }
-.rank-cell  { white-space: nowrap; }
-.rank-num   { display: inline-block; width: 1.6em; text-align: center; vertical-align: middle; }
-.rank-up    { font-size: 10px; color: #22c55e; margin-left: 3px; vertical-align: middle; }
-.rank-down  { font-size: 10px; color: #ef4444; margin-left: 3px; vertical-align: middle; }
-.rank-same  { font-size: 10px; color: #eab308; margin-left: 3px; vertical-align: middle; }
+.rank-cell  { white-space: nowrap; display: flex; align-items: center; gap: 4px; }
+.rank-num   { min-width: 1.4em; text-align: center; }
+.rank-up    { font-size: 10px; color: #22c55e; line-height: 1; }
+.rank-down  { font-size: 10px; color: #ef4444; line-height: 1; }
+.rank-same  { font-size: 10px; color: #eab308; line-height: 1; }
 .rnd-abbr { display: none; }
 
 /* ---- Pick breakdown ---- */
@@ -1050,6 +1050,9 @@ main { padding: 24px; box-sizing: border-box; width: 100%; }
 }
 .bd-gap-row:last-child { border-bottom: none; }
 .bd-gap-actual { padding: 5px 10px; font-size: 11px; color: var(--text-dim); border-top: 1px solid var(--border); background: var(--surface2); }
+.bd-summary-link { margin-top: 24px; text-align: center; }
+.bd-summary-link a { font-size: 13px; font-weight: 600; color: var(--accent); text-decoration: none; padding: 8px 18px; border: 1px solid var(--accent); border-radius: 20px; transition: background .15s; }
+.bd-summary-link a:hover { background: rgba(79,142,247,.1); }
 
 .picks-list { display: flex; flex-wrap: wrap; gap: 4px; }
 

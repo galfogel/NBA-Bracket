@@ -1828,6 +1828,13 @@ function renderPickBreakdown(rows) {
     }
   }
 
+  const ROUND_SUMMARIES = { 1: 'r1-recap.html' };
+  if (ROUND_SUMMARIES[bdRoundFilter]) {
+    html += `<div class="bd-summary-link">
+      <a href="${ROUND_SUMMARIES[bdRoundFilter]}" target="_blank">📊 View ${ROUND_NAMES[bdRoundFilter]} Full Summary →</a>
+    </div>`;
+  }
+
   return html + '</div>';
 }
 
