@@ -512,7 +512,6 @@ function switchUser() {
 }
 
 const SCORE_SNAPSHOT_KEY = 'nba-2026-rank-snap';
-let showIncompleteToast  = false;
 let leaderboardMessage   = '';
 let leaderboardToastCls  = '';
 
@@ -580,8 +579,6 @@ function getLandingTab(pid) {
 
 function startApp() {
   updateUserDisplay();
-  const unlocked = SERIES.filter(s => isSeriesAvailable(s.id) && !isSeriesLocked(s.id));
-  showIncompleteToast = unlocked.some(s => { const p = getPick(currentUserId, s.id); return !p.winner || !p.games; });
   const rankInfo      = getRankMessage(currentUserId);
   leaderboardMessage  = rankInfo.msg;
   leaderboardToastCls = rankInfo.toastCls;
@@ -1186,7 +1183,9 @@ function cardView(sid, t1, t2, pid) {
 function renderBracket() {
   const el = document.getElementById('tab-bracket');
   if (!currentUserId) return;
-  const toast = showIncompleteToast
+  const _unlocked = SERIES.filter(s => isSeriesAvailable(s.id) && !isSeriesLocked(s.id));
+  const _hasIncomplete = _unlocked.some(s => { const p = getPick(currentUserId, s.id); return !p.winner || !p.games; });
+  const toast = _hasIncomplete
     ? `<div class="landing-toast">You have pending picks — lock them in before tip-off! ⏰</div>`
     : '';
   el.innerHTML = `${toast}
@@ -1590,6 +1589,7 @@ function renderLeaderboard() {
   const rows = getLeaderboardRows();
   const snap = JSON.parse(localStorage.getItem(SCORE_SNAPSHOT_KEY) || '{}');
   const msgHtml = leaderboardMessage ? `<div class="landing-toast${leaderboardToastCls ? ' ' + leaderboardToastCls : ''}">${leaderboardMessage}</div>` : '';
+  leaderboardMessage = ''; leaderboardToastCls = '';
 
   el.innerHTML = `
     <div class="leaderboard-wrap">
@@ -1912,7 +1912,7 @@ function switchTab(tab) {
   window.scrollTo(0, 0);
   if (tab !== 'picks') highlightedSid = null;
   if (tab !== 'participants') { highlightedResultSid = null; seriesDetailSid = null; gameDetailData = null; }
-  if (activeTab === 'bracket'     && tab !== 'bracket')     showIncompleteToast = false;
+
   if (activeTab === 'leaderboard' && tab !== 'leaderboard') { leaderboardMessage = ''; leaderboardToastCls = ''; }
   activeTab = tab;
   sessionStorage.setItem('nba-active-tab', tab);
