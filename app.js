@@ -1589,7 +1589,6 @@ function renderLeaderboard() {
   const rows = getLeaderboardRows();
   const snap = JSON.parse(localStorage.getItem(SCORE_SNAPSHOT_KEY) || '{}');
   const msgHtml = leaderboardMessage ? `<div class="landing-toast${leaderboardToastCls ? ' ' + leaderboardToastCls : ''}">${leaderboardMessage}</div>` : '';
-  leaderboardMessage = ''; leaderboardToastCls = '';
 
   el.innerHTML = `
     <div class="leaderboard-wrap">
