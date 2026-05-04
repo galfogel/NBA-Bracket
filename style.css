@@ -604,14 +604,14 @@ main { padding: 24px; box-sizing: border-box; width: 100%; }
 .bracket-list--single .pot-pts           { font-size: 14px; }
 .bracket-list--single .pot-base          { font-size: 14px; }
 .bracket-list--single .pot-bonus         { font-size: 14px; }
-.bracket-list--single .games-bonus-hint  { font-size: 9px; }
+.bracket-list--single .games-bonus-hint  { font-size: 14px; }
 .bracket-list--single .fan-pct           { display: inline; font-size: 14px; color: var(--text); }
 .bracket-list--single .win-mark          { font-size: 17px; }
 .bracket-list--single .games-label       { font-size: 13px; }
 .bracket-list--single .games-btn         { font-size: 17px; padding: 6px 10px; }
 .bracket-list--single .games-selector    { justify-content: center; gap: 8px; padding-right: 10px; }
 .bracket-list--single .card-footer       { font-size: 12px; }
-.bracket-list--single .pts-badge         { font-size: 9px; }
+.bracket-list--single .pts-badge         { font-size: 14px; }
 .bracket-list--single .blist-round-title { font-size: 13px; }
 .bracket-list--single .blist-conf-header { font-size: 15px; }
 .tbd-spacer { display: inline-block; flex-shrink: 0; }
@@ -923,10 +923,9 @@ main { padding: 24px; box-sizing: border-box; width: 100%; }
 .bd-clear-filter { font-size: 12px; padding: 4px 10px; border-radius: 20px; border: 1px solid var(--border); background: transparent; color: var(--text-dim); cursor: pointer; }
 .bd-clear-filter:hover { color: var(--text); border-color: var(--text-dim); }
 
-.bd-pot-dot { width: 20px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
-.bd-pot-dot::after { content: ''; display: block; width: 7px; height: 7px; border-radius: 50%; opacity: 0.75; }
-.bd-pot-dot.green::after  { background: #22c55e; }
-.bd-pot-dot.yellow::after { background: #eab308; }
+.bd-pot-dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; opacity: 0.75; flex-shrink: 0; }
+.bd-pot-dot.green  { background: #22c55e; }
+.bd-pot-dot.yellow { background: #eab308; }
 
 .bd-legend { display: flex; align-items: center; gap: 12px; margin-top: 8px; flex-wrap: wrap; }
 .bd-legend-title { font-size: 10px; font-weight: 700; color: var(--text-dim); }
@@ -1523,6 +1522,11 @@ main { padding: 24px; box-sizing: border-box; width: 100%; }
   background: color-mix(in srgb, var(--green) 12%, var(--surface));
   border-color: var(--green);
   color: var(--green);
+}
+.landing-toast.toast-negative {
+  background: color-mix(in srgb, var(--red) 12%, var(--surface));
+  border-color: var(--red);
+  color: var(--red);
 }
 
 .sync-toast {
