@@ -604,14 +604,14 @@ main { padding: 24px; box-sizing: border-box; width: 100%; }
 .bracket-list--single .pot-pts           { font-size: 14px; }
 .bracket-list--single .pot-base          { font-size: 14px; }
 .bracket-list--single .pot-bonus         { font-size: 14px; }
-.bracket-list--single .games-bonus-hint  { font-size: 14px; }
+.bracket-list--single .games-bonus-hint  { font-size: 9px; }
 .bracket-list--single .fan-pct           { display: inline; font-size: 14px; color: var(--text); }
 .bracket-list--single .win-mark          { font-size: 17px; }
 .bracket-list--single .games-label       { font-size: 13px; }
 .bracket-list--single .games-btn         { font-size: 17px; padding: 6px 10px; }
 .bracket-list--single .games-selector    { justify-content: center; gap: 8px; padding-right: 10px; }
 .bracket-list--single .card-footer       { font-size: 12px; }
-.bracket-list--single .pts-badge         { font-size: 15px; }
+.bracket-list--single .pts-badge         { font-size: 9px; }
 .bracket-list--single .blist-round-title { font-size: 13px; }
 .bracket-list--single .blist-conf-header { font-size: 15px; }
 .tbd-spacer { display: inline-block; flex-shrink: 0; }
@@ -935,7 +935,7 @@ main { padding: 24px; box-sizing: border-box; width: 100%; }
 .bd-legend-dot.green  { background: #22c55e; }
 .bd-legend-dot.yellow { background: #eab308; }
 
-.games-bonus-hint { margin-left: auto; padding-right: 2px; color: var(--text-dim); font-size: 12px; font-weight: 700; line-height: 1; }
+.games-bonus-hint { margin-left: auto; padding-right: 2px; color: var(--text-dim); font-size: 9px; font-weight: 700; line-height: 1; }
 .games-btns { display: flex; gap: 4px; }
 
 .breakdown-round { margin-bottom: 40px; }
@@ -1039,7 +1039,7 @@ main { padding: 24px; box-sizing: border-box; width: 100%; }
 .bd-pick-team.bd-team-bad { border-radius: 4px; opacity: 0.85; }
 .bd-pts-earned { width: 20px; text-align: center; font-size: 11px; font-weight: 700; color: #22c55e; white-space: nowrap; flex-shrink: 0; }
 .bd-pts-wrong  { color: #ef4444; }
-.pts-badge { font-size: 14px; font-weight: 700; color: #22c55e; }
+.pts-badge { font-size: 9px; font-weight: 700; color: #22c55e; }
 .bd-hidden { padding: 8px 10px; font-size: 11px; color: var(--text-dim); font-style: italic; }
 .bd-gap-row {
   display: flex;
@@ -1219,9 +1219,9 @@ main { padding: 24px; box-sizing: border-box; width: 100%; }
 }
 
 .games-btn.selected {
-  background: color-mix(in srgb, #eab308 20%, var(--surface2));
-  border-color: #eab308;
-  color: #eab308;
+  background: color-mix(in srgb, var(--green) 20%, var(--surface2));
+  border-color: var(--green);
+  color: var(--green);
 }
 
 .games-btn.selected.games-correct {
@@ -1231,11 +1231,6 @@ main { padding: 24px; box-sizing: border-box; width: 100%; }
   font-weight: 700;
 }
 
-.games-btn.selected.games-wrong {
-  background: color-mix(in srgb, var(--red) 25%, var(--surface2));
-  border-color: var(--red);
-  color: var(--red);
-}
 
 
 .games-btn:disabled {
