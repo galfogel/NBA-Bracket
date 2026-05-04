@@ -1788,7 +1788,7 @@ function renderPickBreakdown(rows) {
 
     if (bdRoundFilter >= 2 && bdRoundFilter < 4) {
       // R2/R3: East and West side by side, centered
-      html += '<div class="breakdown-confs-row">';
+      html += `<div class="breakdown-confs-row breakdown-confs-row--r${bdRoundFilter}">`;
       for (const conf of ['East', 'West']) {
         const confSeries = series.filter(s => s.conf === conf);
         if (!confSeries.length) continue;
