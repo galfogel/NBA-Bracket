@@ -1,0 +1,970 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>NBA Playoffs 2026 — Round 1 Recap</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --navy:   #0f1623;
+  --navy2:  #141c2e;
+  --navy3:  #1a2236;
+  --border: #2c3a56;
+  --gold:   #f5a623;
+  --green:  #22c55e;
+  --red:    #ef4444;
+  --blue:   #3b82f6;
+  --text:   #e8eaf0;
+  --dim:    #7b82a3;
+  --radius: 12px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Inter',-apple-system,sans-serif;
+  background:var(--navy);color:var(--text);
+  font-size:14px;line-height:1.6;
+  min-height:100vh;
+}
+
+/* ── NAV ── */
+nav{
+  position:sticky;top:0;z-index:100;
+  background:rgba(15,22,35,0.92);backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--border);
+  padding:0 24px;
+  display:flex;align-items:center;gap:0;
+  height:52px;overflow-x:auto;
+}
+.nav-logo{font-size:18px;font-weight:900;color:var(--gold);margin-right:24px;white-space:nowrap}
+.nav-links{display:flex;gap:4px}
+.nav-link{
+  padding:6px 14px;border-radius:20px;
+  font-size:13px;font-weight:600;color:var(--dim);
+  text-decoration:none;white-space:nowrap;
+  transition:all .15s;
+}
+.nav-link:hover{color:var(--text);background:var(--navy3)}
+.nav-link.active{color:var(--gold);background:rgba(245,166,35,.1)}
+
+/* ── HERO ── */
+.hero{
+  background:linear-gradient(160deg,#0f1623 0%,#1a2a4a 50%,#0f1623 100%);
+  padding:64px 24px 48px;text-align:center;
+  border-bottom:1px solid var(--border);
+  position:relative;overflow:hidden;
+}
+.hero::before{
+  content:'';position:absolute;
+  width:600px;height:600px;border-radius:50%;
+  background:radial-gradient(circle,rgba(245,166,35,.07) 0%,transparent 70%);
+  top:-200px;left:50%;transform:translateX(-50%);
+  pointer-events:none;
+}
+.hero-eyebrow{font-size:12px;font-weight:700;letter-spacing:4px;text-transform:uppercase;color:var(--gold);margin-bottom:12px}
+.hero-title{font-size:clamp(36px,7vw,64px);font-weight:900;line-height:1.05;
+  background:linear-gradient(135deg,#fff 0%,#e8eaf0 60%,var(--gold) 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;margin-bottom:8px}
+.hero-sub{font-size:16px;color:var(--dim);margin-bottom:36px}
+.hero-pills{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.pill{
+  padding:8px 20px;border-radius:24px;
+  background:var(--navy3);border:1px solid var(--border);
+  font-size:13px;font-weight:700;
+}
+.pill span{color:var(--gold);margin-right:6px;font-size:16px}
+
+/* ── LAYOUT ── */
+.container{max-width:960px;margin:0 auto;padding:48px 20px}
+.section{margin-bottom:64px}
+.section-head{
+  display:flex;align-items:center;gap:12px;
+  margin-bottom:28px;padding-bottom:14px;
+  border-bottom:2px solid var(--gold);
+}
+.section-icon{font-size:24px}
+.section-title{font-size:22px;font-weight:800;color:#fff}
+.section-badge{
+  margin-left:auto;background:var(--gold);color:var(--navy);
+  font-size:10px;font-weight:800;padding:3px 10px;border-radius:20px;
+  letter-spacing:1px;text-transform:uppercase;
+}
+
+/* ── LEADERBOARD ── */
+.lb-wrap{background:var(--navy2);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
+.lb-row{
+  display:grid;
+  grid-template-columns:52px 1fr 70px 70px 80px;
+  align-items:center;
+  padding:14px 20px;
+  border-bottom:1px solid rgba(44,58,86,.5);
+  transition:background .15s;
+  gap:8px;
+}
+.lb-row:last-child{border-bottom:none}
+.lb-row:hover{background:rgba(255,255,255,.02)}
+.lb-row.gold-row{background:rgba(245,166,35,.05)}
+.lb-row.silver-row{background:rgba(156,163,175,.03)}
+.lb-row.bronze-row{background:rgba(205,127,50,.03)}
+.lb-head{
+  font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;
+  color:var(--dim);padding:10px 20px;
+  display:grid;grid-template-columns:52px 1fr 70px 70px 80px;gap:8px;
+  border-bottom:1px solid var(--border);
+}
+.lb-head span:nth-child(3),.lb-head span:nth-child(4),.lb-head span:nth-child(5){text-align:center}
+
+.rank-wrap{display:flex;align-items:center;gap:6px}
+.rank-n{font-size:15px;font-weight:800;color:var(--dim);min-width:20px;text-align:right}
+.medal{font-size:18px}
+.player-name{font-size:15px;font-weight:700;color:#fff}
+.player-tag{
+  display:inline-block;margin-left:8px;padding:2px 7px;
+  border-radius:10px;font-size:10px;font-weight:700;vertical-align:middle;
+}
+.tag-g{background:rgba(245,166,35,.15);color:var(--gold);border:1px solid var(--gold)}
+.tag-s{background:rgba(156,163,175,.15);color:#9ca3af;border:1px solid #9ca3af}
+.tag-b{background:rgba(205,127,50,.15);color:#cd7f32;border:1px solid #cd7f32}
+
+.pts{font-size:18px;font-weight:800;color:var(--gold);text-align:center}
+.pts.low{color:var(--red)}
+.correct{text-align:center;font-size:15px;font-weight:700;color:var(--green)}
+.correct .tot{font-size:12px;color:var(--dim);font-weight:500}
+
+.bar-col{display:flex;align-items:center;gap:8px}
+.bar-bg{flex:1;height:6px;background:var(--border);border-radius:4px;overflow:hidden}
+.bar-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--blue) 0%,var(--gold) 100%);transition:width .6s ease}
+.bar-fill.red{background:var(--red)}
+
+/* ── SERIES CARDS ── */
+.series-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
+.series-card{
+  background:var(--navy2);border:1px solid var(--border);
+  border-radius:var(--radius);padding:20px;
+  transition:transform .2s,border-color .2s;
+  position:relative;overflow:hidden;
+}
+.series-card:hover{transform:translateY(-2px)}
+.series-card.upset{border-color:rgba(239,68,68,.5)}
+.series-card.sweep{border-color:rgba(245,166,35,.5)}
+.series-card.upset::after{
+  content:'🔥 UPSET';
+  position:absolute;top:12px;right:12px;
+  background:var(--red);color:#fff;
+  font-size:9px;font-weight:800;letter-spacing:1px;
+  padding:2px 8px;border-radius:10px;
+}
+.series-card.sweep::after{
+  content:'🧹 SWEEP';
+  position:absolute;top:12px;right:12px;
+  background:var(--gold);color:var(--navy);
+  font-size:9px;font-weight:800;letter-spacing:1px;
+  padding:2px 8px;border-radius:10px;
+}
+.sc-conf{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--dim);margin-bottom:6px}
+.sc-winner{font-size:17px;font-weight:800;color:#fff;margin-bottom:4px}
+.sc-winner.upset-color{color:var(--red)}
+.sc-winner.sweep-color{color:var(--gold)}
+.sc-detail{font-size:12px;color:var(--dim);margin-bottom:14px}
+.sc-bar-wrap{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.sc-bar-bg{flex:1;height:5px;background:var(--border);border-radius:4px;overflow:hidden}
+.sc-bar-fill{height:100%;border-radius:4px}
+.sc-bar-fill.hit{background:var(--green)}
+.sc-bar-fill.miss{background:var(--red)}
+.sc-bar-label{font-size:11px;font-weight:700;white-space:nowrap}
+.sc-bar-label.hit{color:var(--green)}
+.sc-bar-label.miss{color:var(--red)}
+.sc-names{display:flex;flex-wrap:wrap;gap:4px;margin-top:8px}
+.sc-name{
+  font-size:10px;padding:2px 7px;border-radius:8px;
+  background:var(--navy3);color:var(--dim);border:1px solid var(--border);
+}
+.sc-name.hero{background:rgba(34,197,94,.1);color:var(--green);border-color:var(--green)}
+.sc-name.star{background:rgba(245,166,35,.1);color:var(--gold);border-color:var(--gold)}
+
+/* ── INSIGHTS ── */
+.insights-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
+.insight-card{
+  background:var(--navy2);border:1px solid var(--border);
+  border-radius:var(--radius);padding:20px;
+}
+.ic-title{
+  font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;
+  color:var(--dim);margin-bottom:14px;
+}
+.ic-row{
+  display:flex;align-items:flex-start;justify-content:space-between;
+  padding:8px 0;border-bottom:1px solid rgba(44,58,86,.4);gap:12px;
+}
+.ic-row:last-child{border-bottom:none}
+.ic-label{font-size:12px;color:var(--text)}
+.ic-val{font-size:13px;font-weight:700;text-align:right}
+.c-green{color:var(--green)}.c-gold{color:var(--gold)}.c-red{color:var(--red)}.c-blue{color:var(--blue)}
+
+.callout{
+  padding:14px 16px;border-radius:10px;margin-top:12px;
+  font-size:12px;border:1px solid;
+}
+.callout.green{background:rgba(34,197,94,.07);border-color:rgba(34,197,94,.2);color:var(--green)}
+.callout.gold{background:rgba(245,166,35,.07);border-color:rgba(245,166,35,.2);color:var(--gold)}
+.callout.red{background:rgba(239,68,68,.07);border-color:rgba(239,68,68,.2);color:var(--red)}
+.callout-head{font-weight:700;margin-bottom:4px}
+.callout-body{color:var(--dim)}
+
+/* ── PICK GRID ── */
+.pick-scroll{overflow-x:auto;border-radius:var(--radius);border:1px solid var(--border)}
+.pick-table{width:100%;border-collapse:collapse;font-size:11px;min-width:700px}
+.pick-table th{
+  padding:10px 8px;background:var(--navy3);
+  font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;
+  color:var(--dim);text-align:center;border-bottom:1px solid var(--border);
+  white-space:nowrap;
+}
+.pick-table th.left{text-align:left}
+.pick-table th.upset-h{color:var(--red)}
+.pick-table td{
+  padding:9px 8px;border-bottom:1px solid rgba(44,58,86,.4);
+  text-align:center;vertical-align:middle;
+}
+.pick-table td.name-col{
+  text-align:left;font-weight:700;font-size:12px;
+  color:#fff;white-space:nowrap;padding-left:14px;
+  background:var(--navy2);position:sticky;left:0;z-index:1;
+}
+.pick-table td.pts-col{font-size:15px;font-weight:800;color:var(--gold);background:var(--navy3)}
+.pick-table td.pts-col.low{color:var(--red)}
+.pick-table tr:last-child td{border-bottom:none}
+.pick-table tr:hover td{background:rgba(255,255,255,.02)}
+.pick-table tr:hover td.name-col{background:rgba(26,34,54,.9)}
+
+.actual-row td{background:rgba(245,166,35,.04)!important;border-top:2px solid var(--gold)}
+.actual-row td.name-col{color:var(--gold);font-size:10px;letter-spacing:1px}
+
+.pc{display:flex;flex-direction:column;align-items:center;gap:1px}
+.pc-team{font-size:10px;font-weight:700}
+.pc-team.ok{color:var(--green)}
+.pc-team.bad{color:rgba(255,255,255,.25)}
+.pc-team.upset-ok{color:var(--gold)}
+.pc-games{font-size:9px}
+.pc-games.perfect{color:var(--gold)}
+.pc-games.bad{color:rgba(255,255,255,.2)}
+
+td.cell-ok{background:rgba(34,197,94,.06)!important}
+td.cell-bad{background:rgba(239,68,68,.04)!important}
+
+/* ── LEGEND ── */
+.legend{display:flex;gap:20px;flex-wrap:wrap;margin-top:12px;font-size:11px;color:var(--dim)}
+.legend-item{display:flex;align-items:center;gap:5px}
+
+/* ── FOOTER ── */
+footer{
+  border-top:1px solid var(--border);
+  padding:24px;text-align:center;
+  font-size:11px;color:var(--dim);
+}
+
+/* ── RESPONSIVE ── */
+@media(max-width:600px){
+  .lb-row,.lb-head{grid-template-columns:44px 1fr 56px 56px}
+  .bar-col{display:none}
+  .lb-head span:last-child{display:none}
+  .hero{padding:48px 16px 36px}
+  .container{padding:32px 14px}
+  .section{margin-bottom:48px}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">🏀 NBA 2026</div>
+  <div class="nav-links">
+    <a class="nav-link active" href="#leaderboard">Leaderboard</a>
+    <a class="nav-link" href="#series">Series</a>
+    <a class="nav-link" href="#insights">Insights</a>
+    <a class="nav-link" href="#picks">All Picks</a>
+    <a class="nav-link" href="index.html">← Back to App</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-eyebrow">NBA Playoffs 2026 · Bracket Challenge</div>
+  <div class="hero-title">Round 1 Recap</div>
+  <div class="hero-sub">16 players · 8 series · 3 upsets · 45 games played</div>
+  <div class="hero-pills">
+    <div class="pill"><span>🥇</span>Chemicu leads at 88 pts</div>
+    <div class="pill"><span>😱</span>PHI upset — 0/16 called it</div>
+    <div class="pill"><span>🧹</span>OKC swept PHX 4–0</div>
+    <div class="pill"><span>🔥</span>3 upsets this round</div>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- ── LEADERBOARD ─────────────────────────────────────────── -->
+<section class="section" id="leaderboard">
+  <div class="section-head">
+    <span class="section-icon">🏆</span>
+    <span class="section-title">Leaderboard</span>
+    <span class="section-badge">After R1</span>
+  </div>
+
+  <div class="lb-wrap">
+    <div class="lb-head">
+      <span>#</span><span>Player</span>
+      <span style="text-align:center">Points</span>
+      <span style="text-align:center">Correct</span>
+      <span>Score</span>
+    </div>
+
+    <!-- 1 -->
+    <div class="lb-row gold-row">
+      <div class="rank-wrap"><span class="rank-n">1</span><span class="medal">🥇</span></div>
+      <div><span class="player-name">Chemicu</span><span class="player-tag tag-g">1st</span></div>
+      <div class="pts">88</div>
+      <div class="correct">6<span class="tot">/8</span></div>
+      <div class="bar-col"><div class="bar-bg"><div class="bar-fill" style="width:88%"></div></div></div>
+    </div>
+    <!-- 2 -->
+    <div class="lb-row silver-row">
+      <div class="rank-wrap"><span class="rank-n">2</span><span class="medal">🥈</span></div>
+      <div><span class="player-name">Or Eshed</span><span class="player-tag tag-s">2nd</span></div>
+      <div class="pts">82</div>
+      <div class="correct">6<span class="tot">/8</span></div>
+      <div class="bar-col"><div class="bar-bg"><div class="bar-fill" style="width:82%"></div></div></div>
+    </div>
+    <!-- 3–7 tie -->
+    <div class="lb-row bronze-row">
+      <div class="rank-wrap"><span class="rank-n">3</span><span class="medal">🥉</span></div>
+      <div><span class="player-name">Curryville</span><span class="player-tag tag-b">3rd</span></div>
+      <div class="pts">80</div>
+      <div class="correct">5<span class="tot">/8</span></div>
+      <div class="bar-col"><div class="bar-bg"><div class="bar-fill" style="width:80%"></div></div></div>
+    </div>
+    <div class="lb-row">
+      <div class="rank-wrap"><span class="rank-n">3</span></div>
+      <div><span class="player-name">Dor</span></div>
+      <div class="pts">80</div>
+      <div class="correct">5<span class="tot">/8</span></div>
+      <div class="bar-col"><div class="bar-bg"><div class="bar-fill" style="width:80%"></div></div></div>
+    </div>
+    <div class="lb-row">
+      <div class="rank-wrap"><span class="rank-n">3</span></div>
+      <div><span class="player-name">Eli</span></div>
+      <div class="pts">80</div>
+      <div class="correct">5<span class="tot">/8</span></div>
+      <div class="bar-col"><div class="bar-bg"><div class="bar-fill" style="width:80%"></div></div></div>
+    </div>
+    <div class="lb-row">
+      <div class="rank-wrap"><span class="rank-n">3</span></div>
+      <div><span class="player-name">Nadav</span></div>
+      <div class="pts">80</div>
+      <div class="correct">5<span class="tot">/8</span></div>
+      <div class="bar-col"><div class="bar-bg"><div class="bar-fill" style="width:80%"></div></div></div>
+    </div>
+    <div class="lb-row">
+      <div class="rank-wrap"><span class="rank-n">3</span></div>
+      <div><span class="player-name">RonenA</span></div>
+      <div class="pts">80</div>
+      <div class="correct">5<span class="tot">/8</span></div>
+      <div class="bar-col"><div class="bar-bg"><div class="bar-fill" style="width:80%"></div></div></div>
+    </div>
+    <!-- 8–11 -->
+    <div class="lb-row">
+      <div class="rank-wrap"><span class="rank-n">8</span></div>
+      <div><span class="player-name">Fogel</span></div>
+      <div class="pts">70</div>
+      <div class="correct">5<span class="tot">/8</span></div>
+      <div class="bar-col"><div class="bar-bg"><div class="bar-fill" style="width:70%"></div></div></div>
+    </div>
+    <div class="lb-row">
+      <div class="rank-wrap"><span class="rank-n">8</span></div>
+      <div><span class="player-name">Giladdd88</span></div>
+      <div class="pts">70</div>
+      <div class="correct">5<span class="tot">/8</span></div>
+      <div class="bar-col"><div class="bar-bg"><div class="bar-fill" style="width:70%"></div></div></div>
+    </div>
+    <div class="lb-row">
+      <div class="rank-wrap"><span class="rank-n">8</span></div>
+      <div><span class="player-name">Stavdija</span></div>
+      <div class="pts">70</div>
+      <div class="correct">5<span class="tot">/8</span></div>
+      <div class="bar-col"><div class="bar-bg"><div class="bar-fill" style="width:70%"></div></div></div>
+    </div>
+    <div class="lb-row">
+      <div class="rank-wrap"><span class="rank-n">8</span></div>
+      <div><span class="player-name">ivrish</span></div>
+      <div class="pts">70</div>
+      <div class="correct">5<span class="tot">/8</span></div>
+      <div class="bar-col"><div class="bar-bg"><div class="bar-fill" style="width:70%"></div></div></div>
+    </div>
+    <!-- 12–15 -->
+    <div class="lb-row">
+      <div class="rank-wrap"><span class="rank-n">12</span></div>
+      <div><span class="player-name">Ben Wallace</span></div>
+      <div class="pts">60</div>
+      <div class="correct">5<span class="tot">/8</span></div>
+      <div class="bar-col"><div class="bar-bg"><div class="bar-fill" style="width:60%"></div></div></div>
+    </div>
+    <div class="lb-row">
+      <div class="rank-wrap"><span class="rank-n">12</span></div>
+      <div><span class="player-name">Ucimehc</span></div>
+      <div class="pts">60</div>
+      <div class="correct">5<span class="tot">/8</span></div>
+      <div class="bar-col"><div class="bar-bg"><div class="bar-fill" style="width:60%"></div></div></div>
+    </div>
+    <div class="lb-row">
+      <div class="rank-wrap"><span class="rank-n">12</span></div>
+      <div><span class="player-name">Dj Pinhas</span></div>
+      <div class="pts">60</div>
+      <div class="correct">4<span class="tot">/8</span></div>
+      <div class="bar-col"><div class="bar-bg"><div class="bar-fill" style="width:60%"></div></div></div>
+    </div>
+    <div class="lb-row">
+      <div class="rank-wrap"><span class="rank-n">12</span></div>
+      <div><span class="player-name">Ron Artest</span></div>
+      <div class="pts">60</div>
+      <div class="correct">4<span class="tot">/8</span></div>
+      <div class="bar-col"><div class="bar-bg"><div class="bar-fill" style="width:60%"></div></div></div>
+    </div>
+    <!-- 16 -->
+    <div class="lb-row">
+      <div class="rank-wrap"><span class="rank-n">16</span></div>
+      <div><span class="player-name">roikind</span></div>
+      <div class="pts low">40</div>
+      <div class="correct" style="color:var(--dim)">4<span class="tot">/8</span></div>
+      <div class="bar-col"><div class="bar-bg"><div class="bar-fill red" style="width:40%"></div></div></div>
+    </div>
+  </div>
+
+  <div style="margin-top:12px;padding:12px 16px;background:var(--navy2);border-radius:10px;border:1px solid var(--border);font-size:12px;color:var(--dim)">
+    <strong style="color:var(--text)">Scoring:</strong> 10 pts per correct winner · +10 pts for exact series length · Upset bonus: 2× pts × gap/100 (where gap = floor(fav%) − 50)
+  </div>
+</section>
+
+<!-- ── SERIES RESULTS ──────────────────────────────────────── -->
+<section class="section" id="series">
+  <div class="section-head">
+    <span class="section-icon">🏟️</span>
+    <span class="section-title">Series Results</span>
+  </div>
+
+  <div class="series-grid">
+
+    <div class="series-card">
+      <div class="sc-conf">East · #1 vs #8</div>
+      <div class="sc-winner">🏆 Detroit Pistons</div>
+      <div class="sc-detail">def. Orlando Magic · 4–3 · 7 games · 92% pre-series fav</div>
+      <div class="sc-bar-wrap">
+        <div class="sc-bar-bg"><div class="sc-bar-fill hit" style="width:100%"></div></div>
+        <span class="sc-bar-label hit">16 / 16 called it ✓</span>
+      </div>
+      <div class="sc-names">
+        <span class="sc-name" style="color:var(--dim)">Nobody nailed 7 games</span>
+      </div>
+    </div>
+
+    <div class="series-card">
+      <div class="sc-conf">East · #4 vs #5</div>
+      <div class="sc-winner">🏆 Cleveland Cavaliers</div>
+      <div class="sc-detail">def. Toronto Raptors · 4–3 · 7 games · 86% pre-series fav</div>
+      <div class="sc-bar-wrap">
+        <div class="sc-bar-bg"><div class="sc-bar-fill hit" style="width:94%"></div></div>
+        <span class="sc-bar-label hit">15 / 16 called it ✓</span>
+      </div>
+      <div class="sc-names">
+        <span class="sc-name star">Curryville in 7 ⭐</span>
+        <span class="sc-name star">Eli in 7 ⭐</span>
+        <span class="sc-name star">Stavdija in 7 ⭐</span>
+        <span class="sc-name star">RonenA in 7 ⭐</span>
+        <span class="sc-name star">Chemicu in 7 ⭐</span>
+        <span class="sc-name" style="color:var(--red)">Ron Artest → TOR ✗</span>
+      </div>
+    </div>
+
+    <div class="series-card upset">
+      <div class="sc-conf">East · #2 vs #7</div>
+      <div class="sc-winner upset-color">Philadelphia 76ers</div>
+      <div class="sc-detail">def. Boston Celtics · 4–3 · 7 games · PHI was just 2% to win!</div>
+      <div class="sc-bar-wrap">
+        <div class="sc-bar-bg"><div class="sc-bar-fill miss" style="width:0%"></div></div>
+        <span class="sc-bar-label miss">0 / 16 called it 😱</span>
+      </div>
+      <div class="sc-names">
+        <span class="sc-name" style="color:var(--red);border-color:var(--red);background:rgba(239,68,68,.08)">Everyone picked BOS 💔</span>
+        <span class="sc-name" style="color:var(--gold);border-color:var(--gold);background:rgba(245,166,35,.08)">+8 upset pts if correct</span>
+      </div>
+    </div>
+
+    <div class="series-card">
+      <div class="sc-conf">East · #3 vs #6</div>
+      <div class="sc-winner">🏆 New York Knicks</div>
+      <div class="sc-detail">def. Atlanta Hawks · 4–2 · 6 games · 89% pre-series fav</div>
+      <div class="sc-bar-wrap">
+        <div class="sc-bar-bg"><div class="sc-bar-fill hit" style="width:100%"></div></div>
+        <span class="sc-bar-label hit">16 / 16 called it ✓</span>
+      </div>
+      <div class="sc-names">
+        <span class="sc-name star">Curryville in 6 ⭐</span>
+        <span class="sc-name star">Dor in 6 ⭐</span>
+        <span class="sc-name star">Nadav in 6 ⭐</span>
+        <span class="sc-name star">Chemicu in 6 ⭐</span>
+        <span class="sc-name star">RonenA in 6 ⭐</span>
+        <span class="sc-name star">Ron Artest in 6 ⭐</span>
+        <span class="sc-name star">Dj Pinhas in 6 ⭐</span>
+      </div>
+    </div>
+
+    <div class="series-card sweep">
+      <div class="sc-conf">West · #1 vs #8</div>
+      <div class="sc-winner sweep-color">⚡ Oklahoma City Thunder</div>
+      <div class="sc-detail">def. Phoenix Suns · 4–0 · Dominant sweep · 97% pre-series fav</div>
+      <div class="sc-bar-wrap">
+        <div class="sc-bar-bg"><div class="sc-bar-fill hit" style="width:100%"></div></div>
+        <span class="sc-bar-label hit">16 / 16 called it ✓</span>
+      </div>
+      <div class="sc-names">
+        <span class="sc-name star">Fogel in 4 ⭐</span>
+        <span class="sc-name star">Stavdija in 4 ⭐</span>
+        <span class="sc-name star">Dor in 4 ⭐</span>
+        <span class="sc-name star">Nadav in 4 ⭐</span>
+        <span class="sc-name star">Or Eshed in 4 ⭐</span>
+        <span class="sc-name star">Giladdd88 in 4 ⭐</span>
+        <span class="sc-name star">Ben Wallace in 4 ⭐</span>
+        <span class="sc-name star">RonenA in 4 ⭐</span>
+        <span class="sc-name star">ivrish in 4 ⭐</span>
+      </div>
+    </div>
+
+    <div class="series-card upset">
+      <div class="sc-conf">West · #4 vs #5</div>
+      <div class="sc-winner upset-color">Los Angeles Lakers</div>
+      <div class="sc-detail">def. Houston Rockets · 4–2 · 6 games · LAL were 35% underdogs</div>
+      <div class="sc-bar-wrap">
+        <div class="sc-bar-bg"><div class="sc-bar-fill miss" style="width:12%"></div></div>
+        <span class="sc-bar-label miss">2 / 16 called it (+2 upset pts)</span>
+      </div>
+      <div class="sc-names">
+        <span class="sc-name hero">Or Eshed 🎯</span>
+        <span class="sc-name hero">Chemicu 🎯</span>
+        <span class="sc-name" style="color:var(--dim)">14 others → HOU ✗</span>
+      </div>
+    </div>
+
+    <div class="series-card">
+      <div class="sc-conf">West · #2 vs #7</div>
+      <div class="sc-winner">🏆 San Antonio Spurs</div>
+      <div class="sc-detail">def. Portland Trail Blazers · 4–1 · 5 games · 98% pre-series fav</div>
+      <div class="sc-bar-wrap">
+        <div class="sc-bar-bg"><div class="sc-bar-fill hit" style="width:81%"></div></div>
+        <span class="sc-bar-label hit">13 / 16 called it ✓</span>
+      </div>
+      <div class="sc-names">
+        <span class="sc-name star">Fogel in 5 ⭐</span>
+        <span class="sc-name star">Nadav in 5 ⭐</span>
+        <span class="sc-name star">Dor in 5 ⭐</span>
+        <span class="sc-name star">Or Eshed in 5 ⭐</span>
+        <span class="sc-name star">Ucimehc in 5 ⭐</span>
+        <span class="sc-name star">ivrish in 5 ⭐</span>
+        <span class="sc-name" style="color:var(--red)">roikind → POR ✗</span>
+        <span class="sc-name" style="color:var(--red)">Chemicu → POR ✗</span>
+        <span class="sc-name" style="color:var(--red)">Dj Pinhas → POR ✗</span>
+      </div>
+    </div>
+
+    <div class="series-card upset">
+      <div class="sc-conf">West · #3 vs #6</div>
+      <div class="sc-winner upset-color">Minnesota Timberwolves</div>
+      <div class="sc-detail">def. Denver Nuggets · 4–2 · 6 games · MIN were 18% underdogs</div>
+      <div class="sc-bar-wrap">
+        <div class="sc-bar-bg"><div class="sc-bar-fill miss" style="width:6%"></div></div>
+        <span class="sc-bar-label miss">1 / 16 called it (+6 upset pts)</span>
+      </div>
+      <div class="sc-names">
+        <span class="sc-name hero">Chemicu 🎯 (only one!)</span>
+        <span class="sc-name" style="color:var(--dim)">15 others → DEN ✗</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ── INSIGHTS ────────────────────────────────────────────── -->
+<section class="section" id="insights">
+  <div class="section-head">
+    <span class="section-icon">📊</span>
+    <span class="section-title">Key Insights</span>
+  </div>
+
+  <div class="insights-grid">
+
+    <div class="insight-card">
+      <div class="ic-title">Round at a Glance</div>
+      <div class="ic-row"><span class="ic-label">Series played</span><span class="ic-val c-gold">8</span></div>
+      <div class="ic-row"><span class="ic-label">Total games</span><span class="ic-val c-gold">45</span></div>
+      <div class="ic-row"><span class="ic-label">Upsets</span><span class="ic-val c-red">3 / 8 (38%)</span></div>
+      <div class="ic-row"><span class="ic-label">Sweeps</span><span class="ic-val c-green">1 — OKC 🧹</span></div>
+      <div class="ic-row"><span class="ic-label">7-game thrillers</span><span class="ic-val c-blue">3 (DET, CLE, PHI)</span></div>
+      <div class="ic-row"><span class="ic-label">Avg series length</span><span class="ic-val c-gold">5.6 games</span></div>
+    </div>
+
+    <div class="insight-card">
+      <div class="ic-title">Challenge Stats</div>
+      <div class="ic-row"><span class="ic-label">Total players</span><span class="ic-val c-gold">16</span></div>
+      <div class="ic-row"><span class="ic-label">Average score</span><span class="ic-val c-gold">69 pts</span></div>
+      <div class="ic-row"><span class="ic-label">Highest</span><span class="ic-val c-green">Chemicu — 88 pts</span></div>
+      <div class="ic-row"><span class="ic-label">Lowest</span><span class="ic-val c-red">roikind — 40 pts</span></div>
+      <div class="ic-row"><span class="ic-label">Score spread</span><span class="ic-val c-blue">48 pts</span></div>
+      <div class="ic-row"><span class="ic-label">PHI upset predicted by</span><span class="ic-val c-red">0 / 16 😱</span></div>
+    </div>
+
+    <div class="insight-card">
+      <div class="ic-title">Upset Breakdown</div>
+      <div class="ic-row">
+        <span class="ic-label">PHI over BOS <span style="color:var(--dim)">(2% odds)</span></span>
+        <span class="ic-val c-red">0 called · +8 pts possible</span>
+      </div>
+      <div class="ic-row">
+        <span class="ic-label">LAL over HOU <span style="color:var(--dim)">(35% odds)</span></span>
+        <span class="ic-val c-gold">2 called · +2 pts bonus</span>
+      </div>
+      <div class="ic-row">
+        <span class="ic-label">MIN over DEN <span style="color:var(--dim)">(18% odds)</span></span>
+        <span class="ic-val c-gold">1 called · +6 pts bonus</span>
+      </div>
+      <div class="callout green">
+        <div class="callout-head">🏆 Upset King: Chemicu</div>
+        <div class="callout-body">Only player to correctly call both the LAL and MIN upsets, earning +8 bonus points. Leads by 6 pts heading into Round 2.</div>
+      </div>
+    </div>
+
+    <div class="insight-card">
+      <div class="ic-title">Perfect Game Predictions ⭐</div>
+      <div class="ic-row"><span class="ic-label">OKC sweep (4–0)</span><span class="ic-val c-green" style="font-size:11px">9 players nailed it</span></div>
+      <div class="ic-row"><span class="ic-label">NYK in 6</span><span class="ic-val c-green" style="font-size:11px">7 players</span></div>
+      <div class="ic-row"><span class="ic-label">CLE in 7</span><span class="ic-val c-green" style="font-size:11px">5 players</span></div>
+      <div class="ic-row"><span class="ic-label">SAS in 5</span><span class="ic-val c-green" style="font-size:11px">7 players</span></div>
+      <div class="ic-row"><span class="ic-label">Most ⭐ in one bracket</span><span class="ic-val c-gold">3 (5 players tied)</span></div>
+      <div class="ic-row"><span class="ic-label">Zero ⭐</span><span class="ic-val c-red">roikind</span></div>
+    </div>
+
+    <div class="insight-card">
+      <div class="ic-title">Consensus & Outliers</div>
+      <div class="ic-row"><span class="ic-label">DET, NYK, OKC</span><span class="ic-val c-green">100% consensus</span></div>
+      <div class="ic-row"><span class="ic-label">CLE</span><span class="ic-val c-green">94% (only Ron Artest → TOR)</span></div>
+      <div class="ic-row"><span class="ic-label">SAS</span><span class="ic-val c-blue">81% (3 picked POR)</span></div>
+      <div class="ic-row"><span class="ic-label">LAL upset</span><span class="ic-val c-red">12% — Or Eshed & Chemicu</span></div>
+      <div class="ic-row"><span class="ic-label">MIN upset</span><span class="ic-val c-red">6% — Chemicu alone</span></div>
+      <div class="ic-row"><span class="ic-label">PHI upset</span><span class="ic-val c-red">0% — nobody!</span></div>
+    </div>
+
+    <div class="insight-card">
+      <div class="ic-title">Round 2 Preview</div>
+      <div class="ic-row"><span class="ic-label">EQ1: DET vs CLE</span><span class="ic-val c-gold">DET 58% · CLE 42%</span></div>
+      <div class="ic-row"><span class="ic-label">EQ2: PHI vs NYK</span><span class="ic-val c-red">NYK 71% · PHI 29%</span></div>
+      <div class="ic-row"><span class="ic-label">WQ1: OKC vs LAL</span><span class="ic-val c-gold">OKC 91% · LAL 9%</span></div>
+      <div class="ic-row"><span class="ic-label">WQ2: SAS vs MIN</span><span class="ic-val c-gold">SAS 87% · MIN 13%</span></div>
+      <div class="callout gold">
+        <div class="callout-head">👀 Watch the 76ers</div>
+        <div class="callout-body">If PHI upsets NYK in R2, everyone who picked NYK scores 0 — reshuffling the entire leaderboard.</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ── PICK GRID ────────────────────────────────────────────── -->
+<section class="section" id="picks">
+  <div class="section-head">
+    <span class="section-icon">📋</span>
+    <span class="section-title">Full Pick Breakdown</span>
+  </div>
+
+  <div class="pick-scroll">
+    <table class="pick-table">
+      <thead>
+        <tr>
+          <th class="left" style="min-width:110px">Player</th>
+          <th>DET<br><span style="opacity:.5;font-weight:400">E1v8</span></th>
+          <th>CLE<br><span style="opacity:.5;font-weight:400">E4v5</span></th>
+          <th class="upset-h">PHI 🔥<br><span style="opacity:.5;font-weight:400">E2v7</span></th>
+          <th>NYK<br><span style="opacity:.5;font-weight:400">E3v6</span></th>
+          <th>OKC<br><span style="opacity:.5;font-weight:400">W1v8</span></th>
+          <th class="upset-h">LAL 🔥<br><span style="opacity:.5;font-weight:400">W4v5</span></th>
+          <th>SAS<br><span style="opacity:.5;font-weight:400">W2v7</span></th>
+          <th class="upset-h">MIN 🔥<br><span style="opacity:.5;font-weight:400">W3v6</span></th>
+          <th>Total</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- ACTUAL -->
+        <tr class="actual-row">
+          <td class="name-col" style="font-size:10px;letter-spacing:1px;color:var(--gold)">ACTUAL</td>
+          <td><div class="pc"><span style="font-size:10px;color:var(--gold);font-weight:700">DET</span><span style="font-size:9px;color:var(--dim)">in 7</span></div></td>
+          <td><div class="pc"><span style="font-size:10px;color:var(--gold);font-weight:700">CLE</span><span style="font-size:9px;color:var(--dim)">in 7</span></div></td>
+          <td><div class="pc"><span style="font-size:10px;color:var(--red);font-weight:700">PHI</span><span style="font-size:9px;color:var(--dim)">in 7</span></div></td>
+          <td><div class="pc"><span style="font-size:10px;color:var(--gold);font-weight:700">NYK</span><span style="font-size:9px;color:var(--dim)">in 6</span></div></td>
+          <td><div class="pc"><span style="font-size:10px;color:var(--gold);font-weight:700">OKC</span><span style="font-size:9px;color:var(--dim)">in 4</span></div></td>
+          <td><div class="pc"><span style="font-size:10px;color:var(--red);font-weight:700">LAL</span><span style="font-size:9px;color:var(--dim)">in 6</span></div></td>
+          <td><div class="pc"><span style="font-size:10px;color:var(--gold);font-weight:700">SAS</span><span style="font-size:9px;color:var(--dim)">in 5</span></div></td>
+          <td><div class="pc"><span style="font-size:10px;color:var(--red);font-weight:700">MIN</span><span style="font-size:9px;color:var(--dim)">in 6</span></div></td>
+          <td class="pts-col" style="color:var(--dim)">—</td>
+        </tr>
+        <!-- Chemicu -->
+        <tr>
+          <td class="name-col">Chemicu 🥇</td>
+          <td class="cell-ok"><div class="pc"><span class="pc-team ok">DET</span><span class="pc-games bad">6</span></div></td>
+          <td class="cell-ok"><div class="pc"><span class="pc-team ok">CLE</span><span class="pc-games perfect">7⭐</span></div></td>
+          <td class="cell-bad"><div class="pc"><span class="pc-team bad">BOS</span><span class="pc-games bad">5</span></div></td>
+          <td class="cell-ok"><div class="pc"><span class="pc-team ok">NYK</span><span class="pc-games perfect">6⭐</span></div></td>
+          <td class="cell-ok"><div class="pc"><span class="pc-team ok">OKC</span><span class="pc-games bad">7</span></div></td>
+          <td class="cell-ok"><div class="pc"><span class="pc-team upset-ok">LAL🎯</span><span class="pc-games bad">7</span></div></td>
+          <td class="cell-bad"><div class="pc"><span class="pc-team bad">POR</span><span class="pc-games bad">7</span></div></td>
+          <td class="cell-ok"><div class="pc"><span class="pc-team upset-ok">MIN🎯</span><span class="pc-games bad">7</span></div></td>
+          <td class="pts-col">88</td>
+        </tr>
+        <!-- Or Eshed -->
+        <tr>
+          <td class="name-col">Or Eshed 🥈</td>
+          <td class="cell-ok"><div class="pc"><span class="pc-team ok">DET</span><span class="pc-games bad">4</span></div></td>
+          <td class="cell-ok"><div class="pc"><span class="pc-team ok">CLE</span><span class="pc-games bad">6</span></div></td>
+          <td class="cell-bad"><div class="pc"><span class="pc-team bad">BOS</span><span class="pc-games bad">4</span></div></td>
+          <td class="cell-ok"><div class="pc"><span class="pc-team ok">NYK</span><span class="pc-games bad">5</span></div></td>
+          <td class="cell-ok"><div class="pc"><span class="pc-team ok">OKC</span><span class="pc-games perfect">4⭐</span></div></td>
+          <td class="cell-ok"><div class="pc"><span class="pc-team upset-ok">LAL🎯</span><span class="pc-games bad">7</span></div></td>
+          <td class="cell-ok"><div class="pc"><span class="pc-team ok">SAS</span><span class="pc-games perfect">5⭐</span></div></td>
+          <td class="cell-bad"><div class="pc"><span class="pc-team bad">DEN</span><span class="pc-games bad">6</span></div></td>
+          <td class="pts-col">82</td>
+        </tr>
+        <!-- Curryville -->
+        <tr>
+          <td class="name-col">Curryville 🥉</td>
+          <td class="cell-ok"><div class="pc"><span class="pc-team ok">DET</span><span class="pc-games bad">5</span></div></td>
+          <td class="cell-ok"><div class="pc"><span class="pc-team ok">CLE</span><span class="pc-games perfect">7⭐</span></div></td>
+          <td class="cell-bad"><div class="pc"><span class="pc-team bad">BOS</span><span class="pc-games bad">5</span></div></td>
+          <td class="cell-ok"><div class="pc"><span class="pc-team ok">NYK</span><span class="pc-games perfect">6⭐</span></div></td>
+          <td class="cell-ok"><div class="pc"><span class="pc-team ok">OKC</span><span class="pc-games bad">5</span></div></td>
+          <td class="cell-bad"><div class="pc"><span class="pc-team bad">HOU</span><span class="pc-games bad">5</span></div></td>
+          <td class="cell-ok"><div class="pc"><span class="pc-team ok">SAS</span><span class="pc-games perfect">5⭐</span></div></td>
+          <td class="cell-bad"><div class="pc"><span class="pc-team bad">DEN</span><span class="pc-games bad">7</span></div></td>
+          <td class="pts-col">80</td>
+        </tr>
+        <!-- Dor -->
+        <tr>
+          <td class="name-col">Dor</td>
+          <td class="cell-ok"><div class="pc"><span class="pc-team ok">DET</span><span class="pc-games bad">5</span></div></td>
+          <td class="cell-ok"><div class="pc"><span class="pc-team ok">CLE</span><span class="pc-games bad">6</span></div></td>
+          <td class="cell-bad"><div class="pc"><span class="pc-team bad">BOS</span><span class="pc-games bad">5</span></div></td>
+          <td class="cell-ok"><div class="pc"><span class="pc-team ok">NYK</span><span class="pc-games perfect">6⭐</span></div></td>
+          <td class="cell-ok"><div class="pc"><span class="pc-team ok">OKC</span><span class="pc-games perfect">4⭐</span></div></td>
+          <td class="cell-bad"><div class="pc"><span class="pc-team bad">HOU</span><span class="pc-games bad">5</span></div></td>
+          <td class="cell-ok"><div class="pc"><span class="pc-team ok">SAS</span><span class="pc-games perfect">5⭐</span></div></td>
+          <td class="cell-bad"><div class="pc"><span class="pc-team bad">DEN</span><span class="pc-games bad">6</span></div></td>
+          <td class="pts-col">80</td>
+        </tr>
+        <!-- Eli -->
+        <tr>
+          <td class="name-col">Eli</td>
+          <td class="cell-ok"><div class="pc"><span class="pc-team ok">DET</span><span class="pc-games bad">6</span></div></td>
+          <td class="cell-ok"><div class="pc"><span class="pc-team ok">CLE</span><span class="pc-games perfect">7⭐</span></div></td>
+          <td class="cell-bad"><div class="pc"><span class="pc-team bad">BOS</span><span class="pc-games bad">4</span></div></td>
+          <td class="cell-ok"><div class="pc"><span class="pc-team ok">NYK</span><span class="pc-games bad">5</span></div></td>
+          <td class="cell-ok"><div class="pc"><span class="pc-team ok">OKC</span><span class="pc-games perfect">4⭐</span></div></td>
+          <td class="cell-bad"><div class="pc"><span class="pc-team bad">HOU</span><span class="pc-games bad">5</span></div></td>
+          <td class="cell-ok"><div class="pc"><span class="pc-team ok">SAS</span><span class="pc-games perfect">5⭐</span></div></td>
+          <td class="cell-bad"><div class="pc"><span class="pc-team bad">DEN</span><span class="pc-games bad">7</span></div></td>
+          <td class="pts-col">80</td>
+        </tr>
+        <!-- Nadav -->
+        <tr>
+          <td class="name-col">Nadav</td>
+          <td class="cell-ok"><div class="pc"><span class="pc-team ok">DET</span><span class="pc-games bad">5</span></div></td>
+          <td class="cell-ok"><div class="pc"><span class="pc-team ok">CLE</span><span class="pc-games bad">5</span></div></td>
+          <td class="cell-bad"><div class="pc"><span class="pc-team bad">BOS</span><span class="pc-games bad">4</span></div></td>
+          <td class="cell-ok"><div class="pc"><span class="pc-team ok">NYK</span><span class="pc-games perfect">6⭐</span></div></td>
+          <td class="cell-ok"><div class="pc"><span class="pc-team ok">OKC</span><span class="pc-games perfect">4⭐</span></div></td>
+          <td class="cell-bad"><div class="pc"><span class="pc-team bad">HOU</span><span class="pc-games bad">7</span></div></td>
+          <td class="cell-ok"><div class="pc"><span class="pc-team ok">SAS</span><span class="pc-games perfect">5⭐</span></div></td>
+          <td class="cell-bad"><div class="pc"><span class="pc-team bad">DEN</span><span class="pc-games bad">5</span></div></td>
+          <td class="pts-col">80</td>
+        </tr>
+        <!-- RonenA -->
+        <tr>
+          <td class="name-col">RonenA</td>
+          <td class="cell-ok"><div class="pc"><span class="pc-team ok">DET</span><span class="pc-games bad">5</span></div></td>
+          <td class="cell-ok"><div class="pc"><span class="pc-team ok">CLE</span><span class="pc-games perfect">7⭐</span></div></td>
+          <td class="cell-bad"><div class="pc"><span class="pc-team bad">BOS</span><span class="pc-games bad">6</span></div></td>
+          <td class="cell-ok"><div class="pc"><span class="pc-team ok">NYK</span><span class="pc-games perfect">6⭐</span></div></td>
+          <td class="cell-ok"><div class="pc"><span class="pc-team ok">OKC</span><span class="pc-games perfect">4⭐</span></div></td>
+          <td class="cell-bad"><div class="pc"><span class="pc-team bad">HOU</span><span class="pc-games bad">5</span></div></td>
+          <td class="cell-ok"><div class="pc"><span class="pc-team ok">SAS</span><span class="pc-games bad">6</span></div></td>
+          <td class="cell-bad"><div class="pc"><span class="pc-team bad">DEN</span><span class="pc-games bad">4</span></div></td>
+          <td class="pts-col">80</td>
+        </tr>
+        <!-- Fogel -->
+        <tr>
+          <td class="name-col">Fogel</td>
+          <td class="cell-ok"><div class="pc"><span class="pc-team ok">DET</span><span class="pc-games bad">5</span></div></td>
+          <td class="cell-ok"><div class="pc"><span class="pc-team ok">CLE</span><span class="pc-games bad">6</span></div></td>
+          <td class="cell-bad"><div class="pc"><span class="pc-team bad">BOS</span><span class="pc-games bad">5</span></div></td>
+          <td class="cell-ok"><div class="pc"><span class="pc-team ok">NYK</span><span class="pc-games bad">5</span></div></td>
+          <td class="cell-ok"><div class="pc"><span class="pc-team ok">OKC</span><span class="pc-games perfect">4⭐</span></div></td>
+          <td class="cell-bad"><div class="pc"><span class="pc-team bad">HOU</span><span class="pc-games bad">5</span></div></td>
+          <td class="cell-ok"><div class="pc"><span class="pc-team ok">SAS</span><span class="pc-games perfect">5⭐</span></div></td>
+          <td class="cell-bad"><div class="pc"><span class="pc-team bad">DEN</span><span class="pc-games bad">7</span></div></td>
+          <td class="pts-col">70</td>
+        </tr>
+        <!-- Giladdd88 -->
+        <tr>
+          <td class="name-col">Giladdd88</td>
+          <td class="cell-ok"><div class="pc"><span class="pc-team ok">DET</span><span class="pc-games bad">4</span></div></td>
+          <td class="cell-ok"><div class="pc"><span class="pc-team ok">CLE</span><span class="pc-games bad">6</span></div></td>
+          <td class="cell-bad"><div class="pc"><span class="pc-team bad">BOS</span><span class="pc-games bad">6</span></div></td>
+          <td class="cell-ok"><div class="pc"><span class="pc-team ok">NYK</span><span class="pc-games bad">5</span></div></td>
+          <td class="cell-ok"><div class="pc"><span class="pc-team ok">OKC</span><span class="pc-games perfect">4⭐</span></div></td>
+          <td class="cell-bad"><div class="pc"><span class="pc-team bad">HOU</span><span class="pc-games bad">6</span></div></td>
+          <td class="cell-ok"><div class="pc"><span class="pc-team ok">SAS</span><span class="pc-games perfect">5⭐</span></div></td>
+          <td class="cell-bad"><div class="pc"><span class="pc-team bad">DEN</span><span class="pc-games bad">5</span></div></td>
+          <td class="pts-col">70</td>
+        </tr>
+        <!-- Stavdija -->
+        <tr>
+          <td class="name-col">Stavdija</td>
+          <td class="cell-ok"><div class="pc"><span class="pc-team ok">DET</span><span class="pc-games bad">5</span></div></td>
+          <td class="cell-ok"><div class="pc"><span class="pc-team ok">CLE</span><span class="pc-games perfect">7⭐</span></div></td>
+          <td class="cell-bad"><div class="pc"><span class="pc-team bad">BOS</span><span class="pc-games bad">6</span></div></td>
+          <td class="cell-ok"><div class="pc"><span class="pc-team ok">NYK</span><span class="pc-games bad">5</span></div></td>
+          <td class="cell-ok"><div class="pc"><span class="pc-team ok">OKC</span><span class="pc-games perfect">4⭐</span></div></td>
+          <td class="cell-bad"><div class="pc"><span class="pc-team bad">HOU</span><span class="pc-games bad">5</span></div></td>
+          <td class="cell-ok"><div class="pc"><span class="pc-team ok">SAS</span><span class="pc-games bad">4</span></div></td>
+          <td class="cell-bad"><div class="pc"><span class="pc-team bad">DEN</span><span class="pc-games bad">7</span></div></td>
+          <td class="pts-col">70</td>
+        </tr>
+        <!-- ivrish -->
+        <tr>
+          <td class="name-col">ivrish</td>
+          <td class="cell-ok"><div class="pc"><span class="pc-team ok">DET</span><span class="pc-games bad">4</span></div></td>
+          <td class="cell-ok"><div class="pc"><span class="pc-team ok">CLE</span><span class="pc-games bad">6</span></div></td>
+          <td class="cell-bad"><div class="pc"><span class="pc-team bad">BOS</span><span class="pc-games bad">5</span></div></td>
+          <td class="cell-ok"><div class="pc"><span class="pc-team ok">NYK</span><span class="pc-games bad">5</span></div></td>
+          <td class="cell-ok"><div class="pc"><span class="pc-team ok">OKC</span><span class="pc-games perfect">4⭐</span></div></td>
+          <td class="cell-bad"><div class="pc"><span class="pc-team bad">HOU</span><span class="pc-games bad">7</span></div></td>
+          <td class="cell-ok"><div class="pc"><span class="pc-team ok">SAS</span><span class="pc-games perfect">5⭐</span></div></td>
+          <td class="cell-bad"><div class="pc"><span class="pc-team bad">DEN</span><span class="pc-games bad">5</span></div></td>
+          <td class="pts-col">70</td>
+        </tr>
+        <!-- Ben Wallace -->
+        <tr>
+          <td class="name-col">Ben Wallace</td>
+          <td class="cell-ok"><div class="pc"><span class="pc-team ok">DET</span><span class="pc-games bad">5</span></div></td>
+          <td class="cell-ok"><div class="pc"><span class="pc-team ok">CLE</span><span class="pc-games bad">6</span></div></td>
+          <td class="cell-bad"><div class="pc"><span class="pc-team bad">BOS</span><span class="pc-games bad">5</span></div></td>
+          <td class="cell-ok"><div class="pc"><span class="pc-team ok">NYK</span><span class="pc-games bad">5</span></div></td>
+          <td class="cell-ok"><div class="pc"><span class="pc-team ok">OKC</span><span class="pc-games perfect">4⭐</span></div></td>
+          <td class="cell-bad"><div class="pc"><span class="pc-team bad">HOU</span><span class="pc-games bad">6</span></div></td>
+          <td class="cell-ok"><div class="pc"><span class="pc-team ok">SAS</span><span class="pc-games bad">4</span></div></td>
+          <td class="cell-bad"><div class="pc"><span class="pc-team bad">DEN</span><span class="pc-games bad">6</span></div></td>
+          <td class="pts-col">60</td>
+        </tr>
+        <!-- Ucimehc -->
+        <tr>
+          <td class="name-col">Ucimehc</td>
+          <td class="cell-ok"><div class="pc"><span class="pc-team ok">DET</span><span class="pc-games bad">5</span></div></td>
+          <td class="cell-ok"><div class="pc"><span class="pc-team ok">CLE</span><span class="pc-games bad">6</span></div></td>
+          <td class="cell-bad"><div class="pc"><span class="pc-team bad">BOS</span><span class="pc-games bad">4</span></div></td>
+          <td class="cell-ok"><div class="pc"><span class="pc-team ok">NYK</span><span class="pc-games bad">7</span></div></td>
+          <td class="cell-ok"><div class="pc"><span class="pc-team ok">OKC</span><span class="pc-games bad">6</span></div></td>
+          <td class="cell-bad"><div class="pc"><span class="pc-team bad">HOU</span><span class="pc-games bad">6</span></div></td>
+          <td class="cell-ok"><div class="pc"><span class="pc-team ok">SAS</span><span class="pc-games perfect">5⭐</span></div></td>
+          <td class="cell-bad"><div class="pc"><span class="pc-team bad">DEN</span><span class="pc-games bad">7</span></div></td>
+          <td class="pts-col">60</td>
+        </tr>
+        <!-- Dj Pinhas -->
+        <tr>
+          <td class="name-col">Dj Pinhas</td>
+          <td class="cell-ok"><div class="pc"><span class="pc-team ok">DET</span><span class="pc-games bad">5</span></div></td>
+          <td class="cell-ok"><div class="pc"><span class="pc-team ok">CLE</span><span class="pc-games bad">5</span></div></td>
+          <td class="cell-bad"><div class="pc"><span class="pc-team bad">BOS</span><span class="pc-games bad">6</span></div></td>
+          <td class="cell-ok"><div class="pc"><span class="pc-team ok">NYK</span><span class="pc-games perfect">6⭐</span></div></td>
+          <td class="cell-ok"><div class="pc"><span class="pc-team ok">OKC</span><span class="pc-games perfect">4⭐</span></div></td>
+          <td class="cell-bad"><div class="pc"><span class="pc-team bad">HOU</span><span class="pc-games bad">5</span></div></td>
+          <td class="cell-bad"><div class="pc"><span class="pc-team bad">POR</span><span class="pc-games bad">7</span></div></td>
+          <td class="cell-bad"><div class="pc"><span class="pc-team bad">DEN</span><span class="pc-games bad">6</span></div></td>
+          <td class="pts-col">60</td>
+        </tr>
+        <!-- Ron Artest -->
+        <tr>
+          <td class="name-col">Ron Artest</td>
+          <td class="cell-ok"><div class="pc"><span class="pc-team ok">DET</span><span class="pc-games bad">5</span></div></td>
+          <td class="cell-bad"><div class="pc"><span class="pc-team bad">TOR</span><span class="pc-games bad">6</span></div></td>
+          <td class="cell-bad"><div class="pc"><span class="pc-team bad">BOS</span><span class="pc-games bad">5</span></div></td>
+          <td class="cell-ok"><div class="pc"><span class="pc-team ok">NYK</span><span class="pc-games perfect">6⭐</span></div></td>
+          <td class="cell-ok"><div class="pc"><span class="pc-team ok">OKC</span><span class="pc-games perfect">4⭐</span></div></td>
+          <td class="cell-bad"><div class="pc"><span class="pc-team bad">HOU</span><span class="pc-games bad">6</span></div></td>
+          <td class="cell-ok"><div class="pc"><span class="pc-team ok">SAS</span><span class="pc-games bad">4</span></div></td>
+          <td class="cell-bad"><div class="pc"><span class="pc-team bad">DEN</span><span class="pc-games bad">6</span></div></td>
+          <td class="pts-col">60</td>
+        </tr>
+        <!-- roikind -->
+        <tr>
+          <td class="name-col">roikind</td>
+          <td class="cell-ok"><div class="pc"><span class="pc-team ok">DET</span><span class="pc-games bad">5</span></div></td>
+          <td class="cell-ok"><div class="pc"><span class="pc-team ok">CLE</span><span class="pc-games bad">6</span></div></td>
+          <td class="cell-bad"><div class="pc"><span class="pc-team bad">BOS</span><span class="pc-games bad">4</span></div></td>
+          <td class="cell-ok"><div class="pc"><span class="pc-team ok">NYK</span><span class="pc-games bad">5</span></div></td>
+          <td class="cell-ok"><div class="pc"><span class="pc-team ok">OKC</span><span class="pc-games bad">5</span></div></td>
+          <td class="cell-bad"><div class="pc"><span class="pc-team bad">HOU</span><span class="pc-games bad">5</span></div></td>
+          <td class="cell-bad"><div class="pc"><span class="pc-team bad">POR</span><span class="pc-games bad">6</span></div></td>
+          <td class="cell-bad"><div class="pc"><span class="pc-team bad">DEN</span><span class="pc-games bad">6</span></div></td>
+          <td class="pts-col low">40</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="legend">
+    <span class="legend-item"><span style="color:var(--green)">●</span> Correct winner</span>
+    <span class="legend-item"><span style="opacity:.3">●</span> Wrong pick</span>
+    <span class="legend-item"><span style="color:var(--gold)">⭐</span> Perfect games prediction (+10 pts)</span>
+    <span class="legend-item"><span style="color:var(--gold)">🎯</span> Upset correctly called</span>
+    <span class="legend-item"><span style="color:var(--red)">🔥</span> Upset series header</span>
+  </div>
+</section>
+
+</div><!-- /container -->
+
+<footer>
+  🏀 NBA Playoffs 2026 Bracket Challenge · Round 1 Recap · Generated May 2026
+  <span style="margin-left:16px"><a href="index.html" style="color:var(--gold);text-decoration:none">← Back to Live App</a></span>
+</footer>
+
+<script>
+// Animate bar fills on load
+window.addEventListener('load', () => {
+  document.querySelectorAll('.bar-fill').forEach(el => {
+    const w = el.style.width;
+    el.style.width = '0';
+    setTimeout(() => { el.style.width = w; }, 100);
+  });
+  // Active nav on scroll
+  const sections = document.querySelectorAll('section[id]');
+  const links = document.querySelectorAll('.nav-link[href^="#"]');
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        links.forEach(l => l.classList.remove('active'));
+        const link = document.querySelector(`.nav-link[href="#${e.target.id}"]`);
+        if (link) link.classList.add('active');
+      }
+    });
+  }, { threshold: 0.3 });
+  sections.forEach(s => obs.observe(s));
+});
+</script>
+</body>
+</html>
