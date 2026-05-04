@@ -1467,6 +1467,8 @@ main { padding: 24px; box-sizing: border-box; width: 100%; }
   .leaderboard-table th,
   .leaderboard-table td { padding: 7px 8px; font-size: 12px; }
   .breakdown-grid { grid-template-columns: 1fr 1fr; }
+  .breakdown-confs-row { flex-direction: column; }
+  .breakdown-finals-centered { max-width: 100%; }
   .rnd-full { display: none; }
   .rnd-abbr { display: inline; }
 
