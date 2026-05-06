@@ -1,5 +1,5 @@
 {
-  "updated": "2026-05-05T23:50:54Z",
+  "updated": "2026-05-06T02:09:34Z",
   "records": {
     "ATL-NYK": {
       "NYK": 4,
@@ -40,6 +40,10 @@
     "MIN-SAS": {
       "MIN": 1,
       "SAS": 0
+    },
+    "CLE-DET": {
+      "DET": 1,
+      "CLE": 0
     }
   },
   "games": {
@@ -511,6 +515,17 @@
         "away": "MIN",
         "awayPts": 104,
         "date": "2026-05-04"
+      }
+    ],
+    "CLE-DET": [
+      {
+        "n": "Game 1",
+        "gameId": "0042500201",
+        "home": "DET",
+        "homePts": 111,
+        "away": "CLE",
+        "awayPts": 101,
+        "date": "2026-05-05"
       }
     ]
   },
@@ -12541,6 +12556,234 @@
             "ast": 2,
             "stl": 1,
             "blk": 1
+          }
+        ]
+      }
+    },
+    "0042500201": {
+      "home": {
+        "tricode": "DET",
+        "city": "Detroit",
+        "name": "Pistons",
+        "score": 111,
+        "players": [
+          {
+            "name": "Cade Cunningham",
+            "jersey": "2",
+            "min": "41:00",
+            "pts": 23,
+            "reb": 3,
+            "ast": 7,
+            "stl": 2,
+            "blk": 0
+          },
+          {
+            "name": "Tobias Harris",
+            "jersey": "12",
+            "min": "39:00",
+            "pts": 20,
+            "reb": 8,
+            "ast": 1,
+            "stl": 2,
+            "blk": 0
+          },
+          {
+            "name": "Duncan Robinson",
+            "jersey": "55",
+            "min": "28:00",
+            "pts": 19,
+            "reb": 0,
+            "ast": 2,
+            "stl": 2,
+            "blk": 0
+          },
+          {
+            "name": "Daniss Jenkins",
+            "jersey": "24",
+            "min": "29:00",
+            "pts": 12,
+            "reb": 7,
+            "ast": 3,
+            "stl": 4,
+            "blk": 0
+          },
+          {
+            "name": "Ausar Thompson",
+            "jersey": "9",
+            "min": "33:00",
+            "pts": 11,
+            "reb": 8,
+            "ast": 5,
+            "stl": 1,
+            "blk": 1
+          },
+          {
+            "name": "Jalen Duren",
+            "jersey": "0",
+            "min": "35:00",
+            "pts": 11,
+            "reb": 12,
+            "ast": 4,
+            "stl": 0,
+            "blk": 2
+          },
+          {
+            "name": "Isaiah Stewart",
+            "jersey": "28",
+            "min": "13:00",
+            "pts": 6,
+            "reb": 3,
+            "ast": 1,
+            "stl": 0,
+            "blk": 0
+          },
+          {
+            "name": "Ronald Holland II",
+            "jersey": "5",
+            "min": "10:00",
+            "pts": 6,
+            "reb": 1,
+            "ast": 0,
+            "stl": 1,
+            "blk": 0
+          },
+          {
+            "name": "Javonte Green",
+            "jersey": "31",
+            "min": "03:00",
+            "pts": 3,
+            "reb": 1,
+            "ast": 0,
+            "stl": 0,
+            "blk": 0
+          },
+          {
+            "name": "Caris LeVert",
+            "jersey": "8",
+            "min": "09:00",
+            "pts": 0,
+            "reb": 2,
+            "ast": 0,
+            "stl": 0,
+            "blk": 0
+          }
+        ]
+      },
+      "away": {
+        "tricode": "CLE",
+        "city": "Cleveland",
+        "name": "Cavaliers",
+        "score": 101,
+        "players": [
+          {
+            "name": "Donovan Mitchell",
+            "jersey": "45",
+            "min": "35:00",
+            "pts": 23,
+            "reb": 4,
+            "ast": 2,
+            "stl": 1,
+            "blk": 0
+          },
+          {
+            "name": "James Harden",
+            "jersey": "1",
+            "min": "35:00",
+            "pts": 22,
+            "reb": 8,
+            "ast": 7,
+            "stl": 1,
+            "blk": 2
+          },
+          {
+            "name": "Max Strus",
+            "jersey": "2",
+            "min": "28:00",
+            "pts": 19,
+            "reb": 5,
+            "ast": 2,
+            "stl": 1,
+            "blk": 0
+          },
+          {
+            "name": "Evan Mobley",
+            "jersey": "4",
+            "min": "35:00",
+            "pts": 14,
+            "reb": 9,
+            "ast": 5,
+            "stl": 0,
+            "blk": 2
+          },
+          {
+            "name": "Dennis Schr\u00f6der",
+            "jersey": "8",
+            "min": "16:00",
+            "pts": 9,
+            "reb": 1,
+            "ast": 3,
+            "stl": 0,
+            "blk": 0
+          },
+          {
+            "name": "Dean Wade",
+            "jersey": "32",
+            "min": "28:00",
+            "pts": 5,
+            "reb": 3,
+            "ast": 1,
+            "stl": 1,
+            "blk": 0
+          },
+          {
+            "name": "Thomas Bryant",
+            "jersey": "3",
+            "min": "10:00",
+            "pts": 4,
+            "reb": 0,
+            "ast": 0,
+            "stl": 1,
+            "blk": 0
+          },
+          {
+            "name": "Keon Ellis",
+            "jersey": "14",
+            "min": "11:00",
+            "pts": 3,
+            "reb": 3,
+            "ast": 0,
+            "stl": 2,
+            "blk": 0
+          },
+          {
+            "name": "Jarrett Allen",
+            "jersey": "31",
+            "min": "18:00",
+            "pts": 2,
+            "reb": 3,
+            "ast": 1,
+            "stl": 0,
+            "blk": 1
+          },
+          {
+            "name": "Sam Merrill",
+            "jersey": "5",
+            "min": "07:00",
+            "pts": 0,
+            "reb": 0,
+            "ast": 1,
+            "stl": 0,
+            "blk": 0
+          },
+          {
+            "name": "Jaylon Tyson",
+            "jersey": "20",
+            "min": "17:00",
+            "pts": 0,
+            "reb": 5,
+            "ast": 1,
+            "stl": 0,
+            "blk": 0
           }
         ]
       }
