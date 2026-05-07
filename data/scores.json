@@ -1,5 +1,5 @@
 {
-  "updated": "2026-05-06T23:42:42Z",
+  "updated": "2026-05-07T02:11:47Z",
   "records": {
     "ATL-NYK": {
       "NYK": 4,
@@ -34,7 +34,7 @@
       "POR": 1
     },
     "NYK-PHI": {
-      "NYK": 1,
+      "NYK": 2,
       "PHI": 0
     },
     "MIN-SAS": {
@@ -508,6 +508,15 @@
         "away": "PHI",
         "awayPts": 98,
         "date": "2026-05-04"
+      },
+      {
+        "n": "Game 2",
+        "gameId": "0042500212",
+        "home": "NYK",
+        "homePts": 108,
+        "away": "PHI",
+        "awayPts": 102,
+        "date": "2026-05-06"
       }
     ],
     "MIN-SAS": [
@@ -13067,6 +13076,214 @@
             "ast": 0,
             "stl": 0,
             "blk": 0
+          }
+        ]
+      }
+    },
+    "0042500212": {
+      "home": {
+        "tricode": "NYK",
+        "city": "New York",
+        "name": "Knicks",
+        "score": 108,
+        "players": [
+          {
+            "name": "Jalen Brunson",
+            "jersey": "11",
+            "min": "41:00",
+            "pts": 26,
+            "reb": 1,
+            "ast": 6,
+            "stl": 1,
+            "blk": 0
+          },
+          {
+            "name": "OG Anunoby",
+            "jersey": "8",
+            "min": "37:00",
+            "pts": 24,
+            "reb": 5,
+            "ast": 2,
+            "stl": 4,
+            "blk": 1
+          },
+          {
+            "name": "Karl-Anthony Towns",
+            "jersey": "32",
+            "min": "27:00",
+            "pts": 20,
+            "reb": 10,
+            "ast": 7,
+            "stl": 1,
+            "blk": 0
+          },
+          {
+            "name": "Mikal Bridges",
+            "jersey": "25",
+            "min": "38:00",
+            "pts": 18,
+            "reb": 5,
+            "ast": 2,
+            "stl": 1,
+            "blk": 1
+          },
+          {
+            "name": "Jordan Clarkson",
+            "jersey": "00",
+            "min": "08:00",
+            "pts": 6,
+            "reb": 5,
+            "ast": 0,
+            "stl": 0,
+            "blk": 0
+          },
+          {
+            "name": "Josh Hart",
+            "jersey": "3",
+            "min": "44:00",
+            "pts": 5,
+            "reb": 7,
+            "ast": 6,
+            "stl": 3,
+            "blk": 0
+          },
+          {
+            "name": "Miles McBride",
+            "jersey": "2",
+            "min": "22:00",
+            "pts": 4,
+            "reb": 1,
+            "ast": 1,
+            "stl": 0,
+            "blk": 0
+          },
+          {
+            "name": "Jose Alvarado",
+            "jersey": "5",
+            "min": "07:00",
+            "pts": 3,
+            "reb": 0,
+            "ast": 1,
+            "stl": 0,
+            "blk": 0
+          },
+          {
+            "name": "Ariel Hukporti",
+            "jersey": "55",
+            "min": "07:00",
+            "pts": 2,
+            "reb": 3,
+            "ast": 0,
+            "stl": 0,
+            "blk": 0
+          },
+          {
+            "name": "Jeremy Sochan",
+            "jersey": "20",
+            "min": "01:00",
+            "pts": 0,
+            "reb": 0,
+            "ast": 0,
+            "stl": 0,
+            "blk": 0
+          },
+          {
+            "name": "Landry Shamet",
+            "jersey": "44",
+            "min": "08:00",
+            "pts": 0,
+            "reb": 0,
+            "ast": 0,
+            "stl": 0,
+            "blk": 0
+          }
+        ]
+      },
+      "away": {
+        "tricode": "PHI",
+        "city": "Philadelphia",
+        "name": "76ers",
+        "score": 102,
+        "players": [
+          {
+            "name": "Tyrese Maxey",
+            "jersey": "0",
+            "min": "47:00",
+            "pts": 26,
+            "reb": 3,
+            "ast": 6,
+            "stl": 1,
+            "blk": 0
+          },
+          {
+            "name": "Paul George",
+            "jersey": "8",
+            "min": "43:00",
+            "pts": 19,
+            "reb": 6,
+            "ast": 4,
+            "stl": 2,
+            "blk": 2
+          },
+          {
+            "name": "Kelly Oubre Jr.",
+            "jersey": "9",
+            "min": "40:00",
+            "pts": 19,
+            "reb": 5,
+            "ast": 2,
+            "stl": 1,
+            "blk": 0
+          },
+          {
+            "name": "VJ Edgecombe",
+            "jersey": "77",
+            "min": "40:00",
+            "pts": 17,
+            "reb": 5,
+            "ast": 3,
+            "stl": 1,
+            "blk": 0
+          },
+          {
+            "name": "Quentin Grimes",
+            "jersey": "5",
+            "min": "24:00",
+            "pts": 7,
+            "reb": 3,
+            "ast": 3,
+            "stl": 1,
+            "blk": 0
+          },
+          {
+            "name": "Andre Drummond",
+            "jersey": "1",
+            "min": "15:00",
+            "pts": 6,
+            "reb": 8,
+            "ast": 1,
+            "stl": 1,
+            "blk": 0
+          },
+          {
+            "name": "Dominick Barlow",
+            "jersey": "25",
+            "min": "15:00",
+            "pts": 6,
+            "reb": 2,
+            "ast": 0,
+            "stl": 1,
+            "blk": 2
+          },
+          {
+            "name": "Adem Bona",
+            "jersey": "30",
+            "min": "16:00",
+            "pts": 2,
+            "reb": 7,
+            "ast": 1,
+            "stl": 0,
+            "blk": 2
           }
         ]
       }
