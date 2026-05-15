@@ -544,12 +544,6 @@ function getLeaderboardRows() {
     });
 }
 
-function scoresHaveChanged() {
-  try {
-    const snap = JSON.parse(localStorage.getItem(SCORE_SNAPSHOT_KEY) || '{}');
-    return state.participants.some(p => computeScore(p.id).score !== (snap[p.id]?.score ?? 0));
-  } catch { return false; }
-}
 
 function saveScoreSnapshot() {
   const snap = { __resultsCount: Object.keys(state.results).length };
@@ -585,8 +579,17 @@ function getLandingTab(pid) {
   const unlocked = SERIES.filter(s => isSeriesAvailable(s.id) && !isSeriesLocked(s.id));
   const hasIncomplete = unlocked.some(s => { const p = getPick(pid, s.id); return !p.winner || !p.games; });
   if (hasIncomplete) return 'bracket';
-  if (scoresHaveChanged()) return 'leaderboard';
-  return 'participants';
+  const hasNewResults = Object.keys(state.results).length > getLbSeenData(pid);
+  if (hasNewResults) {
+    const snap = JSON.parse(localStorage.getItem(SCORE_SNAPSHOT_KEY) || '{}');
+    const prevRank = snap[pid]?.rank ?? null;
+    if (prevRank !== null) {
+      const rank = getLeaderboardRows().findIndex(p => p.id === pid) + 1;
+      if (rank !== prevRank) return 'leaderboard';
+    }
+    return 'results';
+  }
+  return 'leaderboard';
 }
 
 function startApp() {
@@ -1483,6 +1486,7 @@ function openGameDetail(gameId, seriesLabel, gameLabel) {
 function closeGameDetail() {
   gameDetailData = null;
   renderResults();
+  window.scrollTo(0, 0);
 }
 function renderGameDetail() {
   const { seriesLabel, gameLabel, loading, error, boxScore } = gameDetailData;
@@ -1608,7 +1612,7 @@ function renderLeaderboard() {
   const rows = getLeaderboardRows();
   const snap = JSON.parse(localStorage.getItem(SCORE_SNAPSHOT_KEY) || '{}');
   const msgHtml = leaderboardMessage ? `<div class="landing-toast${leaderboardToastCls ? ' ' + leaderboardToastCls : ''}">${leaderboardMessage}</div>` : '';
-  if (leaderboardMessage) markLbSeen(currentUserId);
+  if (leaderboardMessage && activeTab === 'leaderboard') markLbSeen(currentUserId);
 
   el.innerHTML = `
     <div class="leaderboard-wrap">
