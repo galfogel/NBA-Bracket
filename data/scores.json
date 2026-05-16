@@ -1,5 +1,5 @@
 {
-  "updated": "2026-05-16T04:19:18Z",
+  "updated": "2026-05-16T04:31:38Z",
   "records": {
     "ATL-NYK": {
       "NYK": 4,
@@ -39,7 +39,7 @@
     },
     "MIN-SAS": {
       "MIN": 2,
-      "SAS": 3
+      "SAS": 4
     },
     "CLE-DET": {
       "DET": 3,
@@ -582,6 +582,15 @@
         "away": "MIN",
         "awayPts": 97,
         "date": "2026-05-12"
+      },
+      {
+        "n": "Game 6",
+        "gameId": "0042500236",
+        "home": "MIN",
+        "homePts": 109,
+        "away": "SAS",
+        "awayPts": 139,
+        "date": "2026-05-15"
       }
     ],
     "CLE-DET": [
@@ -16940,6 +16949,304 @@
             "pts": 0,
             "reb": 0,
             "ast": 0,
+            "stl": 0,
+            "blk": 0
+          }
+        ]
+      }
+    },
+    "0042500236": {
+      "home": {
+        "tricode": "MIN",
+        "city": "Minnesota",
+        "name": "Timberwolves",
+        "score": 109,
+        "players": [
+          {
+            "name": "Anthony Edwards",
+            "jersey": "5",
+            "min": "36:00",
+            "pts": 24,
+            "reb": 2,
+            "ast": 2,
+            "stl": 3,
+            "blk": 0
+          },
+          {
+            "name": "Terrence Shannon Jr.",
+            "jersey": "1",
+            "min": "22:00",
+            "pts": 21,
+            "reb": 2,
+            "ast": 1,
+            "stl": 1,
+            "blk": 0
+          },
+          {
+            "name": "Naz Reid",
+            "jersey": "11",
+            "min": "32:00",
+            "pts": 18,
+            "reb": 7,
+            "ast": 1,
+            "stl": 0,
+            "blk": 0
+          },
+          {
+            "name": "Jaden McDaniels",
+            "jersey": "3",
+            "min": "23:00",
+            "pts": 13,
+            "reb": 1,
+            "ast": 3,
+            "stl": 0,
+            "blk": 1
+          },
+          {
+            "name": "Ayo Dosunmu",
+            "jersey": "13",
+            "min": "23:00",
+            "pts": 10,
+            "reb": 1,
+            "ast": 9,
+            "stl": 0,
+            "blk": 0
+          },
+          {
+            "name": "Mike Conley",
+            "jersey": "10",
+            "min": "18:00",
+            "pts": 6,
+            "reb": 0,
+            "ast": 4,
+            "stl": 3,
+            "blk": 0
+          },
+          {
+            "name": "Joan Beringer",
+            "jersey": "19",
+            "min": "08:00",
+            "pts": 4,
+            "reb": 2,
+            "ast": 0,
+            "stl": 1,
+            "blk": 1
+          },
+          {
+            "name": "Julius Randle",
+            "jersey": "30",
+            "min": "24:00",
+            "pts": 3,
+            "reb": 7,
+            "ast": 1,
+            "stl": 0,
+            "blk": 0
+          },
+          {
+            "name": "Julian Phillips",
+            "jersey": "4",
+            "min": "08:00",
+            "pts": 3,
+            "reb": 0,
+            "ast": 1,
+            "stl": 1,
+            "blk": 0
+          },
+          {
+            "name": "Bones Hyland",
+            "jersey": "8",
+            "min": "08:00",
+            "pts": 3,
+            "reb": 1,
+            "ast": 0,
+            "stl": 0,
+            "blk": 0
+          },
+          {
+            "name": "Kyle Anderson",
+            "jersey": "12",
+            "min": "08:00",
+            "pts": 2,
+            "reb": 0,
+            "ast": 3,
+            "stl": 0,
+            "blk": 0
+          },
+          {
+            "name": "Jaylen Clark",
+            "jersey": "22",
+            "min": "08:00",
+            "pts": 2,
+            "reb": 3,
+            "ast": 0,
+            "stl": 0,
+            "blk": 0
+          },
+          {
+            "name": "Rudy Gobert",
+            "jersey": "27",
+            "min": "22:00",
+            "pts": 0,
+            "reb": 3,
+            "ast": 0,
+            "stl": 0,
+            "blk": 0
+          }
+        ]
+      },
+      "away": {
+        "tricode": "SAS",
+        "city": "San Antonio",
+        "name": "Spurs",
+        "score": 139,
+        "players": [
+          {
+            "name": "Stephon Castle",
+            "jersey": "5",
+            "min": "30:00",
+            "pts": 32,
+            "reb": 11,
+            "ast": 6,
+            "stl": 0,
+            "blk": 0
+          },
+          {
+            "name": "De'Aaron Fox",
+            "jersey": "4",
+            "min": "24:00",
+            "pts": 21,
+            "reb": 4,
+            "ast": 9,
+            "stl": 0,
+            "blk": 2
+          },
+          {
+            "name": "Victor Wembanyama",
+            "jersey": "1",
+            "min": "27:00",
+            "pts": 19,
+            "reb": 6,
+            "ast": 2,
+            "stl": 0,
+            "blk": 3
+          },
+          {
+            "name": "Julian Champagnie",
+            "jersey": "30",
+            "min": "26:00",
+            "pts": 18,
+            "reb": 5,
+            "ast": 2,
+            "stl": 2,
+            "blk": 0
+          },
+          {
+            "name": "Dylan Harper",
+            "jersey": "2",
+            "min": "26:00",
+            "pts": 15,
+            "reb": 5,
+            "ast": 2,
+            "stl": 0,
+            "blk": 1
+          },
+          {
+            "name": "Devin Vassell",
+            "jersey": "24",
+            "min": "27:00",
+            "pts": 11,
+            "reb": 5,
+            "ast": 4,
+            "stl": 0,
+            "blk": 1
+          },
+          {
+            "name": "Luke Kornet",
+            "jersey": "7",
+            "min": "14:00",
+            "pts": 6,
+            "reb": 6,
+            "ast": 1,
+            "stl": 0,
+            "blk": 4
+          },
+          {
+            "name": "Carter Bryant",
+            "jersey": "11",
+            "min": "13:00",
+            "pts": 3,
+            "reb": 6,
+            "ast": 1,
+            "stl": 0,
+            "blk": 0
+          },
+          {
+            "name": "Harrison Barnes",
+            "jersey": "40",
+            "min": "07:00",
+            "pts": 3,
+            "reb": 4,
+            "ast": 2,
+            "stl": 0,
+            "blk": 0
+          },
+          {
+            "name": "Kelly Olynyk",
+            "jersey": "8",
+            "min": "08:00",
+            "pts": 3,
+            "reb": 4,
+            "ast": 1,
+            "stl": 0,
+            "blk": 0
+          },
+          {
+            "name": "Jordan McLaughlin",
+            "jersey": "0",
+            "min": "08:00",
+            "pts": 2,
+            "reb": 1,
+            "ast": 1,
+            "stl": 0,
+            "blk": 0
+          },
+          {
+            "name": "Lindy Waters III",
+            "jersey": "43",
+            "min": "08:00",
+            "pts": 2,
+            "reb": 1,
+            "ast": 1,
+            "stl": 0,
+            "blk": 0
+          },
+          {
+            "name": "Bismack Biyombo",
+            "jersey": "18",
+            "min": "07:00",
+            "pts": 2,
+            "reb": 0,
+            "ast": 0,
+            "stl": 0,
+            "blk": 2
+          },
+          {
+            "name": "Mason Plumlee",
+            "jersey": "45",
+            "min": "05:00",
+            "pts": 2,
+            "reb": 2,
+            "ast": 0,
+            "stl": 0,
+            "blk": 0
+          },
+          {
+            "name": "Keldon Johnson",
+            "jersey": "3",
+            "min": "10:00",
+            "pts": 0,
+            "reb": 0,
+            "ast": 2,
             "stl": 0,
             "blk": 0
           }
