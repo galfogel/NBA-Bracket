@@ -1,5 +1,5 @@
 {
-  "updated": "2026-05-18T23:59:27Z",
+  "updated": "2026-05-19T04:01:31Z",
   "records": {
     "ATL-NYK": {
       "NYK": 4,
@@ -48,6 +48,10 @@
     "LAL-OKC": {
       "OKC": 4,
       "LAL": 0
+    },
+    "OKC-SAS": {
+      "SAS": 1,
+      "OKC": 0
     }
   },
   "games": {
@@ -694,6 +698,17 @@
         "away": "OKC",
         "awayPts": 115,
         "date": "2026-05-11"
+      }
+    ],
+    "OKC-SAS": [
+      {
+        "n": "Game 1",
+        "gameId": "0042500311",
+        "home": "OKC",
+        "homePts": 115,
+        "away": "SAS",
+        "awayPts": 122,
+        "date": "2026-05-18"
       }
     ]
   },
@@ -17539,6 +17554,234 @@
           }
         ]
       }
+    },
+    "0042500311": {
+      "home": {
+        "tricode": "OKC",
+        "city": "Oklahoma City",
+        "name": "Thunder",
+        "score": 115,
+        "players": [
+          {
+            "name": "Alex Caruso",
+            "jersey": "9",
+            "min": "32:00",
+            "pts": 31,
+            "reb": 2,
+            "ast": 1,
+            "stl": 2,
+            "blk": 2
+          },
+          {
+            "name": "Jalen Williams",
+            "jersey": "8",
+            "min": "37:00",
+            "pts": 26,
+            "reb": 7,
+            "ast": 3,
+            "stl": 1,
+            "blk": 1
+          },
+          {
+            "name": "Shai Gilgeous-Alexander",
+            "jersey": "2",
+            "min": "51:00",
+            "pts": 24,
+            "reb": 3,
+            "ast": 12,
+            "stl": 5,
+            "blk": 1
+          },
+          {
+            "name": "Chet Holmgren",
+            "jersey": "7",
+            "min": "41:00",
+            "pts": 8,
+            "reb": 8,
+            "ast": 0,
+            "stl": 1,
+            "blk": 2
+          },
+          {
+            "name": "Cason Wallace",
+            "jersey": "22",
+            "min": "28:00",
+            "pts": 8,
+            "reb": 6,
+            "ast": 0,
+            "stl": 2,
+            "blk": 0
+          },
+          {
+            "name": "Jared McCain",
+            "jersey": "3",
+            "min": "18:00",
+            "pts": 7,
+            "reb": 2,
+            "ast": 1,
+            "stl": 0,
+            "blk": 0
+          },
+          {
+            "name": "Luguentz Dort",
+            "jersey": "5",
+            "min": "22:00",
+            "pts": 5,
+            "reb": 3,
+            "ast": 1,
+            "stl": 0,
+            "blk": 0
+          },
+          {
+            "name": "Ajay Mitchell",
+            "jersey": "25",
+            "min": "34:00",
+            "pts": 4,
+            "reb": 4,
+            "ast": 5,
+            "stl": 2,
+            "blk": 0
+          },
+          {
+            "name": "Isaiah Hartenstein",
+            "jersey": "55",
+            "min": "12:00",
+            "pts": 2,
+            "reb": 2,
+            "ast": 2,
+            "stl": 1,
+            "blk": 2
+          },
+          {
+            "name": "Jaylin Williams",
+            "jersey": "6",
+            "min": "10:00",
+            "pts": 0,
+            "reb": 3,
+            "ast": 0,
+            "stl": 0,
+            "blk": 0
+          },
+          {
+            "name": "Aaron Wiggins",
+            "jersey": "21",
+            "min": "04:00",
+            "pts": 0,
+            "reb": 0,
+            "ast": 0,
+            "stl": 0,
+            "blk": 0
+          },
+          {
+            "name": "Isaiah Joe",
+            "jersey": "11",
+            "min": "01:00",
+            "pts": 0,
+            "reb": 0,
+            "ast": 0,
+            "stl": 0,
+            "blk": 0
+          }
+        ]
+      },
+      "away": {
+        "tricode": "SAS",
+        "city": "San Antonio",
+        "name": "Spurs",
+        "score": 122,
+        "players": [
+          {
+            "name": "Victor Wembanyama",
+            "jersey": "1",
+            "min": "49:00",
+            "pts": 41,
+            "reb": 24,
+            "ast": 3,
+            "stl": 1,
+            "blk": 3
+          },
+          {
+            "name": "Dylan Harper",
+            "jersey": "2",
+            "min": "47:00",
+            "pts": 24,
+            "reb": 11,
+            "ast": 6,
+            "stl": 7,
+            "blk": 0
+          },
+          {
+            "name": "Stephon Castle",
+            "jersey": "5",
+            "min": "49:00",
+            "pts": 17,
+            "reb": 6,
+            "ast": 11,
+            "stl": 1,
+            "blk": 0
+          },
+          {
+            "name": "Devin Vassell",
+            "jersey": "24",
+            "min": "51:00",
+            "pts": 13,
+            "reb": 6,
+            "ast": 2,
+            "stl": 1,
+            "blk": 2
+          },
+          {
+            "name": "Keldon Johnson",
+            "jersey": "3",
+            "min": "21:00",
+            "pts": 13,
+            "reb": 0,
+            "ast": 0,
+            "stl": 0,
+            "blk": 0
+          },
+          {
+            "name": "Julian Champagnie",
+            "jersey": "30",
+            "min": "44:00",
+            "pts": 11,
+            "reb": 9,
+            "ast": 1,
+            "stl": 1,
+            "blk": 2
+          },
+          {
+            "name": "Carter Bryant",
+            "jersey": "11",
+            "min": "14:00",
+            "pts": 3,
+            "reb": 2,
+            "ast": 1,
+            "stl": 0,
+            "blk": 0
+          },
+          {
+            "name": "Luke Kornet",
+            "jersey": "7",
+            "min": "09:00",
+            "pts": 0,
+            "reb": 3,
+            "ast": 1,
+            "stl": 0,
+            "blk": 0
+          },
+          {
+            "name": "Harrison Barnes",
+            "jersey": "40",
+            "min": "06:00",
+            "pts": 0,
+            "reb": 0,
+            "ast": 0,
+            "stl": 0,
+            "blk": 0
+          }
+        ]
+      }
     }
   },
   "gameTimes": {
@@ -17551,6 +17794,6 @@
     "E1v8": "2026-04-19T22:30:00Z",
     "W2v7": "2026-04-20T01:00:00Z"
   },
-  "finalsGame1Gap": null,
+  "finalsGame1Gap": 7,
   "error": null
 }
