@@ -1620,22 +1620,12 @@ function renderMaxPlacements(rows) {
     return { ...p, maxScore };
   }).sort((a, b) => b.maxScore !== a.maxScore ? b.maxScore - a.maxScore : a.name.localeCompare(b.name));
 
-  const items = maxRows.map((p, i) => {
-    const isMe = p.id === currentUserId;
-    const rank = i + 1;
-    const suffix = ['st','nd','rd'][rank - 1] || 'th';
-    const medal = rank <= 3 ? ['🥇','🥈','🥉'][i] : `${rank}${suffix}`;
-    return `<div class="max-place-row${isMe ? ' my-row' : ''}">
-      <span class="max-place-rank">${medal}</span>
-      <span class="max-place-name">${p.name}</span>
-      <span class="max-place-pts">${p.maxScore} pts</span>
-    </div>`;
-  }).join('');
-
-  return `<div class="max-place-section">
-    <div class="max-place-title">Best Possible Placement</div>
-    <div class="max-place-list">${items}</div>
-  </div>`;
+  const myIdx = maxRows.findIndex(p => p.id === currentUserId);
+  if (myIdx < 0) return '';
+  const rank = myIdx + 1;
+  const suffix = ['st','nd','rd'][rank - 1] || 'th';
+  const medal = rank <= 3 ? ['🥇','🥈','🥉'][myIdx] + ' ' : '';
+  return `<div class="max-place-section">Best possible placement: ${medal}<strong>${rank}${suffix} place</strong></div>`;
 }
 
 function renderLeaderboard() {

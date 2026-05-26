@@ -914,14 +914,7 @@ main { padding: 24px; box-sizing: border-box; width: 100%; }
 .rnd-abbr { display: none; }
 
 /* ---- Max possible placement ---- */
-.max-place-section { margin-top: 28px; padding-top: 20px; border-top: 1px solid var(--border); }
-.max-place-title { font-size: 14px; font-weight: 600; color: var(--text-dim); margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.04em; }
-.max-place-list { display: flex; flex-direction: column; gap: 4px; }
-.max-place-row { display: flex; align-items: center; gap: 10px; padding: 5px 10px; border-radius: 6px; font-size: 13px; }
-.max-place-row.my-row { background: color-mix(in srgb, var(--accent) 10%, transparent); font-weight: 600; }
-.max-place-rank { min-width: 32px; font-size: 13px; }
-.max-place-name { flex: 1; }
-.max-place-pts { font-size: 12px; color: var(--text-dim); }
+.max-place-section { margin-top: 12px; font-size: 13px; color: var(--text-dim); }
 
 /* ---- Pick breakdown ---- */
 .pick-breakdown { margin-top: 40px; padding-top: 24px; border-top: 1px solid var(--border); }
