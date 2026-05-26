@@ -1761,7 +1761,7 @@ function renderPickBreakdown(rows) {
           const pickedIsT1 = pick.winner === t1k;
           const opponentWins = !actual && pick.winner ? (pickedIsT1 ? (rec ? rec.t2Wins : 0) : (rec ? rec.t1Wins : 0)) : 0;
           const gamesImpossible = !actual && pick.games && pick.games < opponentWins + 4;
-          const potDot = (!actual && pick.winner)
+          const potDot = (!actual && pick.winner && !bdShowPoints)
             ? `<span class="bd-pot-dot ${gamesImpossible ? 'yellow' : 'green'}"></span>`
             : '';
           let ptsDisplay = '';
@@ -1771,7 +1771,8 @@ function renderPickBreakdown(rows) {
             } else if (pick.winner) {
               const basePts = ROUND_POINTS[SERIES_MAP[def.id].r];
               const potPts  = basePts + getUpsetBonus(def.id, pick.winner, basePts);
-              ptsDisplay = `<span class="bd-pts-earned">${potPts}</span>`;
+              const potCls  = pick.games ? 'bd-pts-pot' : 'bd-pts-pot bd-pts-yellow';
+              ptsDisplay = `<span class="bd-pts-earned ${potCls}">${potPts}</span>`;
             } else {
               ptsDisplay = `<span class="bd-pts-earned bd-pts-wrong">0</span>`;
             }
