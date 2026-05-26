@@ -914,7 +914,7 @@ main { padding: 24px; box-sizing: border-box; width: 100%; }
 .rnd-abbr { display: none; }
 
 /* ---- Max possible placement ---- */
-.max-place-section { margin-top: 12px; font-size: 13px; color: var(--text-dim); }
+.max-place-section { margin-top: 6px; margin-bottom: 6px; font-size: 13px; color: var(--text-dim); }
 
 /* ---- Pick breakdown ---- */
 .pick-breakdown { margin-top: 40px; padding-top: 24px; border-top: 1px solid var(--border); }
