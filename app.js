@@ -1700,7 +1700,7 @@ function renderPickBreakdown(rows) {
       <span class="bd-legend-item"><span class="bd-pts-earned">✓<span class="bd-pts-wrong">✗</span></span> Winner Only</span>
       <span class="bd-legend-item"><span class="bd-pts-earned bd-pts-wrong">✗✗</span> Wrong Pick</span>
     </div>
-    <button class="bd-toggle-pts" onclick="toggleBdPoints()">${bdShowPoints ? 'Show Final Status' : 'Show Points Earned'}</button>
+    <button class="bd-toggle-pts" onclick="toggleBdPoints()">${bdShowPoints ? 'Show Status' : 'Show Points'}</button>
   </div>`;
 
   const series = SERIES.filter(s => s.r === bdRoundFilter && isSeriesAvailable(s.id));
@@ -1765,17 +1765,21 @@ function renderPickBreakdown(rows) {
             ? `<span class="bd-pot-dot ${gamesImpossible ? 'yellow' : 'green'}"></span>`
             : '';
           let ptsDisplay = '';
-          if (actual) {
-            if (bdShowPoints) {
-              if (ok || bad) ptsDisplay = `<span class="bd-pts-earned${bad ? ' bd-pts-wrong' : ''}">${ptsEarned}</span>`;
+          if (bdShowPoints) {
+            if (actual) {
+              ptsDisplay = `<span class="bd-pts-earned${ptsEarned === 0 ? ' bd-pts-wrong' : ''}">${ptsEarned}</span>`;
+            } else if (pick.winner) {
+              const basePts = ROUND_POINTS[SERIES_MAP[def.id].r];
+              const potPts  = basePts + getUpsetBonus(def.id, pick.winner, basePts);
+              ptsDisplay = `<span class="bd-pts-earned">${potPts}</span>`;
             } else {
-              if (ok) ptsDisplay = gok
-                ? `<span class="bd-pts-earned">✓✓</span>`
-                : `<span class="bd-pts-earned">✓<span class="bd-pts-wrong">✗</span></span>`;
-              else if (bad) ptsDisplay = `<span class="bd-pts-earned bd-pts-wrong">✗✗</span>`;
+              ptsDisplay = `<span class="bd-pts-earned bd-pts-wrong">0</span>`;
             }
-          } else if (ptsEarned) {
-            ptsDisplay = `<span class="bd-pts-earned">${ptsEarned} pts</span>`;
+          } else if (actual) {
+            if (ok) ptsDisplay = gok
+              ? `<span class="bd-pts-earned">✓✓</span>`
+              : `<span class="bd-pts-earned">✓<span class="bd-pts-wrong">✗</span></span>`;
+            else if (bad) ptsDisplay = `<span class="bd-pts-earned bd-pts-wrong">✗✗</span>`;
           }
           return `<div class="bd-pick-row${isMe ? ' my-row' : ''}">
             <span class="bd-pick-name p-name-link" onclick="goToAllPicksUser('${p.id}','${def.id}')">${p.name}</span>
