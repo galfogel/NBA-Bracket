@@ -373,6 +373,7 @@ function initLogin() {
   const stored = localStorage.getItem(USER_KEY);
   if (stored && state.participants.find(p => p.id === stored)) {
     currentUserId = stored;
+    document.getElementById('login-overlay').classList.add('hidden');
     startApp();
   } else {
     localStorage.removeItem(USER_KEY);
@@ -2059,6 +2060,8 @@ async function beginApp() {
 
   const loginBtn = document.getElementById('login-btn');
   const loginMsg = document.getElementById('login-msg');
+  // Show overlay during Firestore load so tab content never appears blank
+  document.getElementById('login-overlay').classList.remove('hidden');
   loginBtn.disabled = true;
   loginMsg.textContent = 'Loading…';
   loginMsg.className = 'login-msg';
