@@ -1,5 +1,5 @@
 {
-  "updated": "2026-05-25T23:59:31Z",
+  "updated": "2026-05-26T03:25:32Z",
   "records": {
     "ATL-NYK": {
       "NYK": 4,
@@ -54,7 +54,7 @@
       "OKC": 2
     },
     "CLE-NYK": {
-      "NYK": 3,
+      "NYK": 4,
       "CLE": 0
     }
   },
@@ -769,6 +769,15 @@
         "away": "NYK",
         "awayPts": 121,
         "date": "2026-05-23"
+      },
+      {
+        "n": "Game 4",
+        "gameId": "0042500304",
+        "home": "CLE",
+        "homePts": 93,
+        "away": "NYK",
+        "awayPts": 130,
+        "date": "2026-05-25"
       }
     ]
   },
@@ -19337,6 +19346,294 @@
             "ast": 1,
             "stl": 0,
             "blk": 2
+          }
+        ]
+      }
+    },
+    "0042500304": {
+      "home": {
+        "tricode": "CLE",
+        "city": "Cleveland",
+        "name": "Cavaliers",
+        "score": 93,
+        "players": [
+          {
+            "name": "Donovan Mitchell",
+            "jersey": "45",
+            "min": "31:00",
+            "pts": 31,
+            "reb": 4,
+            "ast": 1,
+            "stl": 1,
+            "blk": 0
+          },
+          {
+            "name": "Evan Mobley",
+            "jersey": "4",
+            "min": "33:00",
+            "pts": 15,
+            "reb": 7,
+            "ast": 4,
+            "stl": 1,
+            "blk": 0
+          },
+          {
+            "name": "James Harden",
+            "jersey": "1",
+            "min": "33:00",
+            "pts": 12,
+            "reb": 4,
+            "ast": 2,
+            "stl": 1,
+            "blk": 1
+          },
+          {
+            "name": "Thomas Bryant",
+            "jersey": "3",
+            "min": "09:00",
+            "pts": 10,
+            "reb": 3,
+            "ast": 0,
+            "stl": 0,
+            "blk": 0
+          },
+          {
+            "name": "Jarrett Allen",
+            "jersey": "31",
+            "min": "25:00",
+            "pts": 6,
+            "reb": 3,
+            "ast": 1,
+            "stl": 2,
+            "blk": 2
+          },
+          {
+            "name": "Max Strus",
+            "jersey": "2",
+            "min": "22:00",
+            "pts": 5,
+            "reb": 2,
+            "ast": 2,
+            "stl": 0,
+            "blk": 0
+          },
+          {
+            "name": "Sam Merrill",
+            "jersey": "5",
+            "min": "18:00",
+            "pts": 5,
+            "reb": 1,
+            "ast": 1,
+            "stl": 0,
+            "blk": 0
+          },
+          {
+            "name": "Keon Ellis",
+            "jersey": "14",
+            "min": "16:00",
+            "pts": 5,
+            "reb": 2,
+            "ast": 1,
+            "stl": 1,
+            "blk": 0
+          },
+          {
+            "name": "Jaylon Tyson",
+            "jersey": "20",
+            "min": "16:00",
+            "pts": 2,
+            "reb": 3,
+            "ast": 2,
+            "stl": 1,
+            "blk": 0
+          },
+          {
+            "name": "Nae'Qwan Tomlin",
+            "jersey": "35",
+            "min": "07:00",
+            "pts": 2,
+            "reb": 1,
+            "ast": 1,
+            "stl": 0,
+            "blk": 0
+          },
+          {
+            "name": "Dean Wade",
+            "jersey": "32",
+            "min": "12:00",
+            "pts": 0,
+            "reb": 1,
+            "ast": 1,
+            "stl": 2,
+            "blk": 1
+          },
+          {
+            "name": "Craig Porter Jr.",
+            "jersey": "9",
+            "min": "09:00",
+            "pts": 0,
+            "reb": 1,
+            "ast": 3,
+            "stl": 0,
+            "blk": 0
+          },
+          {
+            "name": "Tyrese Proctor",
+            "jersey": "24",
+            "min": "09:00",
+            "pts": 0,
+            "reb": 1,
+            "ast": 2,
+            "stl": 0,
+            "blk": 0
+          }
+        ]
+      },
+      "away": {
+        "tricode": "NYK",
+        "city": "New York",
+        "name": "Knicks",
+        "score": 130,
+        "players": [
+          {
+            "name": "Karl-Anthony Towns",
+            "jersey": "32",
+            "min": "26:00",
+            "pts": 19,
+            "reb": 14,
+            "ast": 3,
+            "stl": 2,
+            "blk": 2
+          },
+          {
+            "name": "OG Anunoby",
+            "jersey": "8",
+            "min": "27:00",
+            "pts": 17,
+            "reb": 7,
+            "ast": 4,
+            "stl": 2,
+            "blk": 0
+          },
+          {
+            "name": "Landry Shamet",
+            "jersey": "44",
+            "min": "19:00",
+            "pts": 16,
+            "reb": 0,
+            "ast": 2,
+            "stl": 1,
+            "blk": 0
+          },
+          {
+            "name": "Mikal Bridges",
+            "jersey": "25",
+            "min": "30:00",
+            "pts": 15,
+            "reb": 3,
+            "ast": 5,
+            "stl": 0,
+            "blk": 0
+          },
+          {
+            "name": "Jalen Brunson",
+            "jersey": "11",
+            "min": "31:00",
+            "pts": 15,
+            "reb": 2,
+            "ast": 5,
+            "stl": 0,
+            "blk": 0
+          },
+          {
+            "name": "Miles McBride",
+            "jersey": "2",
+            "min": "17:00",
+            "pts": 11,
+            "reb": 2,
+            "ast": 2,
+            "stl": 3,
+            "blk": 0
+          },
+          {
+            "name": "Mitchell Robinson",
+            "jersey": "23",
+            "min": "18:00",
+            "pts": 8,
+            "reb": 10,
+            "ast": 0,
+            "stl": 1,
+            "blk": 0
+          },
+          {
+            "name": "Tyler Kolek",
+            "jersey": "13",
+            "min": "08:00",
+            "pts": 8,
+            "reb": 1,
+            "ast": 1,
+            "stl": 0,
+            "blk": 0
+          },
+          {
+            "name": "Josh Hart",
+            "jersey": "3",
+            "min": "23:00",
+            "pts": 6,
+            "reb": 11,
+            "ast": 6,
+            "stl": 2,
+            "blk": 0
+          },
+          {
+            "name": "Pac\u00f4me Dadiet",
+            "jersey": "4",
+            "min": "07:00",
+            "pts": 6,
+            "reb": 1,
+            "ast": 0,
+            "stl": 1,
+            "blk": 0
+          },
+          {
+            "name": "Jose Alvarado",
+            "jersey": "5",
+            "min": "10:00",
+            "pts": 4,
+            "reb": 0,
+            "ast": 2,
+            "stl": 2,
+            "blk": 0
+          },
+          {
+            "name": "Jordan Clarkson",
+            "jersey": "00",
+            "min": "08:00",
+            "pts": 3,
+            "reb": 1,
+            "ast": 0,
+            "stl": 0,
+            "blk": 0
+          },
+          {
+            "name": "Ariel Hukporti",
+            "jersey": "55",
+            "min": "08:00",
+            "pts": 2,
+            "reb": 5,
+            "ast": 1,
+            "stl": 1,
+            "blk": 0
+          },
+          {
+            "name": "Mohamed Diawara",
+            "jersey": "51",
+            "min": "08:00",
+            "pts": 0,
+            "reb": 3,
+            "ast": 2,
+            "stl": 0,
+            "blk": 0
           }
         ]
       }
