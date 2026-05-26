@@ -1608,21 +1608,31 @@ function renderMaxPlacements(rows) {
   const hasOpen = SERIES.some(s => isSeriesAvailable(s.id) && !state.results[s.id]);
   if (!hasOpen) return '';
 
+  // Scenario = current user's picks. Everyone's score is computed assuming MY picks are correct.
+  // This gives a realistic "best possible" rather than an impossible "everyone gets their own best".
+  const scenario = {};
+  for (const def of SERIES) {
+    if (state.results[def.id]) continue;
+    const myPick = getPick(currentUserId, def.id);
+    if (myPick.winner) scenario[def.id] = myPick;
+  }
+
   const maxRows = rows.map(p => {
     let maxScore = p.score;
-    for (const def of SERIES) {
-      if (state.results[def.id]) continue;
-      const pick = getPick(p.id, def.id);
-      if (!pick.winner) continue;
+    for (const [sid, myPick] of Object.entries(scenario)) {
+      const def = SERIES_MAP[sid];
+      const pick = getPick(p.id, sid);
+      if (!pick.winner || pick.winner !== myPick.winner) continue;
       const base = ROUND_POINTS[def.r];
+      const bonus = getUpsetBonus(sid, pick.winner, base);
       let gamesBonus = 0;
-      if (pick.games) {
-        const [t1k] = resolveTeams(def.id);
-        const rec = getRecord(def.id);
+      if (pick.games && myPick.games && pick.games === myPick.games) {
+        const rec = getRecord(sid);
+        const [t1k] = resolveTeams(sid);
         const oppWins = pick.winner === t1k ? (rec ? rec.t2Wins : 0) : (rec ? rec.t1Wins : 0);
         if (pick.games >= oppWins + 4) gamesBonus = GAMES_BONUS;
       }
-      maxScore += base + getUpsetBonus(def.id, pick.winner, base) + gamesBonus;
+      maxScore += base + bonus + gamesBonus;
     }
     return { ...p, maxScore };
   }).sort((a, b) => b.maxScore !== a.maxScore ? b.maxScore - a.maxScore : a.name.localeCompare(b.name));
