@@ -878,7 +878,7 @@ main { padding: 24px; box-sizing: border-box; width: 100%; }
 .leaderboard-table {
   width: 100%;
   border-collapse: collapse;
-  margin-bottom: 32px;
+  margin-bottom: 10px;
 }
 
 .leaderboard-table th,

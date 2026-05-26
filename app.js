@@ -373,8 +373,8 @@ function initLogin() {
   const stored = localStorage.getItem(USER_KEY);
   if (stored && state.participants.find(p => p.id === stored)) {
     currentUserId = stored;
-    document.getElementById('login-overlay').classList.add('hidden');
     startApp();
+    document.getElementById('login-overlay').classList.add('hidden');
   } else {
     localStorage.removeItem(USER_KEY);
     showLoginOverlay();
@@ -495,8 +495,8 @@ async function attemptLogin() {
   localStorage.setItem(USER_KEY, currentUserId);
   activeTab = 'bracket';
   setTimeout(() => {
-    document.getElementById('login-overlay').classList.add('hidden');
     startApp();
+    document.getElementById('login-overlay').classList.add('hidden');
   }, 600);
   } catch (err) {
     msg.textContent = 'Error: ' + err.message;
