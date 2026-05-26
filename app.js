@@ -2060,8 +2060,6 @@ async function beginApp() {
 
   const loginBtn = document.getElementById('login-btn');
   const loginMsg = document.getElementById('login-msg');
-  // Show overlay during Firestore load so tab content never appears blank
-  document.getElementById('login-overlay').classList.remove('hidden');
   loginBtn.disabled = true;
   loginMsg.textContent = 'Loading…';
   loginMsg.className = 'login-msg';
