@@ -170,15 +170,16 @@ def detect_finals_game1_gap(games):
     series_starts = {k: series_start(v) for k, v in by_series.items()}
     finals_key    = max(series_starts, key=lambda k: series_starts[k])
 
-    # Sanity check: the Finals starts weeks after all other rounds.
-    # If the "latest" series started within 20 days of the earliest, it's not the Finals.
+    # Sanity check: the Finals starts well after the Conference Finals.
+    # Compare against the most recently started OTHER series — if they started
+    # within 7 days of each other, they're concurrent (both Conf Finals), not Finals.
     if len(series_starts) >= 2:
-        earliest_other = min(v for k, v in series_starts.items() if k != finals_key)
+        most_recent_other = max(v for k, v in series_starts.items() if k != finals_key)
         try:
             fmt = "%Y-%m-%dT%H:%M:%SZ"
             t_finals = datetime.strptime(series_starts[finals_key][:19] + "Z", fmt)
-            t_other  = datetime.strptime(earliest_other[:19] + "Z", fmt)
-            if (t_finals - t_other).days < 20:
+            t_other  = datetime.strptime(most_recent_other[:19] + "Z", fmt)
+            if (t_finals - t_other).days < 7:
                 return None
         except Exception:
             return None
