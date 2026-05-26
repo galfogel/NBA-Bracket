@@ -1615,7 +1615,14 @@ function renderMaxPlacements(rows) {
       const pick = getPick(p.id, def.id);
       if (!pick.winner) continue;
       const base = ROUND_POINTS[def.r];
-      maxScore += base + getUpsetBonus(def.id, pick.winner, base) + (pick.games ? GAMES_BONUS : 0);
+      let gamesBonus = 0;
+      if (pick.games) {
+        const [t1k] = resolveTeams(def.id);
+        const rec = getRecord(def.id);
+        const oppWins = pick.winner === t1k ? (rec ? rec.t2Wins : 0) : (rec ? rec.t1Wins : 0);
+        if (pick.games >= oppWins + 4) gamesBonus = GAMES_BONUS;
+      }
+      maxScore += base + getUpsetBonus(def.id, pick.winner, base) + gamesBonus;
     }
     return { ...p, maxScore };
   }).sort((a, b) => b.maxScore !== a.maxScore ? b.maxScore - a.maxScore : a.name.localeCompare(b.name));
