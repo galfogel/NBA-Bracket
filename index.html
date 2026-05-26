@@ -25,6 +25,16 @@
     <button id="login-btn" class="btn-primary login-btn" disabled>Sign In</button>
   </div>
 </div>
+<script>
+(function(){
+  try {
+    var uid = localStorage.getItem('nba-bracket-2026-user-v2');
+    var st  = JSON.parse(localStorage.getItem('nba-bracket-2026-v2') || '{}');
+    if (uid && (st.participants || []).some(function(p){ return p.id === uid; }))
+      document.getElementById('login-overlay').classList.add('hidden');
+  } catch(e){}
+})();
+</script>
 
 <!-- SYNC ERROR BANNER -->
 <div id="sync-error" class="sync-toast hidden" role="alert">
