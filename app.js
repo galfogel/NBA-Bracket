@@ -1814,9 +1814,11 @@ function renderPickBreakdown(rows) {
             if (actual) {
               ptsDisplay = `<span class="bd-pts-earned${ptsEarned === 0 ? ' bd-pts-wrong' : ''}">${ptsEarned}</span>`;
             } else if (pick.winner) {
-              const basePts = ROUND_POINTS[SERIES_MAP[def.id].r];
-              const potPts  = basePts + getUpsetBonus(def.id, pick.winner, basePts);
-              const potCls  = pick.games ? 'bd-pts-pot' : 'bd-pts-pot bd-pts-yellow';
+              const basePts   = ROUND_POINTS[SERIES_MAP[def.id].r];
+              const upsetBonus = getUpsetBonus(def.id, pick.winner, basePts);
+              const gamesBonus = pick.games && !gamesImpossible ? GAMES_BONUS : 0;
+              const potPts    = basePts + upsetBonus + gamesBonus;
+              const potCls    = (pick.games && !gamesImpossible) ? 'bd-pts-pot' : 'bd-pts-pot bd-pts-yellow';
               ptsDisplay = `<span class="bd-pts-earned ${potCls}">${potPts}</span>`;
             } else {
               ptsDisplay = `<span class="bd-pts-earned bd-pts-wrong">0</span>`;
