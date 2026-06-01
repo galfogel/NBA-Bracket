@@ -495,12 +495,12 @@ async function attemptLogin() {
 
   localStorage.setItem(USER_KEY, currentUserId);
   activeTab = 'bracket';
-  setTimeout(() => {
-    try { startApp(); } finally {
-      document.getElementById('login-overlay').classList.add('hidden');
-    }
-  }, 600);
+  document.getElementById('login-btn').disabled = true;
+  await new Promise(r => setTimeout(r, 400));
+  startApp();
+  document.getElementById('login-overlay').classList.add('hidden');
   } catch (err) {
+    document.getElementById('login-btn').disabled = false;
     msg.textContent = 'Error: ' + err.message;
     msg.className = 'login-msg msg-error';
   }
