@@ -1220,8 +1220,10 @@ function cardView(sid, t1, t2, pid) {
 function renderBracket() {
   const el = document.getElementById('tab-bracket');
   if (!currentUserId) return;
-  const _unlocked = SERIES.filter(s => isSeriesAvailable(s.id) && !isSeriesLocked(s.id));
-  const _hasIncomplete = _unlocked.some(s => { const p = getPick(currentUserId, s.id); return !p.winner || !p.games; });
+  const _openRounds = [...new Set(
+    SERIES.filter(s => isSeriesAvailable(s.id) && !isSeriesLocked(s.id)).map(s => s.r)
+  )];
+  const _hasIncomplete = _openRounds.some(r => getPartialSeries(currentUserId, r).length > 0);
   const toast = _hasIncomplete
     ? `<div class="landing-toast">You have pending picks — lock them in before tip-off! ⏰</div>`
     : '';
