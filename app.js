@@ -1883,8 +1883,9 @@ function renderPickBreakdown(rows) {
     }
   }
 
-  // Finals Game 1 gap — only when Finals round is selected and series is locked
-  if (bdRoundFilter === 4 && (isSeriesLocked('FINALS') || adminView)) {
+  // Finals Game 1 gap — only when Finals round is selected
+  if (bdRoundFilter === 4) {
+    const revealed = isSeriesLocked('FINALS') || adminView;
     const anyGap = filteredRows.some(p => state.finalsGap[p.id] != null);
     if (anyGap || state.finalsGame1ActualGap != null) {
       const actualGap = state.finalsGame1ActualGap;
@@ -1893,14 +1894,18 @@ function renderPickBreakdown(rows) {
       for (const p of filteredRows) {
         const gap = state.finalsGap[p.id];
         const isMe = p.id === currentUserId;
+        const canSee = revealed || isMe;
         let diffStr = '';
-        if (gap != null && actualGap != null) {
+        if (canSee && gap != null && actualGap != null) {
           const diff = Math.abs(gap - actualGap);
           diffStr = `<span class="bd-pick-games">(diff: ${diff})</span>`;
         }
+        const gapDisplay = canSee
+          ? (gap != null ? `${gap} pts` : (isMe ? '?' : '–'))
+          : `<span style="color:var(--text-dim);font-size:10px">🔒</span>`;
         html += `<div class="bd-gap-row${isMe ? ' my-row' : ''}">
           <span class="bd-pick-name">${p.name}</span>
-          <span class="bd-pick-abbr">${gap != null ? `${gap} pts` : (isMe ? '?' : '–')}</span>
+          <span class="bd-pick-abbr">${gapDisplay}</span>
           ${diffStr}
         </div>`;
       }
