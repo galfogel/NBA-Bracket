@@ -1220,7 +1220,7 @@ function cardView(sid, t1, t2, pid) {
 function renderBracket() {
   const el = document.getElementById('tab-bracket');
   if (!currentUserId) return;
-  const _unlocked = SERIES.filter(s => isSeriesAvailable(s.id) && !isSeriesLocked(s.id));
+  const _unlocked = SERIES.filter(s => isSeriesAvailable(s.id) && !isSeriesLocked(s.id) && getGameTime(s.id) !== null);
   const _hasIncomplete = _unlocked.some(s => { const p = getPick(currentUserId, s.id); return !p.winner || !p.games; });
   const toast = _hasIncomplete
     ? `<div class="landing-toast">You have pending picks — lock them in before tip-off! ⏰</div>`
@@ -1883,8 +1883,8 @@ function renderPickBreakdown(rows) {
     }
   }
 
-  // Finals Game 1 gap — only when Finals round is selected
-  if (bdRoundFilter === 4) {
+  // Finals Game 1 gap — only when Finals round is selected and series is locked
+  if (bdRoundFilter === 4 && (isSeriesLocked('FINALS') || adminView)) {
     const anyGap = filteredRows.some(p => state.finalsGap[p.id] != null);
     if (anyGap || state.finalsGame1ActualGap != null) {
       const actualGap = state.finalsGame1ActualGap;
@@ -1900,7 +1900,7 @@ function renderPickBreakdown(rows) {
         }
         html += `<div class="bd-gap-row${isMe ? ' my-row' : ''}">
           <span class="bd-pick-name">${p.name}</span>
-          <span class="bd-pick-abbr">${gap != null ? `${gap} pts` : '–'}</span>
+          <span class="bd-pick-abbr">${gap != null ? `${gap} pts` : (isMe ? '?' : '–')}</span>
           ${diffStr}
         </div>`;
       }
