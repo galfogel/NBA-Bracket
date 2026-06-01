@@ -1892,7 +1892,7 @@ function renderPickBreakdown(rows) {
           }
           html += `<div class="bd-gap-row${isMe ? ' my-row' : ''}">
             <span class="bd-pick-name">${p.name}</span>
-            <span class="bd-pick-abbr">${gap != null ? `${gap} pts` : (isMe ? '?' : '–')}</span>
+            <span class="bd-pick-abbr">${gap != null ? `${gap} pts` : '?'}</span>
             ${diffStr}
           </div>`;
         }
