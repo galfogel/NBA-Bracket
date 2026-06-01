@@ -947,7 +947,9 @@ main { padding: 24px; box-sizing: border-box; width: 100%; }
 .breakdown-confs-row { display: flex; gap: 32px; justify-content: center; margin-bottom: 40px; }
 .breakdown-conf-col { flex: 1; min-width: 0; margin-bottom: 0; }
 .breakdown-conf-col .breakdown-grid { grid-template-columns: repeat(2, 1fr); }
-.breakdown-finals-centered { max-width: 320px; margin: 0 auto 40px; }
+.breakdown-finals-centered { margin: 0 auto 40px; }
+.breakdown-finals-centered .breakdown-grid,
+.breakdown-finals-gap .breakdown-grid { grid-template-columns: 1fr; }
 .breakdown-round .bd-conf-title { font-size: 12px; font-weight: 700; color: var(--accent) !important; text-transform: uppercase; letter-spacing: 0.06em; margin: 0 0 12px; }
 .breakdown-round h4 {
   font-size: 11px;
@@ -1477,7 +1479,8 @@ main { padding: 24px; box-sizing: border-box; width: 100%; }
   .breakdown-confs-row { flex-direction: column; }
   .breakdown-confs-row--r3 { flex-direction: row; gap: 12px; }
   .breakdown-confs-row--r3 .breakdown-conf-col .breakdown-grid { grid-template-columns: 1fr; }
-  .breakdown-finals-centered { max-width: 100%; }
+  .breakdown-finals-centered .breakdown-grid,
+  .breakdown-finals-gap .breakdown-grid { grid-template-columns: 1fr; }
   .rnd-full { display: none; }
   .rnd-abbr { display: inline; }
 

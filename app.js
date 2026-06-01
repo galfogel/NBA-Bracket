@@ -1881,7 +1881,7 @@ function renderPickBreakdown(rows) {
     const anyGap = filteredRows.some(p => state.finalsGap[p.id] != null);
     if (anyGap || state.finalsGame1ActualGap != null) {
       const actualGap = state.finalsGame1ActualGap;
-      html += '<div class="breakdown-round"><h4>Game 1 Finals Gap (Tiebreaker)</h4><div class="breakdown-grid">';
+      html += '<div class="breakdown-round breakdown-finals-gap"><h4>Game 1 Finals Gap (Tiebreaker)</h4><div class="breakdown-grid">';
       html += '<div class="breakdown-series"><div class="bd-picks">';
       for (const p of filteredRows) {
         const gap = state.finalsGap[p.id];
