@@ -1230,12 +1230,20 @@ function renderBracket() {
     ${renderFloatingSaveBar(currentUserId)}`;
 }
 
-// Returns series in `round` that have a partial pick (winner XOR games set).
-// Gap is NOT required — only winner + games matter. Empty series (neither set) is fine.
+// Returns series in `round` that have a partial pick.
+// Non-Finals: winner + games (both or neither). Finals: winner + games + gap (all or none).
 function getPartialSeries(pid, round) {
   return SERIES.filter(s => s.r === round && isSeriesAvailable(s.id)).filter(s => {
     const pick = getPick(pid, s.id);
-    return !!pick.winner !== !!pick.games; // exactly one of the two is set
+    const hasWinner = !!pick.winner;
+    const hasGames  = !!pick.games;
+    if (s.id === 'FINALS') {
+      const hasGap     = state.finalsGap[pid] != null;
+      const atLeastOne = hasWinner || hasGames || hasGap;
+      const allDone    = hasWinner && hasGames && hasGap;
+      return atLeastOne && !allDone;
+    }
+    return hasWinner !== hasGames;
   });
 }
 
