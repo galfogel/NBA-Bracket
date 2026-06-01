@@ -274,16 +274,23 @@ function mergeRemoteState(remote) {
         local.id = rp.id;
       }
     }
-    // Remote submitted picks always win (they are the committed source)
-    if (rPicks[rp.id])     state.picks[rp.id]          = rPicks[rp.id];
+    // Remote submitted picks always win. For the current user, merge on top of
+    // local picks so unsubmitted picks (e.g. a draft Finals pick) are preserved.
+    if (rPicks[rp.id]) {
+      if (rp.id === currentUserId) {
+        state.picks[rp.id] = { ...(state.picks[rp.id] || {}), ...rPicks[rp.id] };
+      } else {
+        state.picks[rp.id] = rPicks[rp.id];
+      }
+    }
     if (rSubmitted[rp.id]) state.picksSubmitted[rp.id] = rSubmitted[rp.id];
     // Merge finalsGap: remote wins for other users, local wins for current user
     if (rp.id !== currentUserId && remote.finalsGap?.[rp.id] != null) {
       state.finalsGap[rp.id] = remote.finalsGap[rp.id];
     }
   }
-  // Commissioner-set actual gap: remote always wins
-  if (remote.finalsGame1ActualGap != null) state.finalsGame1ActualGap = remote.finalsGame1ActualGap;
+  // Commissioner-set actual gap: always sync from remote (null clears it)
+  state.finalsGame1ActualGap = remote.finalsGame1ActualGap ?? null;
 
   // Prune local participants (and their picks) not in remote, so a removed user's
   // stale credentials can't be used to sign back in. Exempt a pending signup.
