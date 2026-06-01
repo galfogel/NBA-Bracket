@@ -149,8 +149,15 @@ nav{
   position:relative;overflow:hidden;
 }
 .series-card:hover{transform:translateY(-2px)}
+.series-card.upset{border-color:rgba(239,68,68,.5)}
 .series-card.sweep{border-color:rgba(245,166,35,.5)}
-.series-card.classic{border-color:rgba(59,130,246,.5)}
+.series-card.upset::after{
+  content:'🔥 UPSET';
+  position:absolute;top:12px;right:12px;
+  background:var(--red);color:#fff;
+  font-size:9px;font-weight:800;letter-spacing:1px;
+  padding:2px 8px;border-radius:10px;
+}
 .series-card.sweep::after{
   content:'🧹 SWEEP';
   position:absolute;top:12px;right:12px;
@@ -158,17 +165,10 @@ nav{
   font-size:9px;font-weight:800;letter-spacing:1px;
   padding:2px 8px;border-radius:10px;
 }
-.series-card.classic::after{
-  content:'🔥 7 GAMES';
-  position:absolute;top:12px;right:12px;
-  background:var(--blue);color:#fff;
-  font-size:9px;font-weight:800;letter-spacing:1px;
-  padding:2px 8px;border-radius:10px;
-}
 .sc-conf{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--dim);margin-bottom:6px}
 .sc-winner{font-size:17px;font-weight:800;color:#fff;margin-bottom:4px}
+.sc-winner.upset-color{color:var(--red)}
 .sc-winner.sweep-color{color:var(--gold)}
-.sc-winner.classic-color{color:var(--blue)}
 .sc-detail{font-size:12px;color:var(--dim);margin-bottom:14px}
 .sc-bar-wrap{display:flex;align-items:center;gap:10px;margin-bottom:10px}
 .sc-bar-bg{flex:1;height:5px;background:var(--border);border-radius:4px;overflow:hidden}
@@ -211,7 +211,7 @@ nav{
 }
 .callout.green{background:rgba(34,197,94,.07);border-color:rgba(34,197,94,.2);color:var(--green)}
 .callout.gold{background:rgba(245,166,35,.07);border-color:rgba(245,166,35,.2);color:var(--gold)}
-.callout.blue{background:rgba(59,130,246,.07);border-color:rgba(59,130,246,.2);color:var(--blue)}
+.callout.red{background:rgba(239,68,68,.07);border-color:rgba(239,68,68,.2);color:var(--red)}
 .callout-head{font-weight:700;margin-bottom:4px}
 .callout-body{color:var(--dim)}
 
@@ -225,6 +225,7 @@ nav{
   white-space:nowrap;
 }
 .pick-table th.left{text-align:left}
+.pick-table th.upset-h{color:var(--red)}
 .pick-table td{
   padding:9px 8px;border-bottom:1px solid rgba(44,58,86,.4);
   text-align:center;vertical-align:middle;
@@ -247,6 +248,7 @@ nav{
 .pc-team{font-size:10px;font-weight:700}
 .pc-team.ok{color:var(--green)}
 .pc-team.bad{color:rgba(255,255,255,.25)}
+.pc-team.upset-ok{color:var(--red)}
 .pc-games{font-size:9px}
 .pc-games.perfect{color:var(--gold)}
 .pc-games.bad{color:rgba(255,255,255,.2)}
@@ -296,8 +298,8 @@ footer{
   <div class="hero-sub">16 players · 2 series · 11 games played</div>
   <div class="hero-pills">
     <div class="pill"><span>🧹</span>NYK sweeps CLE 4–0</div>
-    <div class="pill"><span>🔥</span>SAS outlasts OKC in 7 games</div>
-    <div class="pill"><span>⭐</span>4 players nailed SAS in 7</div>
+    <div class="pill"><span>🔥</span>SAS upsets OKC in 7 — only 27% to win!</div>
+    <div class="pill"><span>⭐</span>Stavdija, Fogel &amp; Dj pinhas nailed SAS in 7</div>
     <div class="pill"><span>🚀</span>Or Eshed surges to 1st place</div>
   </div>
 </div>
@@ -323,119 +325,119 @@ footer{
     <div class="lb-row gold-row">
       <div class="rank-wrap"><span class="rank-n">1</span><span class="medal">🥇</span></div>
       <div><span class="player-name">Or Eshed</span><span class="player-tag tag-g">1st</span><span class="arrow-up">↑4</span></div>
-      <div class="pts">234</div>
+      <div class="pts">250</div>
       <div class="correct">11<span class="tot">/14</span></div>
       <div class="bar-col"><div class="bar-bg"><div class="bar-fill" style="width:100%"></div></div></div>
     </div>
     <div class="lb-row silver-row">
       <div class="rank-wrap"><span class="rank-n">2</span><span class="medal">🥈</span></div>
       <div><span class="player-name">Stavdija</span><span class="player-tag tag-s">2nd</span><span class="arrow-up">↑6</span></div>
-      <div class="pts">232</div>
+      <div class="pts">248</div>
       <div class="correct">10<span class="tot">/14</span></div>
       <div class="bar-col"><div class="bar-bg"><div class="bar-fill" style="width:99%"></div></div></div>
     </div>
     <div class="lb-row bronze-row">
       <div class="rank-wrap"><span class="rank-n">3</span><span class="medal">🥉</span></div>
       <div><span class="player-name">Fogel</span><span class="player-tag tag-b">3rd</span><span class="arrow-up">↑8</span></div>
-      <div class="pts">230</div>
+      <div class="pts">246</div>
       <div class="correct">10<span class="tot">/14</span></div>
       <div class="bar-col"><div class="bar-bg"><div class="bar-fill" style="width:98%"></div></div></div>
     </div>
     <div class="lb-row">
       <div class="rank-wrap"><span class="rank-n">4</span></div>
       <div><span class="player-name">Chemicu</span><span class="arrow-down">↓1</span></div>
-      <div class="pts">220</div>
+      <div class="pts">236</div>
       <div class="correct">11<span class="tot">/14</span></div>
       <div class="bar-col"><div class="bar-bg"><div class="bar-fill" style="width:94%"></div></div></div>
     </div>
     <div class="lb-row">
       <div class="rank-wrap"><span class="rank-n">5</span></div>
       <div><span class="player-name">Giladdd88</span><span class="arrow-up">↑4</span></div>
-      <div class="pts">220</div>
+      <div class="pts">236</div>
       <div class="correct">10<span class="tot">/14</span></div>
       <div class="bar-col"><div class="bar-bg"><div class="bar-fill" style="width:94%"></div></div></div>
     </div>
     <div class="lb-row">
       <div class="rank-wrap"><span class="rank-n">6</span></div>
-      <div><span class="player-name">Curryville</span><span class="arrow-down">↓5</span></div>
-      <div class="pts">212</div>
-      <div class="correct">10<span class="tot">/14</span></div>
-      <div class="bar-col"><div class="bar-bg"><div class="bar-fill" style="width:91%"></div></div></div>
+      <div><span class="player-name">Dj pinhas</span><span class="arrow-up">↑7</span></div>
+      <div class="pts">226</div>
+      <div class="correct">9<span class="tot">/14</span></div>
+      <div class="bar-col"><div class="bar-bg"><div class="bar-fill" style="width:90%"></div></div></div>
     </div>
     <div class="lb-row">
       <div class="rank-wrap"><span class="rank-n">7</span></div>
-      <div><span class="player-name">Nadav Ben Nun</span><span class="arrow-down">↓5</span></div>
+      <div><span class="player-name">Curryville</span><span class="arrow-down">↓6</span></div>
       <div class="pts">212</div>
       <div class="correct">10<span class="tot">/14</span></div>
-      <div class="bar-col"><div class="bar-bg"><div class="bar-fill" style="width:91%"></div></div></div>
+      <div class="bar-col"><div class="bar-bg"><div class="bar-fill" style="width:85%"></div></div></div>
     </div>
     <div class="lb-row">
       <div class="rank-wrap"><span class="rank-n">8</span></div>
-      <div><span class="player-name">Dj pinhas</span><span class="arrow-up">↑5</span></div>
-      <div class="pts">210</div>
-      <div class="correct">9<span class="tot">/14</span></div>
-      <div class="bar-col"><div class="bar-bg"><div class="bar-fill" style="width:90%"></div></div></div>
+      <div><span class="player-name">Nadav Ben Nun</span><span class="arrow-down">↓6</span></div>
+      <div class="pts">212</div>
+      <div class="correct">10<span class="tot">/14</span></div>
+      <div class="bar-col"><div class="bar-bg"><div class="bar-fill" style="width:85%"></div></div></div>
     </div>
     <div class="lb-row">
       <div class="rank-wrap"><span class="rank-n">9</span></div>
       <div><span class="player-name">Ben Wallace</span><span class="arrow-down">↓3</span></div>
       <div class="pts">192</div>
       <div class="correct">10<span class="tot">/14</span></div>
-      <div class="bar-col"><div class="bar-bg"><div class="bar-fill" style="width:82%"></div></div></div>
+      <div class="bar-col"><div class="bar-bg"><div class="bar-fill" style="width:77%"></div></div></div>
     </div>
     <div class="lb-row">
       <div class="rank-wrap"><span class="rank-n">10</span></div>
       <div><span class="player-name">Dor</span><span class="arrow-down">↓3</span></div>
       <div class="pts">190</div>
       <div class="correct">9<span class="tot">/14</span></div>
-      <div class="bar-col"><div class="bar-bg"><div class="bar-fill" style="width:81%"></div></div></div>
+      <div class="bar-col"><div class="bar-bg"><div class="bar-fill" style="width:76%"></div></div></div>
     </div>
     <div class="lb-row">
       <div class="rank-wrap"><span class="rank-n">11</span></div>
       <div><span class="player-name">RonenA</span><span class="arrow-down">↓1</span></div>
       <div class="pts">180</div>
       <div class="correct">9<span class="tot">/14</span></div>
-      <div class="bar-col"><div class="bar-bg"><div class="bar-fill" style="width:77%"></div></div></div>
+      <div class="bar-col"><div class="bar-bg"><div class="bar-fill" style="width:72%"></div></div></div>
     </div>
     <div class="lb-row">
       <div class="rank-wrap"><span class="rank-n">12</span></div>
-      <div><span class="player-name">Ron Artest</span></div>
-      <div class="pts">170</div>
+      <div><span class="player-name">Eli</span><span class="arrow-up">↑2</span></div>
+      <div class="pts">176</div>
       <div class="correct">8<span class="tot">/14</span></div>
-      <div class="bar-col"><div class="bar-bg"><div class="bar-fill" style="width:73%"></div></div></div>
+      <div class="bar-col"><div class="bar-bg"><div class="bar-fill" style="width:70%"></div></div></div>
     </div>
     <div class="lb-row">
       <div class="rank-wrap"><span class="rank-n">13</span></div>
-      <div><span class="player-name">ivrish</span><span class="arrow-down">↓9</span></div>
-      <div class="pts">162</div>
-      <div class="correct">9<span class="tot">/14</span></div>
-      <div class="bar-col"><div class="bar-bg"><div class="bar-fill" style="width:69%"></div></div></div>
+      <div><span class="player-name">Ron Artest</span><span class="arrow-down">↓1</span></div>
+      <div class="pts">170</div>
+      <div class="correct">8<span class="tot">/14</span></div>
+      <div class="bar-col"><div class="bar-bg"><div class="bar-fill" style="width:68%"></div></div></div>
     </div>
     <div class="lb-row">
       <div class="rank-wrap"><span class="rank-n">14</span></div>
-      <div><span class="player-name">Eli</span></div>
-      <div class="pts">160</div>
-      <div class="correct">8<span class="tot">/14</span></div>
-      <div class="bar-col"><div class="bar-bg"><div class="bar-fill" style="width:68%"></div></div></div>
+      <div><span class="player-name">ivrish</span><span class="arrow-down">↓10</span></div>
+      <div class="pts">162</div>
+      <div class="correct">9<span class="tot">/14</span></div>
+      <div class="bar-col"><div class="bar-bg"><div class="bar-fill" style="width:65%"></div></div></div>
     </div>
     <div class="lb-row">
       <div class="rank-wrap"><span class="rank-n">15</span></div>
       <div><span class="player-name">Ucimehc</span></div>
       <div class="pts">152</div>
       <div class="correct">8<span class="tot">/14</span></div>
-      <div class="bar-col"><div class="bar-bg"><div class="bar-fill" style="width:65%"></div></div></div>
+      <div class="bar-col"><div class="bar-bg"><div class="bar-fill" style="width:61%"></div></div></div>
     </div>
     <div class="lb-row">
       <div class="rank-wrap"><span class="rank-n">16</span></div>
       <div><span class="player-name">roikind</span></div>
       <div class="pts low">82</div>
       <div class="correct" style="color:var(--dim)">6<span class="tot">/14</span></div>
-      <div class="bar-col"><div class="bar-bg"><div class="bar-fill red" style="width:35%"></div></div></div>
+      <div class="bar-col"><div class="bar-bg"><div class="bar-fill red" style="width:33%"></div></div></div>
     </div>
   </div>
 
   <div style="margin-top:12px;padding:12px 16px;background:var(--navy2);border-radius:10px;border:1px solid var(--border);font-size:12px;color:var(--dim)">
-    <strong style="color:var(--text)">Scoring:</strong> 40 pts per correct R3 winner · +10 pts exact games · No upset bonus (NYK 58% fav won ECF; SAS 66% fav won WCF)
+    <strong style="color:var(--text)">Scoring:</strong> 40 pts per correct R3 winner · +10 pts exact games · SAS upset bonus: +16 pts (OKC was 73% fav; gap = floor10(73%)−50 = 20; 2×40×20/100 = 16) · No upset bonus for ECF (NYK 58% fav)
   </div>
 </section>
 
@@ -466,23 +468,23 @@ footer{
       </div>
     </div>
 
-    <!-- WCF: SAS over OKC in 7 -->
-    <div class="series-card classic">
+    <!-- WCF: SAS upsets OKC in 7 -->
+    <div class="series-card upset">
       <div class="sc-conf">West · WCF · #1 OKC vs #2 SAS</div>
-      <div class="sc-winner classic-color">🏆 San Antonio Spurs</div>
-      <div class="sc-detail">def. Oklahoma City Thunder · 4–3 · 7-game classic · SAS 66% pre-series fav · 4 players nailed SAS in 7 for the full 50 pts</div>
+      <div class="sc-winner upset-color">San Antonio Spurs</div>
+      <div class="sc-detail">def. Oklahoma City Thunder · 4–3 · 7 games · OKC 73% pre-series fav · SAS pickers earn +16 upset bonus · 3 nailed SAS in 7 for full 66 pts</div>
       <div class="sc-bar-wrap">
         <div class="sc-bar-bg"><div class="sc-bar-fill hit" style="width:47%"></div></div>
-        <span class="sc-bar-label hit">7 / 15 called SAS ✓</span>
+        <span class="sc-bar-label hit">7 / 15 called SAS ✓ (+16 upset pts)</span>
       </div>
       <div class="sc-names">
-        <span class="sc-name star">Stavdija — SAS in 7 ⭐</span>
-        <span class="sc-name star">Fogel — SAS in 7 ⭐</span>
-        <span class="sc-name star">Chemicu — SAS in 7 ⭐</span>
-        <span class="sc-name star">Dj pinhas — SAS in 7 ⭐</span>
-        <span class="sc-name hero">Or Eshed — SAS in 6 ✓</span>
-        <span class="sc-name hero">Giladdd88 — SAS in 6 ✓</span>
-        <span class="sc-name hero">Eli — SAS in 6 ✓</span>
+        <span class="sc-name star">Stavdija 🎯⭐ (SAS in 7!)</span>
+        <span class="sc-name star">Fogel 🎯⭐ (SAS in 7!)</span>
+        <span class="sc-name star">Dj pinhas 🎯⭐ (SAS in 7!)</span>
+        <span class="sc-name hero">Chemicu 🎯 (SAS in 7 — but missed ECF)</span>
+        <span class="sc-name hero">Or Eshed 🎯 (SAS in 6)</span>
+        <span class="sc-name hero">Giladdd88 🎯 (SAS in 6)</span>
+        <span class="sc-name hero">Eli 🎯 (SAS in 6)</span>
         <span class="sc-name" style="color:var(--red)">Curryville → OKC ✗</span>
         <span class="sc-name" style="color:var(--red)">Nadav → OKC ✗</span>
         <span class="sc-name" style="color:var(--red)">Ben Wallace → OKC ✗</span>
@@ -511,10 +513,10 @@ footer{
       <div class="ic-title">Round at a Glance</div>
       <div class="ic-row"><span class="ic-label">Series played</span><span class="ic-val c-gold">2</span></div>
       <div class="ic-row"><span class="ic-label">Total games</span><span class="ic-val c-gold">11</span></div>
-      <div class="ic-row"><span class="ic-label">Upsets</span><span class="ic-val c-green">None — both favs won</span></div>
+      <div class="ic-row"><span class="ic-label">Upsets</span><span class="ic-val c-red">1 / 2 — SAS over OKC</span></div>
       <div class="ic-row"><span class="ic-label">Sweeps</span><span class="ic-val c-gold">1 — NYK 🧹</span></div>
       <div class="ic-row"><span class="ic-label">7-game series</span><span class="ic-val c-blue">1 — OKC–SAS</span></div>
-      <div class="ic-row"><span class="ic-label">SAS in 7 ⭐</span><span class="ic-val c-gold">Stavdija, Fogel, Chemicu, Dj pinhas</span></div>
+      <div class="ic-row"><span class="ic-label">SAS in 7 ⭐ (+66 pts)</span><span class="ic-val c-gold">Stavdija · Fogel · Dj pinhas</span></div>
     </div>
 
     <!-- 2: Series Scores -->
@@ -526,7 +528,7 @@ footer{
       </div>
       <div class="ic-row">
         <span class="ic-label">WCF — SAS over OKC</span>
-        <span class="ic-val c-blue">4–3 (7 games)</span>
+        <span class="ic-val c-red">4–3 (upset!)</span>
       </div>
       <div class="ic-row">
         <span class="ic-label">Called ECF correctly (NYK)</span>
@@ -536,9 +538,9 @@ footer{
         <span class="ic-label">Called WCF correctly (SAS)</span>
         <span class="ic-val c-gold">7 / 15</span>
       </div>
-      <div class="callout blue">
-        <div class="callout-head">🎰 WCF Split the field</div>
-        <div class="callout-body">8 players backed OKC, 7 backed SAS — the most contested call of the playoffs so far. SAS in 7 made the difference between top-3 and mid-table.</div>
+      <div class="callout red">
+        <div class="callout-head">🔥 SAS pulls off the upset!</div>
+        <div class="callout-body">OKC entered as 73% favourites. SAS pickers earn +16 upset bonus — those who also nailed the 7-game length walk away with 66 pts from WCF alone.</div>
       </div>
     </div>
 
@@ -547,13 +549,13 @@ footer{
       <div class="ic-title">Biggest Movers This Round</div>
       <div class="ic-row"><span class="ic-label">Fogel</span><span class="ic-val c-green">9th → 3rd ↑8</span></div>
       <div class="ic-row"><span class="ic-label">Stavdija</span><span class="ic-val c-green">8th → 2nd ↑6</span></div>
-      <div class="ic-row"><span class="ic-label">Dj pinhas</span><span class="ic-val c-green">13th → 8th ↑5</span></div>
+      <div class="ic-row"><span class="ic-label">Dj pinhas</span><span class="ic-val c-green">13th → 6th ↑7</span></div>
       <div class="ic-row"><span class="ic-label">Or Eshed</span><span class="ic-val c-green">5th → 1st ↑4</span></div>
-      <div class="ic-row"><span class="ic-label">ivrish</span><span class="ic-val c-red">4th → 13th ↓9</span></div>
-      <div class="ic-row"><span class="ic-label">Nadav Ben Nun</span><span class="ic-val c-red">1st → 7th ↓6</span></div>
+      <div class="ic-row"><span class="ic-label">ivrish</span><span class="ic-val c-red">4th → 14th ↓10</span></div>
+      <div class="ic-row"><span class="ic-label">Curryville / Nadav</span><span class="ic-val c-red">1st → 7th/8th ↓6</span></div>
       <div class="callout gold">
         <div class="callout-head">📉 ivrish's hard fall</div>
-        <div class="callout-body">CLE ✗ + OKC ✗ = 0 CF pts. Drops 9 places from 4th to 13th in a single round.</div>
+        <div class="callout-body">CLE ✗ + OKC ✗ = 0 CF pts. Drops 10 places from 4th to 14th in a single round.</div>
       </div>
     </div>
 
@@ -577,8 +579,8 @@ footer{
         <span class="ic-val c-green">106 pts (NYK) vs 90 (SAS)</span>
       </div>
       <div class="callout green">
-        <div class="callout-head">👀 Knicks upset = huge swing</div>
-        <div class="callout-body">Picking NYK AND being right would net 96 pts (or 106 with exact games) vs 80 for SAS. It's a bold bet — but the payout could flip the leaderboard.</div>
+        <div class="callout-head">👀 Can NYK do it again?</div>
+        <div class="callout-body">SAS just pulled off a 73% upset — anything is possible. Picking NYK in the Finals would earn 96 pts + potential 10 games bonus. A huge swing if it lands.</div>
       </div>
     </div>
 
@@ -598,7 +600,7 @@ footer{
         <tr>
           <th class="left" style="min-width:130px">Player</th>
           <th>NYK<br><span style="opacity:.5;font-weight:400">ECF</span></th>
-          <th>SAS<br><span style="opacity:.5;font-weight:400">WCF</span></th>
+          <th class="upset-h">SAS 🔥<br><span style="opacity:.5;font-weight:400">WCF OKC→SAS</span></th>
           <th>CF Pts</th>
         </tr>
       </thead>
@@ -607,43 +609,50 @@ footer{
         <tr class="actual-row">
           <td class="name-col" style="font-size:10px;letter-spacing:1px;color:var(--gold)">ACTUAL</td>
           <td><div class="pc"><span style="font-size:10px;color:var(--gold);font-weight:700">NYK</span><span style="font-size:9px;color:var(--dim)">in 4 🧹</span></div></td>
-          <td><div class="pc"><span style="font-size:10px;color:var(--blue);font-weight:700">SAS</span><span style="font-size:9px;color:var(--dim)">in 7 🔥</span></div></td>
+          <td><div class="pc"><span style="font-size:10px;color:var(--red);font-weight:700">SAS</span><span style="font-size:9px;color:var(--dim)">in 7 🔥</span></div></td>
           <td class="pts-col" style="color:var(--dim)">—</td>
         </tr>
-        <!-- Or Eshed 234, CF=80 -->
+        <!-- Or Eshed 250, CF=96 -->
         <tr>
           <td class="name-col">Or Eshed 🥇</td>
           <td class="cell-ok"><div class="pc"><span class="pc-team ok">NYK</span><span class="pc-games bad">5</span></div></td>
-          <td class="cell-ok"><div class="pc"><span class="pc-team ok">SAS</span><span class="pc-games bad">6</span></div></td>
-          <td class="pts-col">80</td>
+          <td class="cell-ok"><div class="pc"><span class="pc-team upset-ok">SAS🎯</span><span class="pc-games bad">6</span></div></td>
+          <td class="pts-col">96</td>
         </tr>
-        <!-- Stavdija 232, CF=90 -->
+        <!-- Stavdija 248, CF=106 -->
         <tr>
           <td class="name-col">Stavdija 🥈</td>
           <td class="cell-ok"><div class="pc"><span class="pc-team ok">NYK</span><span class="pc-games bad">5</span></div></td>
-          <td class="cell-ok"><div class="pc"><span class="pc-team ok">SAS</span><span class="pc-games perfect">7⭐</span></div></td>
-          <td class="pts-col">90</td>
+          <td class="cell-ok"><div class="pc"><span class="pc-team upset-ok">SAS🎯</span><span class="pc-games perfect">7⭐</span></div></td>
+          <td class="pts-col">106</td>
         </tr>
-        <!-- Fogel 230, CF=90 -->
+        <!-- Fogel 246, CF=106 -->
         <tr>
           <td class="name-col">Fogel 🥉</td>
           <td class="cell-ok"><div class="pc"><span class="pc-team ok">NYK</span><span class="pc-games bad">6</span></div></td>
-          <td class="cell-ok"><div class="pc"><span class="pc-team ok">SAS</span><span class="pc-games perfect">7⭐</span></div></td>
-          <td class="pts-col">90</td>
+          <td class="cell-ok"><div class="pc"><span class="pc-team upset-ok">SAS🎯</span><span class="pc-games perfect">7⭐</span></div></td>
+          <td class="pts-col">106</td>
         </tr>
-        <!-- Chemicu 220, CF=50 -->
+        <!-- Chemicu 236, CF=66 -->
         <tr>
           <td class="name-col">Chemicu</td>
           <td class="cell-bad"><div class="pc"><span class="pc-team bad">CLE</span><span class="pc-games bad">7</span></div></td>
-          <td class="cell-ok"><div class="pc"><span class="pc-team ok">SAS</span><span class="pc-games perfect">7⭐</span></div></td>
-          <td class="pts-col">50</td>
+          <td class="cell-ok"><div class="pc"><span class="pc-team upset-ok">SAS🎯</span><span class="pc-games perfect">7⭐</span></div></td>
+          <td class="pts-col">66</td>
         </tr>
-        <!-- Giladdd88 220, CF=80 -->
+        <!-- Giladdd88 236, CF=96 -->
         <tr>
           <td class="name-col">Giladdd88</td>
           <td class="cell-ok"><div class="pc"><span class="pc-team ok">NYK</span><span class="pc-games bad">7</span></div></td>
-          <td class="cell-ok"><div class="pc"><span class="pc-team ok">SAS</span><span class="pc-games bad">6</span></div></td>
-          <td class="pts-col">80</td>
+          <td class="cell-ok"><div class="pc"><span class="pc-team upset-ok">SAS🎯</span><span class="pc-games bad">6</span></div></td>
+          <td class="pts-col">96</td>
+        </tr>
+        <!-- Dj pinhas 226, CF=106 -->
+        <tr>
+          <td class="name-col">Dj pinhas</td>
+          <td class="cell-ok"><div class="pc"><span class="pc-team ok">NYK</span><span class="pc-games bad">6</span></div></td>
+          <td class="cell-ok"><div class="pc"><span class="pc-team upset-ok">SAS🎯</span><span class="pc-games perfect">7⭐</span></div></td>
+          <td class="pts-col">106</td>
         </tr>
         <!-- Curryville 212, CF=40 -->
         <tr>
@@ -658,13 +667,6 @@ footer{
           <td class="cell-ok"><div class="pc"><span class="pc-team ok">NYK</span><span class="pc-games bad">6</span></div></td>
           <td class="cell-bad"><div class="pc"><span class="pc-team bad">OKC</span><span class="pc-games bad">6</span></div></td>
           <td class="pts-col">40</td>
-        </tr>
-        <!-- Dj pinhas 210, CF=90 -->
-        <tr>
-          <td class="name-col">Dj pinhas</td>
-          <td class="cell-ok"><div class="pc"><span class="pc-team ok">NYK</span><span class="pc-games bad">6</span></div></td>
-          <td class="cell-ok"><div class="pc"><span class="pc-team ok">SAS</span><span class="pc-games perfect">7⭐</span></div></td>
-          <td class="pts-col">90</td>
         </tr>
         <!-- Ben Wallace 192, CF=40 -->
         <tr>
@@ -687,6 +689,13 @@ footer{
           <td class="cell-bad"><div class="pc"><span class="pc-team bad">OKC</span><span class="pc-games bad">5</span></div></td>
           <td class="pts-col">40</td>
         </tr>
+        <!-- Eli 176, CF=56 -->
+        <tr>
+          <td class="name-col">Eli</td>
+          <td class="cell-bad"><div class="pc"><span class="pc-team bad">CLE</span><span class="pc-games bad">6</span></div></td>
+          <td class="cell-ok"><div class="pc"><span class="pc-team upset-ok">SAS🎯</span><span class="pc-games bad">6</span></div></td>
+          <td class="pts-col">56</td>
+        </tr>
         <!-- Ron Artest 170, CF=40 -->
         <tr>
           <td class="name-col">Ron Artest</td>
@@ -701,13 +710,6 @@ footer{
           <td class="cell-bad"><div class="pc"><span class="pc-team bad">OKC</span><span class="pc-games bad">6</span></div></td>
           <td class="pts-col low">0</td>
         </tr>
-        <!-- Eli 160, CF=40 -->
-        <tr>
-          <td class="name-col">Eli</td>
-          <td class="cell-bad"><div class="pc"><span class="pc-team bad">CLE</span><span class="pc-games bad">6</span></div></td>
-          <td class="cell-ok"><div class="pc"><span class="pc-team ok">SAS</span><span class="pc-games bad">6</span></div></td>
-          <td class="pts-col">40</td>
-        </tr>
         <!-- Ucimehc 152, CF=40 -->
         <tr>
           <td class="name-col">Ucimehc</td>
@@ -718,8 +720,8 @@ footer{
         <!-- roikind 82, CF=0 -->
         <tr>
           <td class="name-col">roikind</td>
-          <td class="cell-bad"><div class="pc"><span class="pc-team bad" style="color:var(--dim)">—</span></div></td>
-          <td class="cell-bad"><div class="pc"><span class="pc-team bad" style="color:var(--dim)">—</span></div></td>
+          <td><div class="pc"><span class="pc-team bad" style="color:var(--dim)">—</span></div></td>
+          <td><div class="pc"><span class="pc-team bad" style="color:var(--dim)">—</span></div></td>
           <td class="pts-col low">0</td>
         </tr>
       </tbody>
@@ -730,6 +732,7 @@ footer{
     <span class="legend-item"><span style="color:var(--green)">●</span> Correct winner</span>
     <span class="legend-item"><span style="opacity:.3">●</span> Wrong pick</span>
     <span class="legend-item"><span style="color:var(--gold)">⭐</span> Perfect games prediction (+10 pts)</span>
+    <span class="legend-item"><span style="color:var(--gold)">🎯</span> Upset correctly called (+16 pts)</span>
   </div>
 </section>
 

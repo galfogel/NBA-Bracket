@@ -64,7 +64,7 @@ const WIN_PCT = {
   WQ2:  { t1: 87, t2: 13 },  // SAS vs MIN
   // R3
   ECF:  { t1: 42, t2: 58 },  // CLE vs NYK
-  WCF:  { t1: 34, t2: 66 },  // OKC vs SAS
+  WCF:  { t1: 73, t2: 27 },  // OKC vs SAS
   // R4
   FINALS: { t1: 34, t2: 66 },  // NYK vs SAS
 };
