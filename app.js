@@ -1220,7 +1220,7 @@ function cardView(sid, t1, t2, pid) {
 function renderBracket() {
   const el = document.getElementById('tab-bracket');
   if (!currentUserId) return;
-  const _unlocked = SERIES.filter(s => isSeriesAvailable(s.id) && !isSeriesLocked(s.id) && getGameTime(s.id) !== null);
+  const _unlocked = SERIES.filter(s => isSeriesAvailable(s.id) && !isSeriesLocked(s.id));
   const _hasIncomplete = _unlocked.some(s => { const p = getPick(currentUserId, s.id); return !p.winner || !p.games; });
   const toast = _hasIncomplete
     ? `<div class="landing-toast">You have pending picks — lock them in before tip-off! ⏰</div>`
@@ -1891,26 +1891,26 @@ function renderPickBreakdown(rows) {
       const actualGap = state.finalsGame1ActualGap;
       html += '<div class="breakdown-round breakdown-finals-gap"><h4>Game 1 Finals Gap (Tiebreaker)</h4><div class="breakdown-grid">';
       html += '<div class="breakdown-series"><div class="bd-picks">';
-      for (const p of filteredRows) {
-        const gap = state.finalsGap[p.id];
-        const isMe = p.id === currentUserId;
-        const canSee = revealed || isMe;
-        let diffStr = '';
-        if (canSee && gap != null && actualGap != null) {
-          const diff = Math.abs(gap - actualGap);
-          diffStr = `<span class="bd-pick-games">(diff: ${diff})</span>`;
+      if (!revealed) {
+        html += `<div class="bd-hidden">🔒 Hidden until series starts</div>`;
+      } else {
+        for (const p of filteredRows) {
+          const gap = state.finalsGap[p.id];
+          const isMe = p.id === currentUserId;
+          let diffStr = '';
+          if (gap != null && actualGap != null) {
+            const diff = Math.abs(gap - actualGap);
+            diffStr = `<span class="bd-pick-games">(diff: ${diff})</span>`;
+          }
+          html += `<div class="bd-gap-row${isMe ? ' my-row' : ''}">
+            <span class="bd-pick-name">${p.name}</span>
+            <span class="bd-pick-abbr">${gap != null ? `${gap} pts` : (isMe ? '?' : '–')}</span>
+            ${diffStr}
+          </div>`;
         }
-        const gapDisplay = canSee
-          ? (gap != null ? `${gap} pts` : (isMe ? '?' : '–'))
-          : `<span style="color:var(--text-dim);font-size:10px">🔒</span>`;
-        html += `<div class="bd-gap-row${isMe ? ' my-row' : ''}">
-          <span class="bd-pick-name">${p.name}</span>
-          <span class="bd-pick-abbr">${gapDisplay}</span>
-          ${diffStr}
-        </div>`;
-      }
-      if (actualGap != null) {
-        html += `<div class="bd-gap-actual">Actual: <strong>${actualGap} pts</strong></div>`;
+        if (actualGap != null) {
+          html += `<div class="bd-gap-actual">Actual: <strong>${actualGap} pts</strong></div>`;
+        }
       }
       html += '</div></div></div></div>';
     }
