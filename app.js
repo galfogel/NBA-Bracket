@@ -1220,10 +1220,8 @@ function cardView(sid, t1, t2, pid) {
 function renderBracket() {
   const el = document.getElementById('tab-bracket');
   if (!currentUserId) return;
-  const _openRounds = [...new Set(
-    SERIES.filter(s => isSeriesAvailable(s.id) && !isSeriesLocked(s.id)).map(s => s.r)
-  )];
-  const _hasIncomplete = _openRounds.some(r => getPartialSeries(currentUserId, r).length > 0);
+  const _unlocked = SERIES.filter(s => isSeriesAvailable(s.id) && !isSeriesLocked(s.id));
+  const _hasIncomplete = _unlocked.some(s => { const p = getPick(currentUserId, s.id); return !p.winner || !p.games; });
   const toast = _hasIncomplete
     ? `<div class="landing-toast">You have pending picks — lock them in before tip-off! ⏰</div>`
     : '';
@@ -1232,22 +1230,6 @@ function renderBracket() {
     ${renderFloatingSaveBar(currentUserId)}`;
 }
 
-// Returns series in `round` that have a partial pick.
-// Non-Finals: winner + games (both or neither). Finals: winner + games + gap (all or none).
-function getPartialSeries(pid, round) {
-  return SERIES.filter(s => s.r === round && isSeriesAvailable(s.id)).filter(s => {
-    const pick = getPick(pid, s.id);
-    const hasWinner = !!pick.winner;
-    const hasGames  = !!pick.games;
-    if (s.id === 'FINALS') {
-      const hasGap     = state.finalsGap[pid] != null;
-      const atLeastOne = hasWinner || hasGames || hasGap;
-      const allDone    = hasWinner && hasGames && hasGap;
-      return atLeastOne && !allDone;
-    }
-    return hasWinner !== hasGames;
-  });
-}
 
 function renderFloatingSaveBar(pid) {
   // Earliest open/editing round → Save button
@@ -1270,15 +1252,9 @@ function renderFloatingSaveBar(pid) {
 
   if (!openRound && !submittedRound) return '';
 
-  const partial = openRound ? getPartialSeries(pid, openRound) : [];
-  const saveBlocked = partial.length > 0;
-  const saveLabel = saveBlocked
-    ? `Complete or clear: ${partial.map(s => { const [t1, t2] = resolveTeams(s.id); return (t1 ? TEAMS[t1].abbr : '?') + ' vs ' + (t2 ? TEAMS[t2].abbr : '?'); }).join(', ')}`
-    : 'Save';
-
   return `<div class="floating-save-bar">
     ${submittedRound ? `<button class="fab-btn fab-edit edit-round-btn" data-round="${submittedRound}">Edit</button>` : ''}
-    ${openRound ? `<button class="fab-btn fab-save save-round-btn${saveBlocked ? ' fab-save-blocked' : ''}" data-round="${openRound}"${saveBlocked ? ' disabled' : ''}>${saveLabel}</button>` : ''}
+    ${openRound     ? `<button class="fab-btn fab-save save-round-btn" data-round="${openRound}">Save</button>` : ''}
   </div>`;
 }
 
@@ -1301,18 +1277,11 @@ function renderRoundControls(pid) {
       badge  = `<span class="rc-badge rc-saved">✓ Saved</span>`;
       action = `<button class="edit-round-btn btn-outline-sm" data-round="${r}">Edit</button>`;
     } else {
-      const partial = getPartialSeries(pid, r);
-      const canSave = partial.length === 0;
       const missing = [];
       if (picked < avail.length) missing.push(`${avail.length - picked} winner${avail.length - picked > 1 ? 's' : ''}`);
       if (games  < avail.length) missing.push(`${avail.length - games} game count${avail.length - games > 1 ? 's' : ''}`);
       badge  = `<span class="rc-badge rc-open">Open</span>`;
-      if (!canSave) {
-        const names = partial.map(s => { const [t1, t2] = resolveTeams(s.id); return (t1 ? TEAMS[t1].abbr : '?') + ' vs ' + (t2 ? TEAMS[t2].abbr : '?'); });
-        action = `<button class="save-round-btn btn-primary btn-disabled" disabled data-round="${r}">Complete or clear: ${names.join(', ')}</button>`;
-      } else {
-        action = `<button class="save-round-btn btn-primary" data-round="${r}">${isTestUser() ? 'Save' : `Save ${ROUND_NAMES[r]}${missing.length ? ` (${missing.join(' · ')})` : ''}`}</button>`;
-      }
+      action = `<button class="save-round-btn btn-primary" data-round="${r}">${isTestUser() ? 'Save' : `Save ${ROUND_NAMES[r]}${missing.length ? ` (${missing.join(' · ')})` : ''}`}</button>`;
     }
 
     const gapWarn = r === 4 ? `<span class="gap-warn" style="display:none"></span>` : '';
@@ -1361,13 +1330,7 @@ function handlePicksClick(e) {
   // Save round
   const saveBtn = e.target.closest('.save-round-btn[data-round]');
   if (saveBtn && !saveBtn.disabled) {
-    const r       = parseInt(saveBtn.dataset.round);
-    const partial = getPartialSeries(currentUserId, r);
-    if (partial.length > 0) {
-      const names = partial.map(s => { const [t1, t2] = resolveTeams(s.id); return (t1 ? TEAMS[t1].abbr : '?') + ' vs ' + (t2 ? TEAMS[t2].abbr : '?'); });
-      showSaveToast(`⚠ Complete or clear: ${names.join(', ')}`);
-      return;
-    }
+    const r = parseInt(saveBtn.dataset.round);
     if (!state.picksSubmitted[currentUserId]) state.picksSubmitted[currentUserId] = {};
     state.picksSubmitted[currentUserId][r] = true;
     editingState = { pid: null, round: null };
