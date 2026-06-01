@@ -1878,10 +1878,8 @@ function renderPickBreakdown(rows) {
       .sort((a, b) => b.correct !== a.correct ? b.correct - a.correct : a.name.localeCompare(b.name));
     html += '<div class="breakdown-round breakdown-finals-gap"><h4>Correct Picks Leaderboard</h4><div class="breakdown-grid">';
     html += '<div class="breakdown-series"><div class="bd-picks">';
-    let prevCorrect = -1, prevRank = 0;
     correctRows.forEach((p, i) => {
-      const rank = p.correct !== prevCorrect ? i + 1 : prevRank;
-      prevRank = rank; prevCorrect = p.correct;
+      const rank = i + 1;
       const isMe = p.id === currentUserId;
       const medal = rank === 1 ? '🥇' : rank === 2 ? '🥈' : rank === 3 ? '🥉' : `${rank}.`;
       html += `<div class="bd-gap-row${isMe ? ' my-row' : ''}">
