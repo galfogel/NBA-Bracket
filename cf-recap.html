@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>NBA Playoffs 2026 — Conf. Finals Recap</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --navy:   #0f1623;
+  --navy2:  #141c2e;
+  --navy3:  #1a2236;
+  --border: #2c3a56;
+  --gold:   #f5a623;
+  --green:  #22c55e;
+  --red:    #ef4444;
+  --blue:   #3b82f6;
+  --text:   #e8eaf0;
+  --dim:    #7b82a3;
+  --radius: 12px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Inter',-apple-system,sans-serif;
+  background:var(--navy);color:var(--text);
+  font-size:14px;line-height:1.6;
+  min-height:100vh;
+}
+
+/* ── NAV ── */
+nav{
+  position:sticky;top:0;z-index:100;
+  background:rgba(15,22,35,0.92);backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--border);
+  padding:0 20px;
+  display:flex;align-items:center;justify-content:flex-start;
+  height:44px;
+}
+.back-link{
+  padding:6px 14px;border-radius:20px;
+  font-size:13px;font-weight:600;color:var(--gold);
+  text-decoration:none;white-space:nowrap;
+  border:1px solid rgba(245,166,35,.3);
+  transition:background .15s;
+}
+.back-link:hover{background:rgba(245,166,35,.1)}
+
+/* ── HERO ── */
+.hero{
+  background:linear-gradient(160deg,#0f1623 0%,#1a2a4a 50%,#0f1623 100%);
+  padding:64px 24px 48px;text-align:center;
+  border-bottom:1px solid var(--border);
+  position:relative;overflow:hidden;
+}
+.hero::before{
+  content:'';position:absolute;
+  width:600px;height:600px;border-radius:50%;
+  background:radial-gradient(circle,rgba(245,166,35,.07) 0%,transparent 70%);
+  top:-200px;left:50%;transform:translateX(-50%);
+  pointer-events:none;
+}
+.hero-eyebrow{font-size:12px;font-weight:700;letter-spacing:4px;text-transform:uppercase;color:var(--gold);margin-bottom:12px}
+.hero-title{font-size:clamp(36px,7vw,64px);font-weight:900;line-height:1.05;
+  background:linear-gradient(135deg,#fff 0%,#e8eaf0 60%,var(--gold) 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;margin-bottom:8px}
+.hero-sub{font-size:16px;color:var(--dim);margin-bottom:36px}
+.hero-pills{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.pill{
+  padding:8px 20px;border-radius:24px;
+  background:var(--navy3);border:1px solid var(--border);
+  font-size:13px;font-weight:700;
+}
+.pill span{color:var(--gold);margin-right:6px;font-size:16px}
+
+/* ── LAYOUT ── */
+.container{max-width:960px;margin:0 auto;padding:48px 20px}
+.section{margin-bottom:64px;scroll-margin-top:64px}
+.section-head{
+  display:flex;align-items:center;gap:12px;
+  margin-bottom:28px;padding-bottom:14px;
+  border-bottom:2px solid var(--gold);
+}
+.section-icon{font-size:24px}
+.section-title{font-size:22px;font-weight:800;color:#fff}
+.section-badge{
+  margin-left:auto;background:var(--gold);color:var(--navy);
+  font-size:10px;font-weight:800;padding:3px 10px;border-radius:20px;
+  letter-spacing:1px;text-transform:uppercase;
+}
+
+/* ── LEADERBOARD ── */
+.lb-wrap{background:var(--navy2);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
+.lb-row{
+  display:grid;
+  grid-template-columns:52px 1fr 70px 70px 80px;
+  align-items:center;
+  padding:14px 20px;
+  border-bottom:1px solid rgba(44,58,86,.5);
+  transition:background .15s;
+  gap:8px;
+}
+.lb-row:last-child{border-bottom:none}
+.lb-row:hover{background:rgba(255,255,255,.02)}
+.lb-row.gold-row{background:rgba(245,166,35,.05)}
+.lb-row.silver-row{background:rgba(156,163,175,.03)}
+.lb-row.bronze-row{background:rgba(205,127,50,.03)}
+.lb-head{
+  font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;
+  color:var(--dim);padding:10px 20px;
+  display:grid;grid-template-columns:52px 1fr 70px 70px 80px;gap:8px;
+  border-bottom:1px solid var(--border);
+}
+.lb-head span:nth-child(3),.lb-head span:nth-child(4),.lb-head span:nth-child(5){text-align:center}
+
+.rank-wrap{display:flex;align-items:center;gap:6px}
+.rank-n{font-size:15px;font-weight:800;color:var(--dim);min-width:20px;text-align:right}
+.medal{font-size:18px}
+.player-name{font-size:15px;font-weight:700;color:#fff}
+.player-tag{
+  display:inline-block;margin-left:8px;padding:2px 7px;
+  border-radius:10px;font-size:10px;font-weight:700;vertical-align:middle;
+}
+.tag-g{background:rgba(245,166,35,.15);color:var(--gold);border:1px solid var(--gold)}
+.tag-s{background:rgba(156,163,175,.15);color:#9ca3af;border:1px solid #9ca3af}
+.tag-b{background:rgba(205,127,50,.15);color:#cd7f32;border:1px solid #cd7f32}
+
+.arrow-up{font-size:11px;font-weight:700;color:var(--green);margin-left:4px}
+.arrow-down{font-size:11px;font-weight:700;color:var(--red);margin-left:4px}
+
+.pts{font-size:18px;font-weight:800;color:var(--gold);text-align:center}
+.pts.low{color:var(--red)}
+.correct{text-align:center;font-size:15px;font-weight:700;color:var(--green)}
+.correct .tot{font-size:12px;color:var(--dim);font-weight:500}
+
+.bar-col{display:flex;align-items:center;gap:8px}
+.bar-bg{flex:1;height:6px;background:var(--border);border-radius:4px;overflow:hidden}
+.bar-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--blue) 0%,var(--gold) 100%);transition:width .6s ease}
+.bar-fill.red{background:var(--red)}
+
+/* ── SERIES CARDS ── */
+.series-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
+.series-card{
+  background:var(--navy2);border:1px solid var(--border);
+  border-radius:var(--radius);padding:20px;
+  transition:transform .2s,border-color .2s;
+  position:relative;overflow:hidden;
+}
+.series-card:hover{transform:translateY(-2px)}
+.series-card.sweep{border-color:rgba(245,166,35,.5)}
+.series-card.classic{border-color:rgba(59,130,246,.5)}
+.series-card.sweep::after{
+  content:'🧹 SWEEP';
+  position:absolute;top:12px;right:12px;
+  background:var(--gold);color:var(--navy);
+  font-size:9px;font-weight:800;letter-spacing:1px;
+  padding:2px 8px;border-radius:10px;
+}
+.series-card.classic::after{
+  content:'🔥 7 GAMES';
+  position:absolute;top:12px;right:12px;
+  background:var(--blue);color:#fff;
+  font-size:9px;font-weight:800;letter-spacing:1px;
+  padding:2px 8px;border-radius:10px;
+}
+.sc-conf{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--dim);margin-bottom:6px}
+.sc-winner{font-size:17px;font-weight:800;color:#fff;margin-bottom:4px}
+.sc-winner.sweep-color{color:var(--gold)}
+.sc-winner.classic-color{color:var(--blue)}
+.sc-detail{font-size:12px;color:var(--dim);margin-bottom:14px}
+.sc-bar-wrap{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.sc-bar-bg{flex:1;height:5px;background:var(--border);border-radius:4px;overflow:hidden}
+.sc-bar-fill{height:100%;border-radius:4px}
+.sc-bar-fill.hit{background:var(--green)}
+.sc-bar-fill.miss{background:var(--red)}
+.sc-bar-label{font-size:11px;font-weight:700;white-space:nowrap}
+.sc-bar-label.hit{color:var(--green)}
+.sc-bar-label.miss{color:var(--red)}
+.sc-names{display:flex;flex-wrap:wrap;gap:4px;margin-top:8px}
+.sc-name{
+  font-size:10px;padding:2px 7px;border-radius:8px;
+  background:var(--navy3);color:var(--dim);border:1px solid var(--border);
+}
+.sc-name.hero{background:rgba(34,197,94,.1);color:var(--green);border-color:var(--green)}
+.sc-name.star{background:rgba(245,166,35,.1);color:var(--gold);border-color:var(--gold)}
+
+/* ── INSIGHTS ── */
+.insights-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
+.insight-card{
+  background:var(--navy2);border:1px solid var(--border);
+  border-radius:var(--radius);padding:20px;
+}
+.ic-title{
+  font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;
+  color:var(--dim);margin-bottom:14px;
+}
+.ic-row{
+  display:flex;align-items:flex-start;justify-content:space-between;
+  padding:8px 0;border-bottom:1px solid rgba(44,58,86,.4);gap:12px;
+}
+.ic-row:last-child{border-bottom:none}
+.ic-label{font-size:12px;color:var(--text)}
+.ic-val{font-size:13px;font-weight:700;text-align:right}
+.c-green{color:var(--green)}.c-gold{color:var(--gold)}.c-red{color:var(--red)}.c-blue{color:var(--blue)}
+
+.callout{
+  padding:14px 16px;border-radius:10px;margin-top:12px;
+  font-size:12px;border:1px solid;
+}
+.callout.green{background:rgba(34,197,94,.07);border-color:rgba(34,197,94,.2);color:var(--green)}
+.callout.gold{background:rgba(245,166,35,.07);border-color:rgba(245,166,35,.2);color:var(--gold)}
+.callout.blue{background:rgba(59,130,246,.07);border-color:rgba(59,130,246,.2);color:var(--blue)}
+.callout-head{font-weight:700;margin-bottom:4px}
+.callout-body{color:var(--dim)}
+
+/* ── PICK GRID ── */
+.pick-scroll{overflow-x:auto;border-radius:var(--radius);border:1px solid var(--border)}
+.pick-table{width:100%;border-collapse:collapse;font-size:11px;min-width:500px}
+.pick-table th{
+  padding:10px 8px;background:var(--navy3);
+  font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;
+  color:var(--dim);text-align:center;border-bottom:1px solid var(--border);
+  white-space:nowrap;
+}
+.pick-table th.left{text-align:left}
+.pick-table td{
+  padding:9px 8px;border-bottom:1px solid rgba(44,58,86,.4);
+  text-align:center;vertical-align:middle;
+}
+.pick-table td.name-col{
+  text-align:left;font-weight:700;font-size:12px;
+  color:#fff;white-space:nowrap;padding-left:14px;
+  background:var(--navy2);position:sticky;left:0;z-index:1;
+}
+.pick-table td.pts-col{font-size:15px;font-weight:800;color:var(--gold);background:var(--navy3)}
+.pick-table td.pts-col.low{color:var(--red)}
+.pick-table tr:last-child td{border-bottom:none}
+.pick-table tr:hover td{background:rgba(255,255,255,.02)}
+.pick-table tr:hover td.name-col{background:rgba(26,34,54,.9)}
+
+.actual-row td{background:rgba(245,166,35,.04)!important;border-top:2px solid var(--gold)}
+.actual-row td.name-col{color:var(--gold);font-size:10px;letter-spacing:1px}
+
+.pc{display:flex;flex-direction:column;align-items:center;gap:1px}
+.pc-team{font-size:10px;font-weight:700}
+.pc-team.ok{color:var(--green)}
+.pc-team.bad{color:rgba(255,255,255,.25)}
+.pc-games{font-size:9px}
+.pc-games.perfect{color:var(--gold)}
+.pc-games.bad{color:rgba(255,255,255,.2)}
+
+td.cell-ok{background:rgba(34,197,94,.06)!important}
+td.cell-bad{background:rgba(239,68,68,.04)!important}
+
+/* ── LEGEND ── */
+.legend{display:flex;gap:20px;flex-wrap:wrap;margin-top:12px;font-size:11px;color:var(--dim)}
+.legend-item{display:flex;align-items:center;gap:5px}
+
+/* ── FOOTER ── */
+footer{
+  border-top:1px solid var(--border);
+  padding:24px;text-align:center;
+  font-size:11px;color:var(--dim);
+}
+
+/* ── RESPONSIVE ── */
+@media(max-width:600px){
+  .hero{padding:40px 16px 36px}
+  .hero-pills{flex-direction:column;align-items:center}
+  .pill{width:100%;max-width:320px;text-align:center}
+  .container{padding:28px 14px}
+  .section{margin-bottom:40px}
+  .lb-row,.lb-head{grid-template-columns:44px 1fr 60px}
+  .bar-col{display:none}
+  .correct{display:none}
+  .lb-head span:nth-child(4),.lb-head span:nth-child(5){display:none}
+  .lb-row .correct{display:none}
+  .series-grid,.insights-grid{grid-template-columns:1fr}
+  .callout-body{font-size:11px}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="back-link" href="index.html">← Live Bracket</a>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-eyebrow">NBA Playoffs 2026 · Bracket Challenge</div>
+  <div class="hero-title">Conf. Finals Recap</div>
+  <div class="hero-sub">16 players · 2 series · 11 games played</div>
+  <div class="hero-pills">
+    <div class="pill"><span>🧹</span>NYK sweeps CLE 4–0</div>
+    <div class="pill"><span>🔥</span>SAS outlasts OKC in 7 games</div>
+    <div class="pill"><span>⭐</span>4 players nailed SAS in 7</div>
+    <div class="pill"><span>🚀</span>Or Eshed surges to 1st place</div>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- ── LEADERBOARD ─────────────────────────────────────────── -->
+<section class="section" id="leaderboard">
+  <div class="section-head">
+    <span class="section-icon">🏆</span>
+    <span class="section-title">Leaderboard</span>
+    <span class="section-badge">After CF</span>
+  </div>
+
+  <div class="lb-wrap">
+    <div class="lb-head">
+      <span>#</span><span>Player</span>
+      <span style="text-align:center">Total Pts</span>
+      <span style="text-align:center">Correct</span>
+      <span>Score</span>
+    </div>
+
+    <div class="lb-row gold-row">
+      <div class="rank-wrap"><span class="rank-n">1</span><span class="medal">🥇</span></div>
+      <div><span class="player-name">Or Eshed</span><span class="player-tag tag-g">1st</span><span class="arrow-up">↑4</span></div>
+      <div class="pts">234</div>
+      <div class="correct">11<span class="tot">/14</span></div>
+      <div class="bar-col"><div class="bar-bg"><div class="bar-fill" style="width:100%"></div></div></div>
+    </div>
+    <div class="lb-row silver-row">
+      <div class="rank-wrap"><span class="rank-n">2</span><span class="medal">🥈</span></div>
+      <div><span class="player-name">Stavdija</span><span class="player-tag tag-s">2nd</span><span class="arrow-up">↑6</span></div>
+      <div class="pts">232</div>
+      <div class="correct">10<span class="tot">/14</span></div>
+      <div class="bar-col"><div class="bar-bg"><div class="bar-fill" style="width:99%"></div></div></div>
+    </div>
+    <div class="lb-row bronze-row">
+      <div class="rank-wrap"><span class="rank-n">3</span><span class="medal">🥉</span></div>
+      <div><span class="player-name">Fogel</span><span class="player-tag tag-b">3rd</span><span class="arrow-up">↑8</span></div>
+      <div class="pts">230</div>
+      <div class="correct">10<span class="tot">/14</span></div>
+      <div class="bar-col"><div class="bar-bg"><div class="bar-fill" style="width:98%"></div></div></div>
+    </div>
+    <div class="lb-row">
+      <div class="rank-wrap"><span class="rank-n">4</span></div>
+      <div><span class="player-name">Chemicu</span><span class="arrow-down">↓1</span></div>
+      <div class="pts">220</div>
+      <div class="correct">11<span class="tot">/14</span></div>
+      <div class="bar-col"><div class="bar-bg"><div class="bar-fill" style="width:94%"></div></div></div>
+    </div>
+    <div class="lb-row">
+      <div class="rank-wrap"><span class="rank-n">5</span></div>
+      <div><span class="player-name">Giladdd88</span><span class="arrow-up">↑4</span></div>
+      <div class="pts">220</div>
+      <div class="correct">10<span class="tot">/14</span></div>
+      <div class="bar-col"><div class="bar-bg"><div class="bar-fill" style="width:94%"></div></div></div>
+    </div>
+    <div class="lb-row">
+      <div class="rank-wrap"><span class="rank-n">6</span></div>
+      <div><span class="player-name">Curryville</span><span class="arrow-down">↓5</span></div>
+      <div class="pts">212</div>
+      <div class="correct">10<span class="tot">/14</span></div>
+      <div class="bar-col"><div class="bar-bg"><div class="bar-fill" style="width:91%"></div></div></div>
+    </div>
+    <div class="lb-row">
+      <div class="rank-wrap"><span class="rank-n">7</span></div>
+      <div><span class="player-name">Nadav Ben Nun</span><span class="arrow-down">↓5</span></div>
+      <div class="pts">212</div>
+      <div class="correct">10<span class="tot">/14</span></div>
+      <div class="bar-col"><div class="bar-bg"><div class="bar-fill" style="width:91%"></div></div></div>
+    </div>
+    <div class="lb-row">
+      <div class="rank-wrap"><span class="rank-n">8</span></div>
+      <div><span class="player-name">Dj pinhas</span><span class="arrow-up">↑5</span></div>
+      <div class="pts">210</div>
+      <div class="correct">9<span class="tot">/14</span></div>
+      <div class="bar-col"><div class="bar-bg"><div class="bar-fill" style="width:90%"></div></div></div>
+    </div>
+    <div class="lb-row">
+      <div class="rank-wrap"><span class="rank-n">9</span></div>
+      <div><span class="player-name">Ben Wallace</span><span class="arrow-down">↓3</span></div>
+      <div class="pts">192</div>
+      <div class="correct">10<span class="tot">/14</span></div>
+      <div class="bar-col"><div class="bar-bg"><div class="bar-fill" style="width:82%"></div></div></div>
+    </div>
+    <div class="lb-row">
+      <div class="rank-wrap"><span class="rank-n">10</span></div>
+      <div><span class="player-name">Dor</span><span class="arrow-down">↓3</span></div>
+      <div class="pts">190</div>
+      <div class="correct">9<span class="tot">/14</span></div>
+      <div class="bar-col"><div class="bar-bg"><div class="bar-fill" style="width:81%"></div></div></div>
+    </div>
+    <div class="lb-row">
+      <div class="rank-wrap"><span class="rank-n">11</span></div>
+      <div><span class="player-name">RonenA</span><span class="arrow-down">↓1</span></div>
+      <div class="pts">180</div>
+      <div class="correct">9<span class="tot">/14</span></div>
+      <div class="bar-col"><div class="bar-bg"><div class="bar-fill" style="width:77%"></div></div></div>
+    </div>
+    <div class="lb-row">
+      <div class="rank-wrap"><span class="rank-n">12</span></div>
+      <div><span class="player-name">Ron Artest</span></div>
+      <div class="pts">170</div>
+      <div class="correct">8<span class="tot">/14</span></div>
+      <div class="bar-col"><div class="bar-bg"><div class="bar-fill" style="width:73%"></div></div></div>
+    </div>
+    <div class="lb-row">
+      <div class="rank-wrap"><span class="rank-n">13</span></div>
+      <div><span class="player-name">ivrish</span><span class="arrow-down">↓9</span></div>
+      <div class="pts">162</div>
+      <div class="correct">9<span class="tot">/14</span></div>
+      <div class="bar-col"><div class="bar-bg"><div class="bar-fill" style="width:69%"></div></div></div>
+    </div>
+    <div class="lb-row">
+      <div class="rank-wrap"><span class="rank-n">14</span></div>
+      <div><span class="player-name">Eli</span></div>
+      <div class="pts">160</div>
+      <div class="correct">8<span class="tot">/14</span></div>
+      <div class="bar-col"><div class="bar-bg"><div class="bar-fill" style="width:68%"></div></div></div>
+    </div>
+    <div class="lb-row">
+      <div class="rank-wrap"><span class="rank-n">15</span></div>
+      <div><span class="player-name">Ucimehc</span></div>
+      <div class="pts">152</div>
+      <div class="correct">8<span class="tot">/14</span></div>
+      <div class="bar-col"><div class="bar-bg"><div class="bar-fill" style="width:65%"></div></div></div>
+    </div>
+    <div class="lb-row">
+      <div class="rank-wrap"><span class="rank-n">16</span></div>
+      <div><span class="player-name">roikind</span></div>
+      <div class="pts low">82</div>
+      <div class="correct" style="color:var(--dim)">6<span class="tot">/14</span></div>
+      <div class="bar-col"><div class="bar-bg"><div class="bar-fill red" style="width:35%"></div></div></div>
+    </div>
+  </div>
+
+  <div style="margin-top:12px;padding:12px 16px;background:var(--navy2);border-radius:10px;border:1px solid var(--border);font-size:12px;color:var(--dim)">
+    <strong style="color:var(--text)">Scoring:</strong> 40 pts per correct R3 winner · +10 pts exact games · No upset bonus (NYK 58% fav won ECF; SAS 66% fav won WCF)
+  </div>
+</section>
+
+<!-- ── SERIES RESULTS ──────────────────────────────────────── -->
+<section class="section" id="series">
+  <div class="section-head">
+    <span class="section-icon">🏟️</span>
+    <span class="section-title">Series Results</span>
+  </div>
+
+  <div class="series-grid">
+
+    <!-- ECF: NYK sweeps CLE -->
+    <div class="series-card sweep">
+      <div class="sc-conf">East · ECF · #3 NYK vs #4 CLE</div>
+      <div class="sc-winner sweep-color">⚡ New York Knicks</div>
+      <div class="sc-detail">def. Cleveland Cavaliers · 4–0 · Dominant sweep · NYK 58% pre-series fav · Nobody called the sweep — NYK in 4 went unpicked</div>
+      <div class="sc-bar-wrap">
+        <div class="sc-bar-bg"><div class="sc-bar-fill hit" style="width:80%"></div></div>
+        <span class="sc-bar-label hit">12 / 15 called NYK ✓</span>
+      </div>
+      <div class="sc-names">
+        <span class="sc-name" style="color:var(--dim)">Nobody called NYK in 4 🙁</span>
+        <span class="sc-name" style="color:var(--red)">Chemicu → CLE ✗</span>
+        <span class="sc-name" style="color:var(--red)">ivrish → CLE ✗</span>
+        <span class="sc-name" style="color:var(--red)">Eli → CLE ✗</span>
+        <span class="sc-name" style="color:var(--dim)">roikind — no pick</span>
+      </div>
+    </div>
+
+    <!-- WCF: SAS over OKC in 7 -->
+    <div class="series-card classic">
+      <div class="sc-conf">West · WCF · #1 OKC vs #2 SAS</div>
+      <div class="sc-winner classic-color">🏆 San Antonio Spurs</div>
+      <div class="sc-detail">def. Oklahoma City Thunder · 4–3 · 7-game classic · SAS 66% pre-series fav · 4 players nailed SAS in 7 for the full 50 pts</div>
+      <div class="sc-bar-wrap">
+        <div class="sc-bar-bg"><div class="sc-bar-fill hit" style="width:47%"></div></div>
+        <span class="sc-bar-label hit">7 / 15 called SAS ✓</span>
+      </div>
+      <div class="sc-names">
+        <span class="sc-name star">Stavdija — SAS in 7 ⭐</span>
+        <span class="sc-name star">Fogel — SAS in 7 ⭐</span>
+        <span class="sc-name star">Chemicu — SAS in 7 ⭐</span>
+        <span class="sc-name star">Dj pinhas — SAS in 7 ⭐</span>
+        <span class="sc-name hero">Or Eshed — SAS in 6 ✓</span>
+        <span class="sc-name hero">Giladdd88 — SAS in 6 ✓</span>
+        <span class="sc-name hero">Eli — SAS in 6 ✓</span>
+        <span class="sc-name" style="color:var(--red)">Curryville → OKC ✗</span>
+        <span class="sc-name" style="color:var(--red)">Nadav → OKC ✗</span>
+        <span class="sc-name" style="color:var(--red)">Ben Wallace → OKC ✗</span>
+        <span class="sc-name" style="color:var(--red)">Dor → OKC ✗</span>
+        <span class="sc-name" style="color:var(--red)">RonenA → OKC ✗</span>
+        <span class="sc-name" style="color:var(--red)">Ron Artest → OKC ✗</span>
+        <span class="sc-name" style="color:var(--red)">ivrish → OKC ✗</span>
+        <span class="sc-name" style="color:var(--red)">Ucimehc → OKC ✗</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ── INSIGHTS ────────────────────────────────────────────── -->
+<section class="section" id="insights">
+  <div class="section-head">
+    <span class="section-icon">📊</span>
+    <span class="section-title">Key Insights</span>
+  </div>
+
+  <div class="insights-grid">
+
+    <!-- 1: Round at a Glance -->
+    <div class="insight-card">
+      <div class="ic-title">Round at a Glance</div>
+      <div class="ic-row"><span class="ic-label">Series played</span><span class="ic-val c-gold">2</span></div>
+      <div class="ic-row"><span class="ic-label">Total games</span><span class="ic-val c-gold">11</span></div>
+      <div class="ic-row"><span class="ic-label">Upsets</span><span class="ic-val c-green">None — both favs won</span></div>
+      <div class="ic-row"><span class="ic-label">Sweeps</span><span class="ic-val c-gold">1 — NYK 🧹</span></div>
+      <div class="ic-row"><span class="ic-label">7-game series</span><span class="ic-val c-blue">1 — OKC–SAS</span></div>
+      <div class="ic-row"><span class="ic-label">SAS in 7 ⭐</span><span class="ic-val c-gold">Stavdija, Fogel, Chemicu, Dj pinhas</span></div>
+    </div>
+
+    <!-- 2: Series Scores -->
+    <div class="insight-card">
+      <div class="ic-title">Series Scores</div>
+      <div class="ic-row">
+        <span class="ic-label">ECF — NYK over CLE</span>
+        <span class="ic-val c-gold">4–0 (sweep)</span>
+      </div>
+      <div class="ic-row">
+        <span class="ic-label">WCF — SAS over OKC</span>
+        <span class="ic-val c-blue">4–3 (7 games)</span>
+      </div>
+      <div class="ic-row">
+        <span class="ic-label">Called ECF correctly (NYK)</span>
+        <span class="ic-val c-green">12 / 15</span>
+      </div>
+      <div class="ic-row">
+        <span class="ic-label">Called WCF correctly (SAS)</span>
+        <span class="ic-val c-gold">7 / 15</span>
+      </div>
+      <div class="callout blue">
+        <div class="callout-head">🎰 WCF Split the field</div>
+        <div class="callout-body">8 players backed OKC, 7 backed SAS — the most contested call of the playoffs so far. SAS in 7 made the difference between top-3 and mid-table.</div>
+      </div>
+    </div>
+
+    <!-- 3: Biggest Movers -->
+    <div class="insight-card">
+      <div class="ic-title">Biggest Movers This Round</div>
+      <div class="ic-row"><span class="ic-label">Fogel</span><span class="ic-val c-green">9th → 3rd ↑8</span></div>
+      <div class="ic-row"><span class="ic-label">Stavdija</span><span class="ic-val c-green">8th → 2nd ↑6</span></div>
+      <div class="ic-row"><span class="ic-label">Dj pinhas</span><span class="ic-val c-green">13th → 8th ↑5</span></div>
+      <div class="ic-row"><span class="ic-label">Or Eshed</span><span class="ic-val c-green">5th → 1st ↑4</span></div>
+      <div class="ic-row"><span class="ic-label">ivrish</span><span class="ic-val c-red">4th → 13th ↓9</span></div>
+      <div class="ic-row"><span class="ic-label">Nadav Ben Nun</span><span class="ic-val c-red">1st → 7th ↓6</span></div>
+      <div class="callout gold">
+        <div class="callout-head">📉 ivrish's hard fall</div>
+        <div class="callout-body">CLE ✗ + OKC ✗ = 0 CF pts. Drops 9 places from 4th to 13th in a single round.</div>
+      </div>
+    </div>
+
+    <!-- 4: Finals Preview -->
+    <div class="insight-card">
+      <div class="ic-title">Finals Preview: NYK vs SAS</div>
+      <div class="ic-row">
+        <span class="ic-label">SAS (favorite)</span>
+        <span class="ic-val c-gold">66% · 80 pts if correct</span>
+      </div>
+      <div class="ic-row">
+        <span class="ic-label">NYK (underdog)</span>
+        <span class="ic-val c-green">34% · 80 + 16 upset bonus</span>
+      </div>
+      <div class="ic-row">
+        <span class="ic-label">Knicks upset bonus</span>
+        <span class="ic-val c-green">+16 pts (gap = 10)</span>
+      </div>
+      <div class="ic-row">
+        <span class="ic-label">Max with games bonus</span>
+        <span class="ic-val c-green">106 pts (NYK) vs 90 (SAS)</span>
+      </div>
+      <div class="callout green">
+        <div class="callout-head">👀 Knicks upset = huge swing</div>
+        <div class="callout-body">Picking NYK AND being right would net 96 pts (or 106 with exact games) vs 80 for SAS. It's a bold bet — but the payout could flip the leaderboard.</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ── PICK GRID ────────────────────────────────────────────── -->
+<section class="section" id="picks">
+  <div class="section-head">
+    <span class="section-icon">📋</span>
+    <span class="section-title">Full Pick Breakdown — Conf. Finals</span>
+  </div>
+
+  <div class="pick-scroll">
+    <table class="pick-table">
+      <thead>
+        <tr>
+          <th class="left" style="min-width:130px">Player</th>
+          <th>NYK<br><span style="opacity:.5;font-weight:400">ECF</span></th>
+          <th>SAS<br><span style="opacity:.5;font-weight:400">WCF</span></th>
+          <th>CF Pts</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- ACTUAL -->
+        <tr class="actual-row">
+          <td class="name-col" style="font-size:10px;letter-spacing:1px;color:var(--gold)">ACTUAL</td>
+          <td><div class="pc"><span style="font-size:10px;color:var(--gold);font-weight:700">NYK</span><span style="font-size:9px;color:var(--dim)">in 4 🧹</span></div></td>
+          <td><div class="pc"><span style="font-size:10px;color:var(--blue);font-weight:700">SAS</span><span style="font-size:9px;color:var(--dim)">in 7 🔥</span></div></td>
+          <td class="pts-col" style="color:var(--dim)">—</td>
+        </tr>
+        <!-- Or Eshed 234, CF=80 -->
+        <tr>
+          <td class="name-col">Or Eshed 🥇</td>
+          <td class="cell-ok"><div class="pc"><span class="pc-team ok">NYK</span><span class="pc-games bad">5</span></div></td>
+          <td class="cell-ok"><div class="pc"><span class="pc-team ok">SAS</span><span class="pc-games bad">6</span></div></td>
+          <td class="pts-col">80</td>
+        </tr>
+        <!-- Stavdija 232, CF=90 -->
+        <tr>
+          <td class="name-col">Stavdija 🥈</td>
+          <td class="cell-ok"><div class="pc"><span class="pc-team ok">NYK</span><span class="pc-games bad">5</span></div></td>
+          <td class="cell-ok"><div class="pc"><span class="pc-team ok">SAS</span><span class="pc-games perfect">7⭐</span></div></td>
+          <td class="pts-col">90</td>
+        </tr>
+        <!-- Fogel 230, CF=90 -->
+        <tr>
+          <td class="name-col">Fogel 🥉</td>
+          <td class="cell-ok"><div class="pc"><span class="pc-team ok">NYK</span><span class="pc-games bad">6</span></div></td>
+          <td class="cell-ok"><div class="pc"><span class="pc-team ok">SAS</span><span class="pc-games perfect">7⭐</span></div></td>
+          <td class="pts-col">90</td>
+        </tr>
+        <!-- Chemicu 220, CF=50 -->
+        <tr>
+          <td class="name-col">Chemicu</td>
+          <td class="cell-bad"><div class="pc"><span class="pc-team bad">CLE</span><span class="pc-games bad">7</span></div></td>
+          <td class="cell-ok"><div class="pc"><span class="pc-team ok">SAS</span><span class="pc-games perfect">7⭐</span></div></td>
+          <td class="pts-col">50</td>
+        </tr>
+        <!-- Giladdd88 220, CF=80 -->
+        <tr>
+          <td class="name-col">Giladdd88</td>
+          <td class="cell-ok"><div class="pc"><span class="pc-team ok">NYK</span><span class="pc-games bad">7</span></div></td>
+          <td class="cell-ok"><div class="pc"><span class="pc-team ok">SAS</span><span class="pc-games bad">6</span></div></td>
+          <td class="pts-col">80</td>
+        </tr>
+        <!-- Curryville 212, CF=40 -->
+        <tr>
+          <td class="name-col">Curryville</td>
+          <td class="cell-ok"><div class="pc"><span class="pc-team ok">NYK</span><span class="pc-games bad">7</span></div></td>
+          <td class="cell-bad"><div class="pc"><span class="pc-team bad">OKC</span><span class="pc-games bad">7</span></div></td>
+          <td class="pts-col">40</td>
+        </tr>
+        <!-- Nadav 212, CF=40 -->
+        <tr>
+          <td class="name-col">Nadav Ben Nun</td>
+          <td class="cell-ok"><div class="pc"><span class="pc-team ok">NYK</span><span class="pc-games bad">6</span></div></td>
+          <td class="cell-bad"><div class="pc"><span class="pc-team bad">OKC</span><span class="pc-games bad">6</span></div></td>
+          <td class="pts-col">40</td>
+        </tr>
+        <!-- Dj pinhas 210, CF=90 -->
+        <tr>
+          <td class="name-col">Dj pinhas</td>
+          <td class="cell-ok"><div class="pc"><span class="pc-team ok">NYK</span><span class="pc-games bad">6</span></div></td>
+          <td class="cell-ok"><div class="pc"><span class="pc-team ok">SAS</span><span class="pc-games perfect">7⭐</span></div></td>
+          <td class="pts-col">90</td>
+        </tr>
+        <!-- Ben Wallace 192, CF=40 -->
+        <tr>
+          <td class="name-col">Ben Wallace</td>
+          <td class="cell-ok"><div class="pc"><span class="pc-team ok">NYK</span><span class="pc-games bad">6</span></div></td>
+          <td class="cell-bad"><div class="pc"><span class="pc-team bad">OKC</span><span class="pc-games bad">6</span></div></td>
+          <td class="pts-col">40</td>
+        </tr>
+        <!-- Dor 190, CF=40 -->
+        <tr>
+          <td class="name-col">Dor</td>
+          <td class="cell-ok"><div class="pc"><span class="pc-team ok">NYK</span><span class="pc-games bad">5</span></div></td>
+          <td class="cell-bad"><div class="pc"><span class="pc-team bad">OKC</span><span class="pc-games bad">6</span></div></td>
+          <td class="pts-col">40</td>
+        </tr>
+        <!-- RonenA 180, CF=40 -->
+        <tr>
+          <td class="name-col">RonenA</td>
+          <td class="cell-ok"><div class="pc"><span class="pc-team ok">NYK</span><span class="pc-games bad">6</span></div></td>
+          <td class="cell-bad"><div class="pc"><span class="pc-team bad">OKC</span><span class="pc-games bad">5</span></div></td>
+          <td class="pts-col">40</td>
+        </tr>
+        <!-- Ron Artest 170, CF=40 -->
+        <tr>
+          <td class="name-col">Ron Artest</td>
+          <td class="cell-ok"><div class="pc"><span class="pc-team ok">NYK</span><span class="pc-games bad">5</span></div></td>
+          <td class="cell-bad"><div class="pc"><span class="pc-team bad">OKC</span><span class="pc-games bad">6</span></div></td>
+          <td class="pts-col">40</td>
+        </tr>
+        <!-- ivrish 162, CF=0 -->
+        <tr>
+          <td class="name-col">ivrish</td>
+          <td class="cell-bad"><div class="pc"><span class="pc-team bad">CLE</span><span class="pc-games bad">7</span></div></td>
+          <td class="cell-bad"><div class="pc"><span class="pc-team bad">OKC</span><span class="pc-games bad">6</span></div></td>
+          <td class="pts-col low">0</td>
+        </tr>
+        <!-- Eli 160, CF=40 -->
+        <tr>
+          <td class="name-col">Eli</td>
+          <td class="cell-bad"><div class="pc"><span class="pc-team bad">CLE</span><span class="pc-games bad">6</span></div></td>
+          <td class="cell-ok"><div class="pc"><span class="pc-team ok">SAS</span><span class="pc-games bad">6</span></div></td>
+          <td class="pts-col">40</td>
+        </tr>
+        <!-- Ucimehc 152, CF=40 -->
+        <tr>
+          <td class="name-col">Ucimehc</td>
+          <td class="cell-ok"><div class="pc"><span class="pc-team ok">NYK</span><span class="pc-games bad">6</span></div></td>
+          <td class="cell-bad"><div class="pc"><span class="pc-team bad">OKC</span><span class="pc-games bad">6</span></div></td>
+          <td class="pts-col">40</td>
+        </tr>
+        <!-- roikind 82, CF=0 -->
+        <tr>
+          <td class="name-col">roikind</td>
+          <td class="cell-bad"><div class="pc"><span class="pc-team bad" style="color:var(--dim)">—</span></div></td>
+          <td class="cell-bad"><div class="pc"><span class="pc-team bad" style="color:var(--dim)">—</span></div></td>
+          <td class="pts-col low">0</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="legend">
+    <span class="legend-item"><span style="color:var(--green)">●</span> Correct winner</span>
+    <span class="legend-item"><span style="opacity:.3">●</span> Wrong pick</span>
+    <span class="legend-item"><span style="color:var(--gold)">⭐</span> Perfect games prediction (+10 pts)</span>
+  </div>
+</section>
+
+</div><!-- /container -->
+
+<footer>
+  🏀 NBA Playoffs 2026 Bracket Challenge · Conf. Finals Recap · Generated June 2026
+</footer>
+
+<script>
+window.addEventListener('load', () => {
+  document.querySelectorAll('.bar-fill').forEach(el => {
+    const w = el.style.width;
+    el.style.width = '0';
+    setTimeout(() => { el.style.width = w; }, 100);
+  });
+});
+</script>
+</body>
+</html>
