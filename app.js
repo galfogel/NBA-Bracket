@@ -1230,6 +1230,15 @@ function renderBracket() {
     ${renderFloatingSaveBar(currentUserId)}`;
 }
 
+// Returns series in `round` that have a partial pick (winner XOR games set).
+// Gap is NOT required — only winner + games matter. Empty series (neither set) is fine.
+function getPartialSeries(pid, round) {
+  return SERIES.filter(s => s.r === round && isSeriesAvailable(s.id)).filter(s => {
+    const pick = getPick(pid, s.id);
+    return !!pick.winner !== !!pick.games; // exactly one of the two is set
+  });
+}
+
 function renderFloatingSaveBar(pid) {
   // Earliest open/editing round → Save button
   const openRound = [1, 2, 3, 4].find(r => {
@@ -1251,9 +1260,15 @@ function renderFloatingSaveBar(pid) {
 
   if (!openRound && !submittedRound) return '';
 
+  const partial = openRound ? getPartialSeries(pid, openRound) : [];
+  const saveBlocked = partial.length > 0;
+  const saveLabel = saveBlocked
+    ? `Complete or clear: ${partial.map(s => { const [t1, t2] = resolveTeams(s.id); return (t1 ? TEAMS[t1].abbr : '?') + ' vs ' + (t2 ? TEAMS[t2].abbr : '?'); }).join(', ')}`
+    : 'Save';
+
   return `<div class="floating-save-bar">
     ${submittedRound ? `<button class="fab-btn fab-edit edit-round-btn" data-round="${submittedRound}">Edit</button>` : ''}
-    ${openRound     ? `<button class="fab-btn fab-save save-round-btn" data-round="${openRound}">Save</button>` : ''}
+    ${openRound ? `<button class="fab-btn fab-save save-round-btn${saveBlocked ? ' fab-save-blocked' : ''}" data-round="${openRound}"${saveBlocked ? ' disabled' : ''}>${saveLabel}</button>` : ''}
   </div>`;
 }
 
@@ -1276,17 +1291,18 @@ function renderRoundControls(pid) {
       badge  = `<span class="rc-badge rc-saved">✓ Saved</span>`;
       action = `<button class="edit-round-btn btn-outline-sm" data-round="${r}">Edit</button>`;
     } else {
+      const partial = getPartialSeries(pid, r);
+      const canSave = partial.length === 0;
       const missing = [];
       if (picked < avail.length) missing.push(`${avail.length - picked} winner${avail.length - picked > 1 ? 's' : ''}`);
       if (games  < avail.length) missing.push(`${avail.length - games} game count${avail.length - games > 1 ? 's' : ''}`);
-      if (r === 4 && state.finalsGap[pid] == null) missing.push('Game 1 gap');
-      const canSave = !(r === 4 && state.finalsGap[pid] == null);
       badge  = `<span class="rc-badge rc-open">Open</span>`;
-      action = canSave
-        ? `<button class="save-round-btn btn-primary" data-round="${r}">${isTestUser() ? 'Save' : `Save ${ROUND_NAMES[r]}${missing.length ? ` (${missing.join(' · ')})` : ''}`}</button>`
-        : `<button class="save-round-btn btn-primary btn-disabled" disabled data-round="${r}" title="Still missing: ${missing.join(', ')}">
-             Missing: ${missing.join(' · ')}
-           </button>`;
+      if (!canSave) {
+        const names = partial.map(s => { const [t1, t2] = resolveTeams(s.id); return (t1 ? TEAMS[t1].abbr : '?') + ' vs ' + (t2 ? TEAMS[t2].abbr : '?'); });
+        action = `<button class="save-round-btn btn-primary btn-disabled" disabled data-round="${r}">Complete or clear: ${names.join(', ')}</button>`;
+      } else {
+        action = `<button class="save-round-btn btn-primary" data-round="${r}">${isTestUser() ? 'Save' : `Save ${ROUND_NAMES[r]}${missing.length ? ` (${missing.join(' · ')})` : ''}`}</button>`;
+      }
     }
 
     const gapWarn = r === 4 ? `<span class="gap-warn" style="display:none"></span>` : '';
@@ -1335,13 +1351,12 @@ function handlePicksClick(e) {
   // Save round
   const saveBtn = e.target.closest('.save-round-btn[data-round]');
   if (saveBtn && !saveBtn.disabled) {
-    const r     = parseInt(saveBtn.dataset.round);
-    const avail = SERIES.filter(s => s.r === r && isSeriesAvailable(s.id));
-    if (r === 4 && state.finalsGap[currentUserId] == null) {
-      const warn = saveBtn.closest('.round-col, .blist-round')?.querySelector('.gap-warn');
-      if (warn) { warn.textContent = '⚠ Add a Game 1 gap for the tiebreaker!'; warn.style.display = 'block'; }
-      setTimeout(() => { if (warn) warn.style.display = 'none'; }, 4000);
-      return; // block submission until gap is filled
+    const r       = parseInt(saveBtn.dataset.round);
+    const partial = getPartialSeries(currentUserId, r);
+    if (partial.length > 0) {
+      const names = partial.map(s => { const [t1, t2] = resolveTeams(s.id); return (t1 ? TEAMS[t1].abbr : '?') + ' vs ' + (t2 ? TEAMS[t2].abbr : '?'); });
+      showSaveToast(`⚠ Complete or clear: ${names.join(', ')}`);
+      return;
     }
     if (!state.picksSubmitted[currentUserId]) state.picksSubmitted[currentUserId] = {};
     state.picksSubmitted[currentUserId][r] = true;
