@@ -1493,7 +1493,6 @@ main { padding: 24px; box-sizing: border-box; width: 100%; }
   .breakdown-confs-row--r3 .breakdown-conf-col .breakdown-grid { grid-template-columns: 1fr; }
   .breakdown-finals-centered .breakdown-grid,
   .breakdown-finals-gap .breakdown-grid { grid-template-columns: 1fr; }
-  .breakdown-finals-row { flex-direction: column; }
   .rnd-full { display: none; }
   .rnd-abbr { display: inline; }
 
