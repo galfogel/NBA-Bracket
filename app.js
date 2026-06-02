@@ -1827,7 +1827,7 @@ function renderPickBreakdown(rows) {
             else if (bad) ptsDisplay = `<span class="bd-pts-earned bd-pts-wrong">✗✗</span>`;
           }
           return `<div class="bd-pick-row${isMe ? ' my-row' : ''}">
-            <span class="bd-pick-name p-name-link" onclick="goToAllPicksUser('${p.id}','${def.id}')">${p.name}</span>
+            <span class="bd-pick-name p-name-link" onclick="goToAllPicksUser('${p.id}','${def.id}')">${p.name}${isMe ? ' <span class="you-badge">you</span>' : ''}</span>
             <span class="bd-pick-team ${teamCls}">
               ${pt ? `<span class="bd-pick-abbr" style="color:${pt.color}">${pt.abbr}</span>` : '<span class="bd-pick-abbr">?</span>'}
               ${pick.games ? `<span class="bd-pick-games">${pick.games}</span>` : ''}
@@ -1906,7 +1906,7 @@ function renderPickBreakdown(rows) {
             diffStr = `<span class="bd-pick-games">(diff: ${diff})</span>`;
           }
           html += `<div class="bd-gap-row${isMe ? ' my-row' : ''}">
-            <span class="bd-pick-name">${p.name}</span>
+            <span class="bd-pick-name">${p.name}${isMe ? ' <span class="you-badge">you</span>' : ''}</span>
             <span class="bd-pick-abbr">${gap != null ? `${gap} pts` : '?'}</span>
             ${diffStr}
           </div>`;
