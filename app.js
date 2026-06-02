@@ -1894,7 +1894,7 @@ function renderPickBreakdown(rows) {
     // Tiebreaker table
     if (showGap) {
       const actualGap = state.finalsGame1ActualGap;
-      html += '<div class="breakdown-round breakdown-finals-gap"><h4>Game 1 Finals Gap (Tiebreaker)</h4><div class="breakdown-grid"><div class="breakdown-series"><div class="bd-picks">';
+      html += '<div class="breakdown-round breakdown-finals-gap"><h4>Game 1 Finals Gap</h4><div class="breakdown-grid"><div class="breakdown-series"><div class="bd-picks">';
       if (!revealed) {
         html += `<div class="bd-hidden">🔒 Hidden until series starts</div>`;
       } else {
