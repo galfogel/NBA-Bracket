@@ -1545,6 +1545,11 @@ main { padding: 24px; box-sizing: border-box; width: 100%; }
   opacity: 1;
   transform: translate(-50%, -50%) scale(1);
 }
+#save-toast.save-toast-warn {
+  background: color-mix(in srgb, var(--accent) 18%, var(--surface));
+  border-color: var(--accent);
+  color: var(--accent);
+}
 #save-toast.save-toast-hide {
   opacity: 0;
   transform: translate(-50%, -50%) scale(0.9);

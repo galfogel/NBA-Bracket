@@ -670,7 +670,7 @@ function isSeriesLocked(sid) {
   return false;
 }
 
-function showSaveToast(msg) {
+function showSaveToast(msg, warn = false) {
   let el = document.getElementById('save-toast');
   if (!el) {
     el = document.createElement('div');
@@ -678,6 +678,7 @@ function showSaveToast(msg) {
     document.body.appendChild(el);
   }
   el.textContent = msg;
+  el.classList.toggle('save-toast-warn', warn);
   el.classList.remove('save-toast-hide');
   el.classList.add('save-toast-show');
   clearTimeout(el._hideTimer);
@@ -1350,7 +1351,7 @@ function handlePicksClick(e) {
     const r = parseInt(saveBtn.dataset.round);
     const partial = getPartialSeries(currentUserId, r);
     if (partial.length > 0) {
-      showSaveToast('⚠ Some picks are incomplete — finish them or clear them to save');
+      showSaveToast('⚠ Some picks are incomplete — finish them or clear them to save', true);
       return;
     }
     if (!state.picksSubmitted[currentUserId]) state.picksSubmitted[currentUserId] = {};
