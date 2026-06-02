@@ -1642,11 +1642,7 @@ function renderMaxPlacements(rows) {
   const rank = myIdx + 1;
   const suffix = ['st','nd','rd'][rank - 1] || 'th';
   const medal = rank <= 3 ? ['🥇','🥈','🥉'][myIdx] + ' ' : '';
-  return `<div class="max-place-section">Best possible placement: ${medal}<strong>${rank}${suffix} place</strong></div>
-  <div class="max-place-hint">
-    <span>Potential: <span class="bd-legend-dot green" style="display:inline-block;vertical-align:middle"></span> Winner &amp; Games &nbsp;<span class="bd-legend-dot yellow" style="display:inline-block;vertical-align:middle"></span> Winner Only</span>
-    <span>Final: <span class="bd-pts-earned" style="font-size:11px">✓✓</span> Winner &amp; Games &nbsp;<span class="bd-pts-earned" style="font-size:11px">✓<span class="bd-pts-wrong">✗</span></span> Winner Only &nbsp;<span class="bd-pts-earned bd-pts-wrong" style="font-size:11px">✗✗</span> Wrong</span>
-  </div>`;
+  return `<div class="max-place-section">Best possible placement: ${medal}<strong>${rank}${suffix} place</strong></div>`;
 }
 
 function renderLeaderboard() {
