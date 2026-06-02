@@ -2006,16 +2006,16 @@ function renderInfo() {
 
       <section class="info-section">
         <h2>Tiebreaker</h2>
-        <p class="info-detail">If two or more players finish with the same total score, the tiebreaker is the <strong>Game 1 NBA Finals score margin</strong> prediction — each player enters their predicted point difference for Game 1.</p>
+        <p class="info-detail">When players are tied on total score, the following factors are applied in order:</p>
         <table class="info-table">
-          <thead><tr><th>Scenario</th><th>Result</th></tr></thead>
+          <thead><tr><th>#</th><th>Factor</th><th>Winner</th></tr></thead>
           <tbody>
-            <tr><td>Closer prediction to actual margin</td><td>Higher place 🏆</td></tr>
-            <tr><td>Equal distance from actual margin</td><td>Shared place</td></tr>
-            <tr><td>No prediction submitted</td><td>Ranked last among tied players</td></tr>
+            <tr><td>1</td><td><strong>Correct picks</strong> — number of series picked correctly</td><td>More correct picks wins</td></tr>
+            <tr><td>2</td><td><strong>Game 1 Finals margin</strong> — predicted point difference for Game 1</td><td>Closest to actual margin wins</td></tr>
+            <tr><td>3</td><td>Equal on all factors above</td><td>Shared place</td></tr>
           </tbody>
         </table>
-        <p class="info-detail">Example: actual margin = <strong>8 pts</strong>. Player A predicted 6 (off by 2), Player B predicted 11 (off by 3) → Player A wins the tiebreaker.</p>
+        <p class="info-detail">Example for factor 2: actual margin = <strong>8 pts</strong>. Player A predicted 6 (off by 2), Player B predicted 11 (off by 3) → Player A wins.</p>
       </section>
 
     </div>
