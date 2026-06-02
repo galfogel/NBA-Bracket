@@ -1968,7 +1968,6 @@ function renderInfo() {
             <tr class="upset-row"><td><span style="color:var(--green)">Upset Bonus</span> <span class="info-note">(picking the underdog correctly)</span></td><td><span style="color:var(--green)">see table below</span></td></tr>
           </tbody>
         </table>
-        <p class="info-detail"><strong>Tiebreaker:</strong> If scores are equal, the player whose predicted Game 1 NBA Finals score margin is closest to the actual margin wins the higher place. Equal distance = shared place.</p>
       </section>
 
       <section class="info-section">
@@ -2003,6 +2002,20 @@ function renderInfo() {
             <tr><td class="prize-place">🥉 3rd place</td><td>Buy-in back</td></tr>
           </tbody>
         </table>
+      </section>
+
+      <section class="info-section">
+        <h2>Tiebreaker</h2>
+        <p class="info-detail">If two or more players finish with the same total score, the tiebreaker is the <strong>Game 1 NBA Finals score margin</strong> prediction — each player enters their predicted point difference for Game 1.</p>
+        <table class="info-table">
+          <thead><tr><th>Scenario</th><th>Result</th></tr></thead>
+          <tbody>
+            <tr><td>Closer prediction to actual margin</td><td>Higher place 🏆</td></tr>
+            <tr><td>Equal distance from actual margin</td><td>Shared place</td></tr>
+            <tr><td>No prediction submitted</td><td>Ranked last among tied players</td></tr>
+          </tbody>
+        </table>
+        <p class="info-detail">Example: actual margin = <strong>8 pts</strong>. Player A predicted 6 (off by 2), Player B predicted 11 (off by 3) → Player A wins the tiebreaker.</p>
       </section>
 
     </div>
