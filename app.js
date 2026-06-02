@@ -1231,6 +1231,23 @@ function renderBracket() {
 }
 
 
+// Returns series in `round` that have a partial pick (at least one param set but not all).
+// Non-Finals: needs winner + games. Finals: needs winner + games + gap. Empty = fine.
+function getPartialSeries(pid, round) {
+  return SERIES.filter(s => s.r === round && isSeriesAvailable(s.id)).filter(s => {
+    const pick = getPick(pid, s.id);
+    const hasWinner = !!pick.winner;
+    const hasGames  = !!pick.games;
+    if (s.id === 'FINALS') {
+      const hasGap     = state.finalsGap[pid] != null;
+      const atLeastOne = hasWinner || hasGames || hasGap;
+      const allDone    = hasWinner && hasGames && hasGap;
+      return atLeastOne && !allDone;
+    }
+    return hasWinner !== hasGames;
+  });
+}
+
 function renderFloatingSaveBar(pid) {
   // Earliest open/editing round → Save button
   const openRound = [1, 2, 3, 4].find(r => {
@@ -1331,6 +1348,15 @@ function handlePicksClick(e) {
   const saveBtn = e.target.closest('.save-round-btn[data-round]');
   if (saveBtn && !saveBtn.disabled) {
     const r = parseInt(saveBtn.dataset.round);
+    const partial = getPartialSeries(currentUserId, r);
+    if (partial.length > 0) {
+      const names = partial.map(s => {
+        const [t1, t2] = resolveTeams(s.id);
+        return (t1 ? TEAMS[t1].abbr : '?') + ' vs ' + (t2 ? TEAMS[t2].abbr : '?');
+      });
+      showSaveToast(`⚠ Incomplete pick: ${names.join(', ')} — fill all or clear`);
+      return;
+    }
     if (!state.picksSubmitted[currentUserId]) state.picksSubmitted[currentUserId] = {};
     state.picksSubmitted[currentUserId][r] = true;
     editingState = { pid: null, round: null };
