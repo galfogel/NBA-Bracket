@@ -1959,6 +1959,21 @@ function renderInfo() {
   el.innerHTML = `
     <div class="info-tab">
       <section class="info-section">
+        <h2>How Picking Works</h2>
+        <p class="info-detail">For each series you pick the <strong>winning team</strong> and the <strong>number of games</strong> (4–7). For the NBA Finals you also predict the <strong>Game 1 score margin</strong> (used as a tiebreaker).</p>
+        <table class="info-table">
+          <thead><tr><th>Round</th><th>Opens</th><th>Locks</th></tr></thead>
+          <tbody>
+            <tr><td>First Round</td><td>Before the playoffs start</td><td>Game 1 tip-off <span class="info-note">(series by series)</span></td></tr>
+            <tr><td>Conf. Semifinals</td><td>Once both R1 series in the conference finish</td><td>Game 1 tip-off</td></tr>
+            <tr><td>Conf. Finals</td><td>Once both CSF series in the conference finish</td><td>Game 1 tip-off</td></tr>
+            <tr><td>NBA Finals</td><td>Once both conference champions are decided</td><td>Game 1 tip-off</td></tr>
+          </tbody>
+        </table>
+        <p class="info-detail">⏰ All deadlines are shown in <strong>Israel time (IST)</strong>. Once a series locks, picks are final — no edits allowed.</p>
+      </section>
+
+      <section class="info-section">
         <h2>Points System</h2>
         <table class="info-table">
           <thead><tr><th>Round</th><th>Points</th></tr></thead>
