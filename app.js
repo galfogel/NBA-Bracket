@@ -1871,11 +1871,17 @@ function renderPickBreakdown(rows) {
     }
   }
 
-  // Correct picks leaderboard — shown whenever Finals round is selected
+  // Correct picks + Tiebreaker — side by side under the Finals card
   if (bdRoundFilter === 4) {
     const totalDone = SERIES.filter(s => !!state.results[s.id]).length;
-    html += '<div class="breakdown-round breakdown-finals-gap"><h4>Correct Picks Leaderboard</h4><div class="breakdown-grid">';
-    html += '<div class="breakdown-series"><div class="bd-picks">';
+    const revealed  = isSeriesLocked('FINALS') || adminView;
+    const anyGap    = filteredRows.some(p => state.finalsGap[p.id] != null);
+    const showGap   = anyGap || state.finalsGame1ActualGap != null;
+
+    html += '<div class="breakdown-finals-row">';
+
+    // Correct picks table
+    html += '<div class="breakdown-round breakdown-finals-gap"><h4>Correct Picks Leaderboard</h4><div class="breakdown-grid"><div class="breakdown-series"><div class="bd-picks">';
     rows.forEach(p => {
       const isMe = p.id === currentUserId;
       html += `<div class="bd-gap-row${isMe ? ' my-row' : ''}">
@@ -1884,16 +1890,11 @@ function renderPickBreakdown(rows) {
       </div>`;
     });
     html += '</div></div></div></div>';
-  }
 
-  // Finals Game 1 gap — only when Finals round is selected
-  if (bdRoundFilter === 4) {
-    const revealed = isSeriesLocked('FINALS') || adminView;
-    const anyGap = filteredRows.some(p => state.finalsGap[p.id] != null);
-    if (anyGap || state.finalsGame1ActualGap != null) {
+    // Tiebreaker table
+    if (showGap) {
       const actualGap = state.finalsGame1ActualGap;
-      html += '<div class="breakdown-round breakdown-finals-gap"><h4>Game 1 Finals Gap (Tiebreaker)</h4><div class="breakdown-grid">';
-      html += '<div class="breakdown-series"><div class="bd-picks">';
+      html += '<div class="breakdown-round breakdown-finals-gap"><h4>Game 1 Finals Gap (Tiebreaker)</h4><div class="breakdown-grid"><div class="breakdown-series"><div class="bd-picks">';
       if (!revealed) {
         html += `<div class="bd-hidden">🔒 Hidden until series starts</div>`;
       } else {
@@ -1917,6 +1918,8 @@ function renderPickBreakdown(rows) {
       }
       html += '</div></div></div></div>';
     }
+
+    html += '</div>';
   }
 
 
