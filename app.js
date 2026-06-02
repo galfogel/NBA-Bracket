@@ -1762,14 +1762,14 @@ function renderPickBreakdown(rows) {
       <span class="bd-legend-title">Potential Status:</span>
       <span class="bd-legend-item"><span class="bd-legend-dot green"></span> Winner &amp; Games</span>
       <span class="bd-legend-item"><span class="bd-legend-dot yellow"></span> Winner Only</span>
-      ${infoBtn('Points you could still earn from ongoing series.<br>🟢 Full potential: base pts + upset bonus + games bonus (exact games still achievable).<br>🟡 Partial: games bonus excluded — either no games pick, or the series score already makes your games prediction impossible.')}
+      ${infoBtn('Points you could still earn from ongoing series.<br><br><span class="bd-legend-dot green" style="display:inline-block;vertical-align:middle;margin:0 4px 0 0"></span> <strong>Full potential</strong> — base pts + upset bonus + games bonus (exact games still achievable).<br><br><span class="bd-legend-dot yellow" style="display:inline-block;vertical-align:middle;margin:0 4px 0 0"></span> <strong>Partial</strong> — games bonus excluded: either no games pick, or the live score makes your games prediction impossible.')}
     </div>
     <div class="bd-legend">
       <span class="bd-legend-title">Final Status:</span>
       <span class="bd-legend-item"><span class="bd-pts-earned">✓✓</span> Winner &amp; Games</span>
       <span class="bd-legend-item"><span class="bd-pts-earned">✓<span class="bd-pts-wrong">✗</span></span> Winner Only</span>
       <span class="bd-legend-item"><span class="bd-pts-earned bd-pts-wrong">✗✗</span> Wrong Pick</span>
-      ${infoBtn('Result of a completed series.<br>✓✓ Correct winner + correct game count → full points including +10 games bonus.<br>✓✗ Correct winner, wrong game count → base + upset bonus only.<br>✗✗ Wrong winner → 0 points.')}
+      ${infoBtn('Result of a completed series.<br><br><span style="color:var(--green);font-weight:700">✓✓</span> Correct winner + correct game count → full points incl. +10 games bonus.<br><br><span style="color:var(--green);font-weight:700">✓</span><span style="color:var(--red);font-weight:700">✗</span> Correct winner, wrong game count → base + upset bonus only.<br><br><span style="color:var(--red);font-weight:700">✗✗</span> Wrong winner → 0 points.')}
     </div>
     <button class="bd-toggle-pts" onclick="toggleBdPoints()">${bdShowPoints ? 'Show Status' : 'Show Points'}</button>
   </div>`;

@@ -947,7 +947,7 @@ main { padding: 24px; box-sizing: border-box; width: 100%; }
 }
 
 /* ---- Max possible placement ---- */
-.max-place-section { margin: 0; padding: 10px 0; font-size: 13px; color: var(--text-dim); }
+.max-place-section { margin: 0; padding: 10px 0 20px; font-size: 13px; color: var(--text-dim); }
 
 /* ---- Pick breakdown ---- */
 .pick-breakdown { margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--border); }
@@ -1064,6 +1064,7 @@ main { padding: 24px; box-sizing: border-box; width: 100%; }
 }
 .bd-toggle-pts {
   width: 100%;
+  margin-top: 8px;
   font-size: 13px;
   font-weight: 600;
   padding: 4px 8px;
