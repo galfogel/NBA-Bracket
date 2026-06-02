@@ -937,6 +937,14 @@ main { padding: 24px; box-sizing: border-box; width: 100%; }
   white-space: normal;
 }
 .info-tooltip.visible { display: block; }
+@media (max-width: 600px) {
+  .info-tooltip.visible {
+    position: fixed;
+    left: 16px; right: 16px; width: auto;
+    transform: none;
+    top: 50%; margin-top: -60px;
+  }
+}
 
 /* ---- Max possible placement ---- */
 .max-place-section { margin: 0; padding: 10px 0; font-size: 13px; color: var(--text-dim); }
