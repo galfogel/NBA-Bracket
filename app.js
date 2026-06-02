@@ -1874,18 +1874,11 @@ function renderPickBreakdown(rows) {
   // Correct picks leaderboard — shown whenever Finals round is selected
   if (bdRoundFilter === 4) {
     const totalDone = SERIES.filter(s => !!state.results[s.id]).length;
-    const correctRows = [...rows]
-      .sort((a, b) => b.correct !== a.correct ? b.correct - a.correct : a.name.localeCompare(b.name));
     html += '<div class="breakdown-round breakdown-finals-gap"><h4>Correct Picks Leaderboard</h4><div class="breakdown-grid">';
     html += '<div class="breakdown-series"><div class="bd-picks">';
-    let denseRank = 0, prevCorrect = null;
-    correctRows.forEach((p, i) => {
-      if (p.correct !== prevCorrect) { denseRank++; prevCorrect = p.correct; }
-      const rank = denseRank;
+    rows.forEach(p => {
       const isMe = p.id === currentUserId;
-      const medal = rank === 1 ? '🥇' : rank === 2 ? '🥈' : rank === 3 ? '🥉' : `${rank}.`;
       html += `<div class="bd-gap-row${isMe ? ' my-row' : ''}">
-        <span class="bd-correct-rank">${medal}</span>
         <span class="bd-pick-name p-name-link" onclick="goToAllPicksUser('${p.id}')">${p.name}${isMe ? ' <span class="you-badge">you</span>' : ''}</span>
         <span class="bd-pick-abbr" style="font-weight:700;color:var(--green)">${p.correct}<span style="font-weight:400;color:var(--text-dim);font-size:10px">/${totalDone}</span></span>
       </div>`;
