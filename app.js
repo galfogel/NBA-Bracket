@@ -670,6 +670,10 @@ function isSeriesLocked(sid) {
   return false;
 }
 
+function infoBtn(text) {
+  return `<button class="info-btn" onclick="event.stopPropagation();var t=this.querySelector('.info-tooltip');document.querySelectorAll('.info-tooltip.visible').forEach(x=>x!==t&&x.classList.remove('visible'));t.classList.toggle('visible')">i<span class="info-tooltip">${text}</span></button>`;
+}
+
 function showSaveToast(msg, warn = false) {
   let el = document.getElementById('save-toast');
   if (!el) {
@@ -1665,7 +1669,7 @@ function renderMaxPlacements(rows) {
   const rank = myIdx + 1;
   const suffix = ['st','nd','rd'][rank - 1] || 'th';
   const medal = rank <= 3 ? ['🥇','🥈','🥉'][myIdx] + ' ' : '';
-  return `<div class="max-place-section">Best possible placement: ${medal}<strong>${rank}${suffix} place</strong></div>`;
+  return `<div class="max-place-section">Best possible placement: ${medal}<strong>${rank}${suffix} place</strong> ${infoBtn('Assumes all your remaining picks are correct. Everyone\'s score is recalculated using your picks as the actual results — showing where you\'d rank if everything goes your way.')}</div>`;
 }
 
 function renderLeaderboard() {
@@ -1758,12 +1762,14 @@ function renderPickBreakdown(rows) {
       <span class="bd-legend-title">Potential Status:</span>
       <span class="bd-legend-item"><span class="bd-legend-dot green"></span> Winner &amp; Games</span>
       <span class="bd-legend-item"><span class="bd-legend-dot yellow"></span> Winner Only</span>
+      ${infoBtn('Points you could still earn from ongoing series.<br>🟢 Full potential: base pts + upset bonus + games bonus (exact games still achievable).<br>🟡 Partial: games bonus excluded — either no games pick, or the series score already makes your games prediction impossible.')}
     </div>
     <div class="bd-legend">
       <span class="bd-legend-title">Final Status:</span>
       <span class="bd-legend-item"><span class="bd-pts-earned">✓✓</span> Winner &amp; Games</span>
       <span class="bd-legend-item"><span class="bd-pts-earned">✓<span class="bd-pts-wrong">✗</span></span> Winner Only</span>
       <span class="bd-legend-item"><span class="bd-pts-earned bd-pts-wrong">✗✗</span> Wrong Pick</span>
+      ${infoBtn('Result of a completed series.<br>✓✓ Correct winner + correct game count → full points including +10 games bonus.<br>✓✗ Correct winner, wrong game count → base + upset bonus only.<br>✗✗ Wrong winner → 0 points.')}
     </div>
     <button class="bd-toggle-pts" onclick="toggleBdPoints()">${bdShowPoints ? 'Show Status' : 'Show Points'}</button>
   </div>`;
@@ -2098,6 +2104,11 @@ function switchTab(tab) {
 // ============================================================
 
 async function beginApp() {
+  document.addEventListener('click', e => {
+    if (!e.target.closest('.info-btn'))
+      document.querySelectorAll('.info-tooltip.visible').forEach(t => t.classList.remove('visible'));
+  });
+
   document.querySelectorAll('.tab-btn').forEach(btn =>
     btn.addEventListener('click', () => switchTab(btn.dataset.tab)));
 

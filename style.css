@@ -917,6 +917,27 @@ main { padding: 24px; box-sizing: border-box; width: 100%; }
 .rank-same-line { display: block; width: 5px; height: 2px; background: #eab308; border-radius: 1px; }
 .rnd-abbr { display: none; }
 
+/* ---- Info button & tooltip ---- */
+.info-btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 15px; height: 15px; border-radius: 50%;
+  background: var(--surface2); border: 1px solid var(--border);
+  color: var(--text-dim); font-size: 9px; font-weight: 700;
+  cursor: pointer; vertical-align: middle; flex-shrink: 0;
+  position: relative; margin-left: 4px; line-height: 1;
+}
+.info-tooltip {
+  display: none; position: absolute; z-index: 500;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 8px; padding: 10px 12px;
+  font-size: 12px; font-weight: 400; color: var(--text);
+  line-height: 1.55; width: 280px;
+  top: calc(100% + 6px); left: 50%; transform: translateX(-50%);
+  box-shadow: 0 6px 20px rgba(0,0,0,.5); text-align: left;
+  white-space: normal;
+}
+.info-tooltip.visible { display: block; }
+
 /* ---- Max possible placement ---- */
 .max-place-section { margin: 0; padding: 10px 0; font-size: 13px; color: var(--text-dim); }
 
