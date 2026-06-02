@@ -1881,7 +1881,7 @@ function renderPickBreakdown(rows) {
     html += '<div class="breakdown-finals-row">';
 
     // Correct picks table
-    html += '<div class="breakdown-round breakdown-finals-gap"><h4>Correct Picks Leaderboard</h4><div class="breakdown-grid"><div class="breakdown-series"><div class="bd-picks">';
+    html += '<div class="breakdown-round breakdown-finals-gap"><h4>Correct Picks</h4><div class="breakdown-grid"><div class="breakdown-series"><div class="bd-picks">';
     rows.forEach(p => {
       const isMe = p.id === currentUserId;
       html += `<div class="bd-gap-row${isMe ? ' my-row' : ''}">
