@@ -1350,11 +1350,7 @@ function handlePicksClick(e) {
     const r = parseInt(saveBtn.dataset.round);
     const partial = getPartialSeries(currentUserId, r);
     if (partial.length > 0) {
-      const names = partial.map(s => {
-        const [t1, t2] = resolveTeams(s.id);
-        return (t1 ? TEAMS[t1].abbr : '?') + ' vs ' + (t2 ? TEAMS[t2].abbr : '?');
-      });
-      showSaveToast(`⚠ Incomplete pick: ${names.join(', ')} — fill all or clear`);
+      showSaveToast('⚠ Some picks are incomplete — finish them or clear them to save');
       return;
     }
     if (!state.picksSubmitted[currentUserId]) state.picksSubmitted[currentUserId] = {};
