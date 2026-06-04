@@ -1,5 +1,5 @@
 {
-  "updated": "2026-06-04T01:44:40Z",
+  "updated": "2026-06-04T06:36:54Z",
   "records": {
     "ATL-NYK": {
       "NYK": 4,
@@ -56,6 +56,10 @@
     "CLE-NYK": {
       "NYK": 4,
       "CLE": 0
+    },
+    "NYK-SAS": {
+      "NYK": 1,
+      "SAS": 0
     }
   },
   "games": {
@@ -805,6 +809,17 @@
         "away": "NYK",
         "awayPts": 130,
         "date": "2026-05-25"
+      }
+    ],
+    "NYK-SAS": [
+      {
+        "n": "Game 1",
+        "gameId": "0042500401",
+        "home": "SAS",
+        "homePts": 95,
+        "away": "NYK",
+        "awayPts": 105,
+        "date": "2026-06-03"
       }
     ]
   },
@@ -20448,6 +20463,224 @@
           }
         ]
       }
+    },
+    "0042500401": {
+      "home": {
+        "tricode": "SAS",
+        "city": "San Antonio",
+        "name": "Spurs",
+        "score": 95,
+        "players": [
+          {
+            "name": "Victor Wembanyama",
+            "jersey": "1",
+            "min": "38:00",
+            "pts": 26,
+            "reb": 12,
+            "ast": 2,
+            "stl": 1,
+            "blk": 3
+          },
+          {
+            "name": "Stephon Castle",
+            "jersey": "5",
+            "min": "35:00",
+            "pts": 17,
+            "reb": 8,
+            "ast": 3,
+            "stl": 0,
+            "blk": 0
+          },
+          {
+            "name": "Julian Champagnie",
+            "jersey": "30",
+            "min": "31:00",
+            "pts": 16,
+            "reb": 10,
+            "ast": 1,
+            "stl": 0,
+            "blk": 1
+          },
+          {
+            "name": "Dylan Harper",
+            "jersey": "2",
+            "min": "28:00",
+            "pts": 16,
+            "reb": 8,
+            "ast": 1,
+            "stl": 1,
+            "blk": 0
+          },
+          {
+            "name": "Devin Vassell",
+            "jersey": "24",
+            "min": "36:00",
+            "pts": 9,
+            "reb": 9,
+            "ast": 3,
+            "stl": 0,
+            "blk": 0
+          },
+          {
+            "name": "De'Aaron Fox",
+            "jersey": "4",
+            "min": "38:00",
+            "pts": 7,
+            "reb": 4,
+            "ast": 5,
+            "stl": 1,
+            "blk": 0
+          },
+          {
+            "name": "Keldon Johnson",
+            "jersey": "3",
+            "min": "08:00",
+            "pts": 3,
+            "reb": 0,
+            "ast": 0,
+            "stl": 0,
+            "blk": 0
+          },
+          {
+            "name": "Carter Bryant",
+            "jersey": "11",
+            "min": "04:00",
+            "pts": 1,
+            "reb": 0,
+            "ast": 0,
+            "stl": 0,
+            "blk": 0
+          },
+          {
+            "name": "Luke Kornet",
+            "jersey": "7",
+            "min": "10:00",
+            "pts": 0,
+            "reb": 1,
+            "ast": 0,
+            "stl": 1,
+            "blk": 0
+          },
+          {
+            "name": "Harrison Barnes",
+            "jersey": "40",
+            "min": "12:00",
+            "pts": 0,
+            "reb": 2,
+            "ast": 1,
+            "stl": 0,
+            "blk": 0
+          }
+        ]
+      },
+      "away": {
+        "tricode": "NYK",
+        "city": "New York",
+        "name": "Knicks",
+        "score": 105,
+        "players": [
+          {
+            "name": "Jalen Brunson",
+            "jersey": "11",
+            "min": "37:00",
+            "pts": 30,
+            "reb": 3,
+            "ast": 2,
+            "stl": 0,
+            "blk": 0
+          },
+          {
+            "name": "Karl-Anthony Towns",
+            "jersey": "32",
+            "min": "34:00",
+            "pts": 18,
+            "reb": 12,
+            "ast": 4,
+            "stl": 0,
+            "blk": 1
+          },
+          {
+            "name": "OG Anunoby",
+            "jersey": "8",
+            "min": "31:00",
+            "pts": 17,
+            "reb": 3,
+            "ast": 0,
+            "stl": 1,
+            "blk": 1
+          },
+          {
+            "name": "Landry Shamet",
+            "jersey": "44",
+            "min": "33:00",
+            "pts": 13,
+            "reb": 1,
+            "ast": 0,
+            "stl": 0,
+            "blk": 0
+          },
+          {
+            "name": "Mikal Bridges",
+            "jersey": "25",
+            "min": "28:00",
+            "pts": 9,
+            "reb": 3,
+            "ast": 3,
+            "stl": 2,
+            "blk": 0
+          },
+          {
+            "name": "Jose Alvarado",
+            "jersey": "5",
+            "min": "11:00",
+            "pts": 7,
+            "reb": 4,
+            "ast": 1,
+            "stl": 1,
+            "blk": 0
+          },
+          {
+            "name": "Miles McBride",
+            "jersey": "2",
+            "min": "20:00",
+            "pts": 6,
+            "reb": 1,
+            "ast": 4,
+            "stl": 0,
+            "blk": 1
+          },
+          {
+            "name": "Josh Hart",
+            "jersey": "3",
+            "min": "27:00",
+            "pts": 3,
+            "reb": 15,
+            "ast": 6,
+            "stl": 4,
+            "blk": 1
+          },
+          {
+            "name": "Mitchell Robinson",
+            "jersey": "23",
+            "min": "13:00",
+            "pts": 2,
+            "reb": 6,
+            "ast": 0,
+            "stl": 0,
+            "blk": 0
+          },
+          {
+            "name": "Jordan Clarkson",
+            "jersey": "00",
+            "min": "06:00",
+            "pts": 0,
+            "reb": 1,
+            "ast": 0,
+            "stl": 0,
+            "blk": 0
+          }
+        ]
+      }
     }
   },
   "gameTimes": {
@@ -20460,6 +20693,6 @@
     "E1v8": "2026-04-19T22:30:00Z",
     "W2v7": "2026-04-20T01:00:00Z"
   },
-  "finalsGame1Gap": null,
+  "finalsGame1Gap": 10,
   "error": null
 }
