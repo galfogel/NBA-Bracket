@@ -1111,6 +1111,9 @@ main { padding: 24px; box-sizing: border-box; width: 100%; }
   border-bottom: 1px solid var(--border);
 }
 .bd-gap-row:last-child { border-bottom: none; }
+.bd-diff-close { font-size: 11px; font-weight: 700; color: var(--green); margin-left: 4px; }
+.bd-diff-mid   { font-size: 11px; font-weight: 600; color: #eab308;      margin-left: 4px; }
+.bd-diff-far   { font-size: 11px;                   color: var(--red);   margin-left: 4px; }
 .bd-correct-rank { min-width: 28px; font-size: 13px; flex-shrink: 0; }
 .bd-gap-actual { padding: 5px 10px; font-size: 11px; color: var(--text-dim); border-top: 1px solid var(--border); background: var(--surface2); }
 .bd-summary-link { margin-top: 24px; text-align: center; }

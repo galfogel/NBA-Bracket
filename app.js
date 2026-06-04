@@ -1923,17 +1923,25 @@ function renderPickBreakdown(rows) {
     // Tiebreaker table
     if (showGap) {
       const actualGap = state.finalsGame1ActualGap;
+      const gapRows = actualGap != null
+        ? [...filteredRows].sort((a, b) => {
+            const da = state.finalsGap[a.id] != null ? Math.abs(state.finalsGap[a.id] - actualGap) : Infinity;
+            const db = state.finalsGap[b.id] != null ? Math.abs(state.finalsGap[b.id] - actualGap) : Infinity;
+            return da !== db ? da - db : a.name.localeCompare(b.name);
+          })
+        : filteredRows;
       html += '<div class="breakdown-round breakdown-finals-gap"><h4>Game 1 Finals Gap</h4><div class="breakdown-grid"><div class="breakdown-series"><div class="bd-picks">';
       if (!revealed) {
         html += `<div class="bd-hidden">🔒 Hidden until series starts</div>`;
       } else {
-        for (const p of filteredRows) {
+        for (const p of gapRows) {
           const gap = state.finalsGap[p.id];
           const isMe = p.id === currentUserId;
           let diffStr = '';
           if (gap != null && actualGap != null) {
             const diff = Math.abs(gap - actualGap);
-            diffStr = `<span class="bd-pick-games">(diff: ${diff})</span>`;
+            const diffCls = diff <= 2 ? 'bd-diff-close' : diff <= 5 ? 'bd-diff-mid' : 'bd-diff-far';
+            diffStr = `<span class="${diffCls}">(${diff})</span>`;
           }
           html += `<div class="bd-gap-row${isMe ? ' my-row' : ''}">
             <span class="bd-pick-name">${p.name}${isMe ? ' <span class="you-badge">you</span>' : ''}</span>
