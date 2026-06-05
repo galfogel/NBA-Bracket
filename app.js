@@ -517,6 +517,7 @@ async function attemptLogin() {
 }
 
 function switchUser() {
+  localStorage.removeItem(USER_KEY);
   const prevUserId = currentUserId;
   currentUserId   = null;
   pendingSignupId = null;
