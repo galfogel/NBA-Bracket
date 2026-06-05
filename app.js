@@ -1473,20 +1473,12 @@ function renderResults() {
   if (gameDetailData)  { el.innerHTML = renderGameDetail();                   return; }
   if (seriesDetailSid) { el.innerHTML = renderSeriesDetail(seriesDetailSid); return; }
 
-  const gapDisplay = state.finalsGame1ActualGap != null
-    ? `<div class="game1-gap-ctrl">
-        <span class="gap-label">Finals Game 1 actual gap:</span>
-        <strong>${state.finalsGame1ActualGap} pts</strong>
-       </div>`
-    : '';
-
   el.innerHTML = `
     <div class="bracket-instructions">
       ${scoresData
         ? `<span class="scores-updated">Last sync: ${new Date(scoresData.updated).toLocaleString('en-GB', { timeZone: 'Asia/Jerusalem', day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })} (IST)</span>`
         : ''}
     </div>
-    ${gapDisplay}
     ${renderBracketLayout('results', null)}`;
 
   clearTimeout(_highlightResultTimer);
