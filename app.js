@@ -289,8 +289,9 @@ function mergeRemoteState(remote) {
       state.finalsGap[rp.id] = remote.finalsGap[rp.id];
     }
   }
-  // Commissioner-set actual gap: always sync from remote (null clears it)
-  state.finalsGame1ActualGap = remote.finalsGame1ActualGap ?? null;
+  // Actual gap: remote wins if set; fall back to scores pipeline value so
+  // fetchPicks can't clear a value that fetchScores already loaded.
+  state.finalsGame1ActualGap = remote.finalsGame1ActualGap ?? scoresData?.finalsGame1Gap ?? null;
 
   // Prune local participants (and their picks) not in remote, so a removed user's
   // stale credentials can't be used to sign back in. Exempt a pending signup.
