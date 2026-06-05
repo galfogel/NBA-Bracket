@@ -1920,7 +1920,7 @@ function renderPickBreakdown(rows) {
       const isMe = p.id === currentUserId;
       html += `<div class="bd-gap-row${isMe ? ' my-row' : ''}">
         <span class="bd-pick-name p-name-link" onclick="goToAllPicksUser('${p.id}')">${p.name}${isMe ? ' <span class="you-badge">you</span>' : ''}</span>
-        <span class="bd-pick-abbr" style="font-weight:700;color:var(--green)">${p.correct}<span style="font-weight:400;color:var(--text-dim);font-size:10px">/${totalDone}</span></span>
+        <span style="font-weight:700;color:var(--green);font-size:12px">${p.correct}<span style="font-weight:400;color:var(--text-dim);font-size:10px">/${totalDone}</span></span>
       </div>`;
     });
     html += '</div></div></div></div>';
