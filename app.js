@@ -1908,6 +1908,7 @@ function renderPickBreakdown(rows) {
     const anyGap    = filteredRows.some(p => state.finalsGap[p.id] != null);
     const showGap   = anyGap || state.finalsGame1ActualGap != null;
 
+    html += '<h4 class="bd-conf-title" style="margin-bottom:12px">Tiebreaker</h4>';
     html += '<div class="breakdown-finals-row">';
 
     // Correct picks table
