@@ -1920,7 +1920,7 @@ function renderPickBreakdown(rows) {
       const isMe = p.id === currentUserId;
       html += `<div class="bd-gap-row${isMe ? ' my-row' : ''}">
         <span class="bd-pick-name p-name-link" onclick="goToAllPicksUser('${p.id}')">${p.name}${isMe ? ' <span class="you-badge">you</span>' : ''}</span>
-        <span style="font-weight:700;color:var(--green);font-size:12px">${p.correct}<span style="font-weight:400;color:var(--text-dim);font-size:10px">/${totalDone}</span></span>
+        <span style="font-weight:700;color:var(--green);font-size:12px">${p.correct}<span style="font-weight:400;color:var(--text-dim);font-size:12px">/${totalDone}</span></span>
       </div>`;
     });
     html += '</div></div></div></div>';
@@ -1940,9 +1940,9 @@ function renderPickBreakdown(rows) {
           if (gap != null) {
             if (actualGap != null) {
               const diff = Math.abs(gap - actualGap);
-              gapDisplay = `<span style="font-weight:400;color:var(--text-dim);font-size:10px">${gap}</span><span style="font-weight:400;color:var(--text-dim);font-size:10px"> (</span><span style="font-weight:700;color:var(--green);font-size:12px">${diff}</span><span style="font-weight:400;color:var(--text-dim);font-size:10px">)</span>`;
+              gapDisplay = `<span style="font-weight:400;color:var(--text-dim);font-size:12px">${gap}</span><span style="font-weight:400;color:var(--text-dim);font-size:12px"> (</span><span style="font-weight:700;color:var(--green);font-size:12px">${diff}</span><span style="font-weight:400;color:var(--text-dim);font-size:12px">)</span>`;
             } else {
-              gapDisplay = `<span style="font-weight:400;color:var(--text-dim);font-size:10px">${gap}</span>`;
+              gapDisplay = `<span style="font-weight:400;color:var(--text-dim);font-size:12px">${gap}</span>`;
             }
           }
           html += `<div class="bd-gap-row${isMe ? ' my-row' : ''}">
