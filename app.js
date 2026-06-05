@@ -1907,7 +1907,7 @@ function renderPickBreakdown(rows) {
   // Correct picks + Tiebreaker — side by side under the Finals card
   if (bdRoundFilter === 4) {
     const totalDone = SERIES.filter(s => !!state.results[s.id]).length;
-    const revealed  = isSeriesLocked('FINALS') || adminView;
+    const revealed  = isSeriesLocked('FINALS');
     const anyGap    = filteredRows.some(p => state.finalsGap[p.id] != null);
     const showGap   = anyGap || state.finalsGame1ActualGap != null;
 
