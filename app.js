@@ -1979,7 +1979,7 @@ function renderPickBreakdown(rows) {
       }
       html += '</div></div></div>';
       if (actualGap != null) {
-        html += `<div class="bd-gap-actual-text">Actual Game 1 gap: <strong>${actualGap} pts</strong></div>`;
+        html += `<div class="bd-gap-actual-text">Actual Game 1 Gap: <strong>${actualGap} pts</strong></div>`;
       }
       html += '</div>';
     }
