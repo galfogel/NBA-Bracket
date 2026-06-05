@@ -1132,27 +1132,6 @@ function cardView(sid, t1, t2, pid) {
 
   const isOwnPicks = pid === currentUserId;
 
-  // Admin viewing another user's unlocked series: show only pick-completion dot
-  if (!locked && isAdmin() && !isOwnPicks) {
-    const pick = getPick(pid, sid);
-    const complete = !!(pick.winner && pick.games);
-    function rowPlain(key) {
-      const t = TEAMS[key];
-      return `<div class="team-row no-pointer">
-        <span class="seed-num">${t.seed ?? ''}</span>
-        <img class="team-logo" src="${t.logo}" alt="${t.abbr}" />
-        <span class="team-name">${t.name}</span>
-      </div>`;
-    }
-    return `<div class="matchup-card" data-series="${sid}">
-      ${rowPlain(t1)}<div class="series-divider"></div>${rowPlain(t2)}
-      <div class="card-footer ${complete ? 'footer-correct' : 'footer-wrong'}" style="display:flex;align-items:center;gap:6px;justify-content:center">
-        <span class="bd-legend-dot ${complete ? 'green' : 'red'}"></span>
-        <span style="font-size:10px;color:var(--text-dim)">${complete ? 'Pick made' : 'No pick'}</span>
-      </div>
-    </div>`;
-  }
-
   // Picks are hidden until the series locks (starts), except for the user viewing their own picks
   if (!locked && !isOwnPicks) {
     function rowHidden(key) {
@@ -1832,7 +1811,7 @@ function renderPickBreakdown(rows) {
       const resultBar = `<div class="bd-result">${resultText}</div>`;
 
       let pickRows = '';
-      if (seriesLocked || adminView) {
+      if (seriesLocked) {
         pickRows = filteredRows.map(p => {
           const pick = getPick(p.id, def.id);
           const pt = pick.winner ? TEAMS[pick.winner] : null;
@@ -1878,6 +1857,16 @@ function renderPickBreakdown(rows) {
               ${potDot}
             </span>
             ${ptsDisplay}
+          </div>`;
+        }).join('');
+      } else if (adminView) {
+        pickRows = filteredRows.map(p => {
+          const pick = getPick(p.id, def.id);
+          const complete = !!(pick.winner && pick.games);
+          const isMe = p.id === currentUserId;
+          return `<div class="bd-pick-row${isMe ? ' my-row' : ''}">
+            <span class="bd-pick-name">${p.name}${isMe ? ' <span class="you-badge">you</span>' : ''}</span>
+            <span class="bd-pick-team"><span class="bd-legend-dot ${complete ? 'green' : 'red'}"></span></span>
           </div>`;
         }).join('');
       } else {
@@ -1940,20 +1929,6 @@ function renderPickBreakdown(rows) {
     if (showGap) {
       const actualGap = state.finalsGame1ActualGap;
 
-      // Build color map keyed by diff VALUE (not pid) so equal diffs get the same color
-      const diffColorMap = {};
-      if (actualGap != null) {
-        const uniqueDiffs = [...new Set(
-          filteredRows
-            .filter(p => state.finalsGap[p.id] != null)
-            .map(p => Math.abs(state.finalsGap[p.id] - actualGap))
-        )].sort((a, b) => a - b);
-        const n = uniqueDiffs.length;
-        uniqueDiffs.forEach((d, i) => {
-          diffColorMap[d] = ['bd-diff-close', 'bd-diff-mid', 'bd-diff-far'][Math.floor(i * 3 / n)];
-        });
-      }
-
       html += '<div class="breakdown-round breakdown-finals-gap"><h4>Game 1 Finals Gap (Diff)</h4><div class="breakdown-grid"><div class="breakdown-series"><div class="bd-picks">';
       if (!revealed) {
         html += `<div class="bd-hidden">🔒 Hidden until series starts</div>`;
@@ -1965,8 +1940,7 @@ function renderPickBreakdown(rows) {
           if (gap != null) {
             if (actualGap != null) {
               const diff = Math.abs(gap - actualGap);
-              const cls  = diffColorMap[diff] || 'bd-diff-mid';
-              gapDisplay = `${gap} (<span class="${cls}">${diff}</span>)`;
+              gapDisplay = `${gap} (<span class="bd-diff-close">${diff}</span>)`;
             } else {
               gapDisplay = `${gap} (?)`;
             }
