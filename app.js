@@ -1923,22 +1923,40 @@ function renderPickBreakdown(rows) {
     // Tiebreaker table
     if (showGap) {
       const actualGap = state.finalsGame1ActualGap;
-      html += '<div class="breakdown-round breakdown-finals-gap"><h4>Game 1 Finals Gap</h4><div class="breakdown-grid"><div class="breakdown-series"><div class="bd-picks">';
+
+      // Build color map: split users-with-picks into 3 equal groups by diff (ascending)
+      const diffColorMap = {};
+      if (actualGap != null) {
+        const withDiff = filteredRows
+          .filter(p => state.finalsGap[p.id] != null)
+          .map(p => ({ id: p.id, diff: Math.abs(state.finalsGap[p.id] - actualGap) }))
+          .sort((a, b) => a.diff - b.diff);
+        const n = withDiff.length;
+        withDiff.forEach((item, i) => {
+          diffColorMap[item.id] = ['bd-diff-close', 'bd-diff-mid', 'bd-diff-far'][Math.floor(i * 3 / n)];
+        });
+      }
+
+      html += '<div class="breakdown-round breakdown-finals-gap"><h4>Game 1 Finals Gap (Diff)</h4><div class="breakdown-grid"><div class="breakdown-series"><div class="bd-picks">';
       if (!revealed) {
         html += `<div class="bd-hidden">🔒 Hidden until series starts</div>`;
       } else {
         for (const p of filteredRows) {
           const gap = state.finalsGap[p.id];
           const isMe = p.id === currentUserId;
-          let diffStr = '';
-          if (gap != null && actualGap != null) {
-            const diff = Math.abs(gap - actualGap);
-            diffStr = `<span class="bd-pick-games">(diff: ${diff})</span>`;
+          let gapDisplay = '?';
+          if (gap != null) {
+            if (actualGap != null) {
+              const diff = Math.abs(gap - actualGap);
+              const cls  = diffColorMap[p.id] || 'bd-diff-mid';
+              gapDisplay = `${gap} (<span class="${cls}">${diff}</span>)`;
+            } else {
+              gapDisplay = `${gap} (?)`;
+            }
           }
           html += `<div class="bd-gap-row${isMe ? ' my-row' : ''}">
             <span class="bd-pick-name">${p.name}${isMe ? ' <span class="you-badge">you</span>' : ''}</span>
-            <span class="bd-pick-abbr">${gap != null ? `${gap} pts` : '?'}</span>
-            ${diffStr}
+            <span class="bd-pick-abbr">${gapDisplay}</span>
           </div>`;
         }
         if (actualGap != null) {
