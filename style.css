@@ -1116,6 +1116,7 @@ main { padding: 24px; box-sizing: border-box; width: 100%; }
 .bd-diff-far   { color: var(--red); }
 .bd-correct-rank { min-width: 28px; font-size: 13px; flex-shrink: 0; }
 .bd-gap-actual { padding: 5px 10px; font-size: 11px; color: var(--text-dim); border-top: 1px solid var(--border); background: var(--surface2); }
+.bd-gap-actual-text { font-size: 12px; color: var(--text-dim); padding: 8px 2px 0; }
 .bd-summary-link { margin-top: 24px; text-align: center; }
 .bd-summary-link a { font-size: 13px; font-weight: 600; color: var(--accent); text-decoration: none; padding: 8px 18px; border: 1px solid var(--accent); border-radius: 20px; transition: background .15s; }
 .bd-summary-link a:hover { background: rgba(79,142,247,.1); }

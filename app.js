@@ -1925,16 +1925,17 @@ function renderPickBreakdown(rows) {
     if (showGap) {
       const actualGap = state.finalsGame1ActualGap;
 
-      // Build color map: split users-with-picks into 3 equal groups by diff (ascending)
+      // Build color map keyed by diff VALUE (not pid) so equal diffs get the same color
       const diffColorMap = {};
       if (actualGap != null) {
-        const withDiff = filteredRows
-          .filter(p => state.finalsGap[p.id] != null)
-          .map(p => ({ id: p.id, diff: Math.abs(state.finalsGap[p.id] - actualGap) }))
-          .sort((a, b) => a.diff - b.diff);
-        const n = withDiff.length;
-        withDiff.forEach((item, i) => {
-          diffColorMap[item.id] = ['bd-diff-close', 'bd-diff-mid', 'bd-diff-far'][Math.floor(i * 3 / n)];
+        const uniqueDiffs = [...new Set(
+          filteredRows
+            .filter(p => state.finalsGap[p.id] != null)
+            .map(p => Math.abs(state.finalsGap[p.id] - actualGap))
+        )].sort((a, b) => a - b);
+        const n = uniqueDiffs.length;
+        uniqueDiffs.forEach((d, i) => {
+          diffColorMap[d] = ['bd-diff-close', 'bd-diff-mid', 'bd-diff-far'][Math.floor(i * 3 / n)];
         });
       }
 
@@ -1949,7 +1950,7 @@ function renderPickBreakdown(rows) {
           if (gap != null) {
             if (actualGap != null) {
               const diff = Math.abs(gap - actualGap);
-              const cls  = diffColorMap[p.id] || 'bd-diff-mid';
+              const cls  = diffColorMap[diff] || 'bd-diff-mid';
               gapDisplay = `${gap} (<span class="${cls}">${diff}</span>)`;
             } else {
               gapDisplay = `${gap} (?)`;
@@ -1960,11 +1961,12 @@ function renderPickBreakdown(rows) {
             <span class="bd-pick-abbr">${gapDisplay}</span>
           </div>`;
         }
-        if (actualGap != null) {
-          html += `<div class="bd-gap-actual">Actual: <strong>${actualGap} pts</strong></div>`;
-        }
       }
-      html += '</div></div></div></div>';
+      html += '</div></div></div>';
+      if (actualGap != null) {
+        html += `<div class="bd-gap-actual-text">Actual Game 1 gap: <strong>${actualGap} pts</strong></div>`;
+      }
+      html += '</div>';
     }
 
     html += '</div>';
