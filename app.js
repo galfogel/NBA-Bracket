@@ -1852,7 +1852,7 @@ function renderPickBreakdown(rows) {
           return `<div class="bd-pick-row${isMe ? ' my-row' : ''}">
             <span class="bd-pick-name p-name-link" onclick="goToAllPicksUser('${p.id}','${def.id}')">${p.name}${isMe ? ' <span class="you-badge">you</span>' : ''}</span>
             <span class="bd-pick-team ${teamCls}">
-              ${pt ? `<span class="bd-pick-abbr" style="color:${pt.color}">${pt.abbr}</span>` : '<span class="bd-pick-abbr">?</span>'}
+              ${pt ? `<span class="bd-pick-abbr" style="color:${pt.color}">${pt.abbr}</span>` : '<span class="bd-pick-games">-</span>'}
               ${pick.games ? `<span class="bd-pick-games">${pick.games}</span>` : ''}
               ${potDot}
             </span>
@@ -1936,13 +1936,13 @@ function renderPickBreakdown(rows) {
         for (const p of filteredRows) {
           const gap = state.finalsGap[p.id];
           const isMe = p.id === currentUserId;
-          let gapDisplay = '?';
+          let gapDisplay = '<span class="bd-pick-games">-</span>';
           if (gap != null) {
             if (actualGap != null) {
               const diff = Math.abs(gap - actualGap);
-              gapDisplay = `${gap} (<span class="bd-diff-close">${diff}</span>)`;
+              gapDisplay = `<span style="font-weight:700;color:var(--green)">${gap}</span><span style="font-weight:400;color:var(--text-dim);font-size:10px"> (${diff})</span>`;
             } else {
-              gapDisplay = `${gap} (?)`;
+              gapDisplay = `<span style="font-weight:700;color:var(--green)">${gap}</span>`;
             }
           }
           html += `<div class="bd-gap-row${isMe ? ' my-row' : ''}">
