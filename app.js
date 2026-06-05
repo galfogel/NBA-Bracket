@@ -1940,9 +1940,9 @@ function renderPickBreakdown(rows) {
           if (gap != null) {
             if (actualGap != null) {
               const diff = Math.abs(gap - actualGap);
-              gapDisplay = `<span style="font-weight:700;color:var(--green)">${gap}</span><span style="font-weight:400;color:var(--text-dim);font-size:10px"> (${diff})</span>`;
+              gapDisplay = `<span style="font-weight:400;color:var(--text-dim);font-size:10px">${gap}</span><span style="font-weight:400;color:var(--text-dim);font-size:10px"> (<span style="font-weight:700;color:var(--green)">${diff}</span>)</span>`;
             } else {
-              gapDisplay = `<span style="font-weight:700;color:var(--green)">${gap}</span>`;
+              gapDisplay = `<span style="font-weight:400;color:var(--text-dim);font-size:10px">${gap}</span>`;
             }
           }
           html += `<div class="bd-gap-row${isMe ? ' my-row' : ''}">
