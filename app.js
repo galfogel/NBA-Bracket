@@ -1132,8 +1132,29 @@ function cardView(sid, t1, t2, pid) {
 
   const isOwnPicks = pid === currentUserId;
 
-  // Picks are hidden until the series locks (starts), except for the admin or the user viewing their own picks
-  if (!locked && !isAdmin() && !isOwnPicks) {
+  // Admin viewing another user's unlocked series: show only pick-completion dot
+  if (!locked && isAdmin() && !isOwnPicks) {
+    const pick = getPick(pid, sid);
+    const complete = !!(pick.winner && pick.games);
+    function rowPlain(key) {
+      const t = TEAMS[key];
+      return `<div class="team-row no-pointer">
+        <span class="seed-num">${t.seed ?? ''}</span>
+        <img class="team-logo" src="${t.logo}" alt="${t.abbr}" />
+        <span class="team-name">${t.name}</span>
+      </div>`;
+    }
+    return `<div class="matchup-card" data-series="${sid}">
+      ${rowPlain(t1)}<div class="series-divider"></div>${rowPlain(t2)}
+      <div class="card-footer ${complete ? 'footer-correct' : 'footer-wrong'}" style="display:flex;align-items:center;gap:6px;justify-content:center">
+        <span class="bd-pot-dot ${complete ? 'green' : 'red'}"></span>
+        <span style="font-size:10px;color:var(--text-dim)">${complete ? 'Pick made' : 'No pick'}</span>
+      </div>
+    </div>`;
+  }
+
+  // Picks are hidden until the series locks (starts), except for the user viewing their own picks
+  if (!locked && !isOwnPicks) {
     function rowHidden(key) {
       const t = TEAMS[key];
       const pct = getWinPct(sid, key);

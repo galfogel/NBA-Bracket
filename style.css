@@ -965,6 +965,7 @@ main { padding: 24px; box-sizing: border-box; width: 100%; }
 .bd-pot-dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; opacity: 0.75; flex-shrink: 0; }
 .bd-pot-dot.green  { background: #22c55e; }
 .bd-pot-dot.yellow { background: #eab308; }
+.bd-pot-dot.red    { background: var(--red); }
 
 .bd-legend { display: flex; align-items: center; gap: 12px; margin-top: 8px; flex-wrap: wrap; }
 .bd-legend-title { font-size: 10px; font-weight: 700; color: var(--text-dim); }
