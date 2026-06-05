@@ -524,7 +524,7 @@ function switchUser() {
   document.getElementById('login-name').value = '';
   document.getElementById('login-pass').value = '';
   document.getElementById('login-msg').textContent = '';
-  showLoginOverlay(!!prevUserId);
+  showLoginOverlay(false);
 }
 
 const SCORE_SNAPSHOT_KEY = 'nba-2026-rank-snap';
