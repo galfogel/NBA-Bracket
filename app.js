@@ -405,6 +405,7 @@ function setLoginMode(mode) {
 function showLoginOverlay(canGoBack = false) {
   const overlay = document.getElementById('login-overlay');
   overlay.classList.remove('hidden');
+  document.getElementById('login-btn').disabled = false;
   setLoginMode('signin');
 
   let backBtn = overlay.querySelector('.login-back-btn');
